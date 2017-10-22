@@ -1,31 +1,39 @@
 package resources
 
-import scala.collection.mutable
-import scala.collection.mutable.ArrayBuffer
+class Inventory(val resources: Seq[Resource], val maxSize: Int, init: Amount*) {
 
-class Inventory(init: Amount*) {
+    private val _content = new Array[Double](resources.size)
+    init.foreach(a => _content(a.resource.i) = if (a.amount > maxSize) maxSize else a.amount)
 
-    var _content: mutable.Buffer[Amount] = init.toBuffer.sorted
+    def content: Seq[Amount] = resources.map(r => _content(r.i) ~ r)
 
-    def content: mutable.Buffer[Amount] = _content
+    def apply(resource: Resource): Double = _content(resource.i)
+
+    def add(amounts: Amount*): Boolean = {
+        var it = amounts.iterator
+        while (it.hasNext) {
+            val a = it.next()
+            if (_content(a.resource.i) + a.amount > maxSize) return false
+        }
+        it = amounts.iterator
+        while (it.hasNext) {
+            val a = it.next()
+            _content(a.resource.i) = _content(a.resource.i) + a.amount
+        }
+        true
+    }
 
     def remove(amounts: Amount*): Boolean = {
-        val sorted = amounts.sorted
-        val changed = ArrayBuffer[Amount]()
-        val it = sorted.iterator
-        var current = it.next()
-        _content.foreach(c => {
-            if (c.resource == current.resource) {
-                if (c.amount < current.amount) {
-                    return false
-                }
-                changed += c - current
-                if (it.hasNext) current = it.next()
-            } else {
-                changed += c
-            }
-        })
-        _content = changed
+        var it = amounts.iterator
+        while (it.hasNext) {
+            val a = it.next()
+            if (_content(a.resource.i) - a.amount < 0) return false
+        }
+        it = amounts.iterator
+        while (it.hasNext) {
+            val a = it.next()
+            _content(a.resource.i) = _content(a.resource.i) - a.amount
+        }
         true
     }
 

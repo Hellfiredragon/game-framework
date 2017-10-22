@@ -17,18 +17,31 @@ package object resources {
 
     case class RichNumber(number: Number) {
 
+        @inline
         def ~(resource: Resource): Amount = Amount(resource, number.floatValue())
 
     }
 
-    case class Resource(name: String)
+    case class Resource(i: Int, name: String)
 
-    case class Amount(resource: Resource, amount: Float) {
+    case class Amount(resource: Resource, amount: Double) {
+
+        def +(other: Amount): Amount = if (other.resource == resource) {
+            (amount + other.amount) ~ resource
+        } else {
+            this
+        }
 
         def -(other: Amount): Amount = if (other.resource == resource) {
             (amount - other.amount) ~ resource
         } else {
             this
+        }
+
+        def <(other: Amount): Boolean = if (other.resource == resource) {
+            other.amount < amount
+        } else {
+            false
         }
 
     }

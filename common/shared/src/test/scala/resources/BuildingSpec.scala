@@ -4,7 +4,7 @@ import org.scalatest.FunSpec
 
 class BuildingSpec extends FunSpec {
 
-    val wood = Resource("Wood")
+    val wood = Resource(0, "Wood")
 
     describe("A building") {
         describe("when enough resource available") {
