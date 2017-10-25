@@ -1,8 +1,6 @@
 package resources
 
-import org.scalatest.FunSpec
-
-class InventorySpec extends FunSpec {
+class InventorySpec extends DefaultSpec {
 
     val steel = Resource(0, "Steel")
     val stone = Resource(1, "Stone")

@@ -22,28 +22,14 @@ package object resources {
 
     }
 
-    case class Resource(i: Int, name: String)
+    case class Resource(i: Int, name: String) {
+        override def toString: String = name
+    }
 
     case class Amount(resource: Resource, amount: Double) {
+        def *(factor: Double) = Amount(resource, amount * factor)
 
-        def +(other: Amount): Amount = if (other.resource == resource) {
-            (amount + other.amount) ~ resource
-        } else {
-            this
-        }
-
-        def -(other: Amount): Amount = if (other.resource == resource) {
-            (amount - other.amount) ~ resource
-        } else {
-            this
-        }
-
-        def <(other: Amount): Boolean = if (other.resource == resource) {
-            other.amount < amount
-        } else {
-            false
-        }
-
+        override def toString: String = amount + " " + resource.toString
     }
 
 }
