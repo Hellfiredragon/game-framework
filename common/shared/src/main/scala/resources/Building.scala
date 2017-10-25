@@ -24,7 +24,6 @@ class Building(val template: BuildingTemplate, var currentLevel: Int) {
     def nextUpgradeCost(levels: Int): Seq[Amount] = for (i <- upgradeBaseCost.indices) yield {
         val base = upgradeFactors(i).amount
         val m = (for (exp <- currentLevel until (currentLevel + levels)) yield {
-            println(base, exp)
             Math.pow(base, exp)
         }).sum
         upgradeBaseCost(i) * m
