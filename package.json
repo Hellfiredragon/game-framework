@@ -1,0 +1,17 @@
+{
+  "name": "game-framework",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {},
+  "devDependencies": {
+    "jsdom": "^11.3.0",
+    "less-watch-compiler": "^1.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "O:\\\\Repositories\\\\game-framework.git"
+  },
+  "author": "Jan Muthreich <jan@mutreich.eu>",
+  "license": "PRIVATE",
+  "private": true
+}

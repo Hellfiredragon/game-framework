@@ -1,6 +1,6 @@
 package resources
 
-class Inventory(val resources: Seq[Resource], val maxSize: Int, init: Amount*) {
+class Inventory(val resources: Seq[Resource], val maxSize: Double, init: Amount*) {
 
     val content = new Array[Double](resources.size)
     init.foreach(a => content(a.resource.i) = if (a.amount > maxSize) maxSize else a.amount)
