@@ -10,7 +10,13 @@
         "moduleResolution": "Node",
         "declaration": false,
         "strictNullChecks": true,
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "paths": {
+            // define absolute path mappings
+            "redux": [
+                "typings/redux.d.ts"
+            ]
+        }
     },
     "include": [
         "src/**/*"
