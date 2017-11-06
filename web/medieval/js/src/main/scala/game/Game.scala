@@ -1,27 +1,55 @@
 package game
 
-import game.components.{GameWindow, MenuItem}
 import org.scalajs.dom._
-import org.scalajs.dom.html.Div
 
-object State {
+import scala.collection.mutable.ArrayBuffer
+import scala.language.implicitConversions
 
-    var activePage: String = _
+object Data {
+
+    object Buildings {
+        val carpenter = "Carpenter"
+        val blacksmith = "Blacksmith"
+        val landlord = "Landlord"
+    }
 
 }
 
+trait Entity {
+
+    def update(duration: Double): Unit
+
+}
+
+object State {
+
+    var currentStage: String = ChooseStartBuildingStage.Name
+
+    var buildings: ArrayBuffer[String] = ArrayBuffer()
+
+}
+
+
 object Game {
 
-    val gameWindow = GameWindow()
+    val views = Seq(
+        new ChooseStartBuildingStage(),
+        new MainStage()
+    )
 
     def main(args: Array[String]): Unit = {
-        document.body.appendChild(gameWindow.render())
-        window.requestAnimationFrame(_ => update())
+        window.requestAnimationFrame(t => update(t))
     }
 
-    def update(): Unit = {
-        gameWindow.update()
-        window.requestAnimationFrame(_ => update())
+    var lastTime = 0.0
+
+    def update(t: Double): Unit = {
+        val duration = t - lastTime
+        lastTime = t
+
+
+        views.foreach(_.render())
+        window.requestAnimationFrame(t => update(t))
     }
 
 }

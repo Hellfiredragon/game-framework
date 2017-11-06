@@ -2,4 +2,4 @@
 .gradle
 
 **/target
-build
+node_modules/
