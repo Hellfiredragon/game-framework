@@ -7,9 +7,7 @@ const entries = {};
 glob.sync("./src/**/*.specs.tsx").forEach(x => {
     entries["../test-target" + x.substr(0, x.length - 4).substr(5)] = x;
 });
-glob.sync("./src/**/!(*.spec*(s)).tsx").forEach(x => {
-    entries[x.substr(0, x.length - 4).substr(5)] = x;
-});
+entries["index"] = "./src/index.tsx";
 
 module.exports = {
     entry: entries,
@@ -40,8 +38,10 @@ module.exports = {
     externals: [],
     plugins: [
         new CopyWebpackPlugin([
-            {from: "src/index.html"}
+            {from: "src/index.html"},
+            {from: "node_modules/font-awesome/css/font-awesome.min.css", to: "css"},
+            {from: "node_modules/font-awesome/fonts/*", to: "fonts", flatten: true}
         ]),
-        new ExtractTextPlugin("index.css")
+        new ExtractTextPlugin("css/index.css")
     ]
 };

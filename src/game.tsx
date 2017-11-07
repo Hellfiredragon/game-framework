@@ -1,10 +1,49 @@
 import * as React from "react";
 import {connect} from "react-redux";
 import {RootState, saveStorage} from "./store";
-import {resetGame, updateFrame} from "./actions";
+import {updateFrame} from "./actions";
+import {Bucket, Building, Product} from "./state";
+
+export const Icon: React.SFC<{
+    icon: string
+}> = (props) => {
+    return <span className={"fa fa-fw fa-" + props.icon}/>
+};
+
+export const BucketComponent: React.SFC<{
+    text: string,
+    value: Bucket
+}> = (props) => {
+    const { text, value } = props;
+    const { current, max } = value;
+    return <div className="bucket">
+        {text}: {current} / {max}
+    </div>
+};
+
+export const ProductComponent: React.SFC<{ value: Product }> = (props) => {
+    const { name, worker, consumes, time } = props.value;
+    return <div className="bucket worker">
+        <div>{name}</div>
+        <div>
+            Worker: {worker}
+            <Icon icon="plus"/>
+            <Icon icon="minus"/>
+        </div>
+        <BucketComponent text="Time" value={time}/>
+    </div>
+};
+
+export const BuildingComponent: React.SFC<{
+    value: Building
+}> = (props) => (<div className="building">
+    {props.value.name}
+    {props.value.products.map(product => <ProductComponent value={product}/>)}
+</div>);
 
 export interface Props {
-    gold: number
+    worker: Bucket,
+    buildings: Building[]
 }
 
 export class _Game extends React.Component<Props, {}> {
@@ -14,9 +53,10 @@ export class _Game extends React.Component<Props, {}> {
     }
 
     render() {
+        const { worker, buildings } = this.props;
         return <div>
-            <h1>It Works: {this.props.gold}</h1>
-            <button onClick={resetGame}>Reset</button>
+            <BucketComponent text="Worker" value={worker}/>
+            {buildings.map(building => <BuildingComponent value={building}/>)}
         </div>
     }
 
@@ -38,5 +78,6 @@ export class _Game extends React.Component<Props, {}> {
 }
 
 export const Game = connect((state: RootState) => ({
-    gold: state.game.gold
+    worker: state.game.worker,
+    buildings: state.game.buildings
 }), {})(_Game);
