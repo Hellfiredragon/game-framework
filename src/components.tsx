@@ -3,14 +3,14 @@ import {AllProducts, Building, Product} from "./state";
 import {addBuyer, addCart, addSeller, addWorker, removeBuyer, removeCart, removeSeller, removeWorker} from "./actions";
 import classNames = require("classnames");
 
-export const Icon: React.SFC<{
-    icon: string,
-    onClick?: () => void
-}> = (props) => {
-    const classes = ["fa", "fa-fw", "fa-" + props.icon];
-    if (props.onClick) classes.push("clickable");
-    return <span className={classNames(classes)} onClick={props.onClick}/>
-};
+export class Icon extends React.PureComponent<{ icon: string, onClick?: () => void }, {}> {
+    render() {
+        const { icon, onClick } = this.props;
+        const classes = ["fa", "fa-fw", "fa-" + icon];
+        if (onClick) classes.push("clickable");
+        return <span className={classNames(classes)} onClick={onClick}/>
+    }
+}
 
 export class GoldIcon extends React.PureComponent<{}, {}> {
     render() {
@@ -18,7 +18,7 @@ export class GoldIcon extends React.PureComponent<{}, {}> {
     }
 }
 
-export class WorkerBox extends React.Component<{ product: Product }, {}> {
+export class WorkerBox extends React.PureComponent<{ worker: number, product: Product }, {}> {
 
     handlePlus = () => addWorker(this.props.product);
     handleMinus = () => removeWorker(this.props.product);
@@ -33,31 +33,47 @@ export class WorkerBox extends React.Component<{ product: Product }, {}> {
     }
 }
 
-export class RouteComponent extends React.Component<{ building: Building, target: Building }, {}> {
+export class RouteSection extends React.Component<{ building: Building, target: Building }, {}> {
 
     render() {
         const { building, target } = this.props;
-        return <div className="route">
+        return <div className="route-section">
             <h1>{target.name}</h1>
-            {building.inventory.map((amount, productId) => <div key={productId}>
-                {AllProducts[productId].name}: {(building.routes[target.id] || {})[productId] || 0}
-                <Icon icon="plus" onClick={() => addCart(building, target.id, productId)}/>
-                <Icon icon="minus" onClick={() => removeCart(building, target.id, productId)}/>
-            </div>)}
+            {building.inventory.map((amount, productId) =>
+                <RouteBox key={productId} building={building}
+                          carts={(building.routes[target.id] || {})[productId] || 0}
+                          targetId={target.id} productId={productId}/>
+            )}
+        </div>
+    }
+
+}
+
+export class RouteBox extends React.PureComponent<{ building: Building, carts: number, targetId: number, productId: number }, {}> {
+
+    handlePlus = () => addCart(this.props.building, this.props.targetId, this.props.productId);
+    handleMinus = () => removeCart(this.props.building, this.props.targetId, this.props.productId);
+
+    render() {
+        const { productId, carts } = this.props;
+        return <div className="route">
+            {AllProducts[productId].name}: {carts}
+            <Icon icon="plus" onClick={this.handlePlus}/>
+            <Icon icon="minus" onClick={this.handleMinus}/>
         </div>
     }
 }
 
-export class SaleComponent extends React.Component<{ building: Building, productId: number }, {}> {
+export class SaleComponent extends React.PureComponent<{ seller: number, building: Building, productId: number }, {}> {
 
     handlePlus = () => addSeller(this.props.building, this.props.productId);
     handleMinus = () => removeSeller(this.props.building, this.props.productId);
 
     render() {
-        const { building, productId } = this.props;
+        const { seller, productId } = this.props;
         const product = AllProducts[productId];
         return <div className="sale">
-            {product.name}: {building.sales[productId] || 0}
+            {product.name}: {seller || 0}
             <Icon icon="plus" onClick={this.handlePlus}/>
             <Icon icon="minus" onClick={this.handleMinus}/>
             ({Math.ceil(product.value * 0.8)} <GoldIcon/>)
@@ -65,16 +81,16 @@ export class SaleComponent extends React.Component<{ building: Building, product
     }
 }
 
-export class PurchaseComponent extends React.Component<{ building: Building, productId: number }, {}> {
+export class PurchaseComponent extends React.PureComponent<{ buyer: number, building: Building, productId: number }, {}> {
 
     handlePlus = () => addBuyer(this.props.building, this.props.productId);
     handleMinus = () => removeBuyer(this.props.building, this.props.productId);
 
     render() {
-        const { building, productId } = this.props;
+        const { buyer, productId } = this.props;
         const product = AllProducts[productId];
         return <div className="purchase">
-            {product.name}: {building.purchases[productId] || 0}
+            {product.name}: {buyer}
             <Icon icon="plus" onClick={this.handlePlus}/>
             <Icon icon="minus" onClick={this.handleMinus}/>
             ({Math.ceil(product.value * 1.2)} <GoldIcon/>)

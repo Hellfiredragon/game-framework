@@ -2,7 +2,7 @@ import * as React from "react";
 import {saveStorage, Store} from "./store";
 import {chooseStartBuilding, updateFrame, updateTick} from "./actions";
 import {AllProducts, Bucket, Building, GameStages, Product} from "./state";
-import {GoldIcon, PurchaseComponent, RouteComponent, SaleComponent, WorkerBox} from "./components";
+import {PurchaseComponent, RouteSection, SaleComponent, WorkerBox} from "./components";
 
 export const BucketComponent: React.SFC<{
     text: string,
@@ -38,7 +38,7 @@ export const ProductComponent: React.SFC<{ product: Product }> = (props) => {
     return <div className="product">
         <h1>{product.name}</h1>
         <ResourceRow resources={product.consumes}/>
-        <WorkerBox product={product}/>
+        <WorkerBox worker={product.worker} product={product}/>
         <BucketComponent text="Time" value={product.time}/>
     </div>
 };
@@ -69,17 +69,19 @@ export class BuildingComponent extends React.Component<BuildingComponentProps, {
             )}
             <h2>Sales</h2>
             {building.inventory.map((amount, productId) =>
-                <SaleComponent key={productId} building={building} productId={productId}/>
+                <SaleComponent key={productId} seller={building.sales[productId] || 0}
+                               building={building} productId={productId}/>
             )}
             <h2>Purchases</h2>
             {purchases.map((b, productId) =>
-                <PurchaseComponent building={building} productId={productId}/>
+                <PurchaseComponent key={productId} buyer={building.purchases[productId] || 0}
+                                   building={building} productId={productId}/>
             )}
             <h2>Routes</h2>
             {buildings
                 .filter(x => x != building)
                 .map((target, i) =>
-                    <RouteComponent key={i} building={building} target={target}/>
+                    <RouteSection key={i} building={building} target={target}/>
                 )}
         </div>
     }
