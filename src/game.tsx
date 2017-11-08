@@ -1,7 +1,8 @@
 import * as React from "react";
 import {saveStorage, Store} from "./store";
 import {addWorker, chooseStartBuilding, removeWorker, updateFrame} from "./actions";
-import {Bucket, Building, GameStages, Inventory, Product} from "./state";
+import {Bucket, Building, Dict, GameStages, Inventory, Product} from "./state";
+import {dictEquals} from "./utils";
 import classNames = require("classnames");
 
 export const Icon: React.SFC<{
@@ -20,14 +21,37 @@ export const BucketComponent: React.SFC<{
     const { text, value } = props;
     const { current, max } = value;
     return <div className="bucket">
-        {text}: {current} / {max}
+        {text}: {current.toPrecision(3)} / {max}
     </div>
 };
 
+export interface ResourceRowProps {
+    resources: Dict<number>
+}
+
+export class ResourceRow extends React.Component<ResourceRowProps, {}> {
+
+    shouldComponentUpdate(nextProps: ResourceRowProps) {
+        return !dictEquals(this.props, nextProps)
+    }
+
+    render() {
+        const { resources } = this.props;
+        const keys = Object.keys(resources);
+        return <div className="resources-row">
+            {keys.map(key => <div key={key}>
+                {key}: {resources[key].toFixed(0)}
+            </div>)}
+        </div>;
+    }
+
+}
+
 export const ProductComponent: React.SFC<{ product: Product }> = (props) => {
     const { product } = props;
-    return <div className="bucket worker">
-        <div>{product.name}</div>
+    return <div className="product">
+        <h2>{product.name}</h2>
+        <ResourceRow resources={product.consumes}/>
         <div>
             Worker: {product.worker}
             <Icon icon="plus" onClick={() => addWorker(product)}/>
@@ -42,7 +66,7 @@ export const BuildingComponent: React.SFC<{
 }> = (props) => {
     const { building } = props;
     return <div className="building">
-        {building.name}
+        <h1>{building.name}</h1>
         {building.products.map(product =>
             <ProductComponent key={product.name} product={product}/>)}
     </div>

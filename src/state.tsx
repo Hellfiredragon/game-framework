@@ -1,4 +1,4 @@
-export type Map<T> = { [key: string]: T }
+export type Dict<T> = { [key: string]: T }
 
 export type Bucket = {
     current: number
@@ -10,12 +10,12 @@ function bucket(current: number, max: number): Bucket {
 }
 
 export interface Inventory {
-    values: Map<number>
+    values: Dict<number>
 }
 
 export interface Product {
     name: string
-    consumes: Map<number>
+    consumes: Dict<number>
     time: Bucket
     worker: number
 }
