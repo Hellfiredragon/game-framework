@@ -9,3 +9,13 @@ html, body {
     margin: 0;
     font-family: @font-family;
 }
+
+.clickable {
+    cursor: pointer;
+    &:hover {
+        text-shadow: 2px 2px 3px black;
+    }
+    &:active {
+        text-shadow: none;
+    }
+}

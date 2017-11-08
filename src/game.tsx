@@ -1,13 +1,16 @@
 import * as React from "react";
-import {connect} from "react-redux";
-import {RootState, saveStorage} from "./store";
-import {updateFrame} from "./actions";
-import {Bucket, Building, Product} from "./state";
+import {saveStorage, Store} from "./store";
+import {addWorker, removeWorker, updateFrame} from "./actions";
+import {Bucket, Building, Inventory, Product} from "./state";
+import classNames = require("classnames");
 
 export const Icon: React.SFC<{
-    icon: string
+    icon: string,
+    onClick?: () => void
 }> = (props) => {
-    return <span className={"fa fa-fw fa-" + props.icon}/>
+    const classes = ["fa", "fa-fw", "fa-" + props.icon];
+    if (props.onClick) classes.push("clickable");
+    return <span className={classNames(classes)} onClick={props.onClick}/>
 };
 
 export const BucketComponent: React.SFC<{
@@ -21,42 +24,64 @@ export const BucketComponent: React.SFC<{
     </div>
 };
 
-export const ProductComponent: React.SFC<{ value: Product }> = (props) => {
-    const { name, worker, consumes, time } = props.value;
+export const ProductComponent: React.SFC<{ product: Product }> = (props) => {
+    const { product } = props;
     return <div className="bucket worker">
-        <div>{name}</div>
+        <div>{product.name}</div>
         <div>
-            Worker: {worker}
-            <Icon icon="plus"/>
-            <Icon icon="minus"/>
+            Worker: {product.worker}
+            <Icon icon="plus" onClick={() => addWorker(product)}/>
+            <Icon icon="minus" onClick={() => removeWorker(product)}/>
         </div>
-        <BucketComponent text="Time" value={time}/>
+        <BucketComponent text="Time" value={product.time}/>
     </div>
 };
 
 export const BuildingComponent: React.SFC<{
-    value: Building
-}> = (props) => (<div className="building">
-    {props.value.name}
-    {props.value.products.map(product => <ProductComponent value={product}/>)}
-</div>);
+    building: Building
+}> = (props) => {
+    const { building } = props;
+    return <div className="building">
+        {building.name}
+        {building.products.map(product =>
+            <ProductComponent product={product}/>)}
+    </div>
+};
 
-export interface Props {
-    worker: Bucket,
-    buildings: Building[]
+export const InventoryComponent: React.SFC<{
+    inventory: Inventory
+}> = (props) => {
+    const { inventory } = props;
+    const keys = Object.keys(inventory.values);
+    return <div className="inventory">
+        {keys.map(k => <div key={k}>{k}: {inventory.values[k]}</div>)}
+    </div>
+};
+
+export class SelectStartBuildingStage extends React.Component<{}, {}> {
+
+    render() {
+        return <div className="select-start-building-stage">
+
+        </div>
+    }
+
 }
 
-export class _Game extends React.Component<Props, {}> {
+export class Game extends React.Component<{}, {}> {
 
     componentDidMount() {
         requestAnimationFrame(this.loop)
     }
 
     render() {
-        const { worker, buildings } = this.props;
+        const { worker, buildings, inventory } = Store.game;
         return <div>
             <BucketComponent text="Worker" value={worker}/>
-            {buildings.map(building => <BuildingComponent value={building}/>)}
+            <InventoryComponent inventory={inventory}/>
+            {buildings.map(building =>
+                <BuildingComponent key={building.name} building={building}/>
+            )}
         </div>
     }
 
@@ -71,13 +96,11 @@ export class _Game extends React.Component<Props, {}> {
             saveStorage();
             this.lastTimeSaved = 0;
         }
-        updateFrame(duration);
+        updateFrame(duration / 1000);
+        this.forceUpdate(this.continueLoop);
+    };
+
+    continueLoop = () => {
         requestAnimationFrame(this.loop)
-    }
-
+    };
 }
-
-export const Game = connect((state: RootState) => ({
-    worker: state.game.worker,
-    buildings: state.game.buildings
-}), {})(_Game);

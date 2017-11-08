@@ -9,12 +9,7 @@ function bucket(current: number, max: number): Bucket {
     return { current, max }
 }
 
-export interface Resource {
-    name: string
-}
-
 export interface Inventory {
-    size: number
     values: Map<number>
 }
 
@@ -32,9 +27,16 @@ export interface Building {
 
 }
 
+export enum GameStages {
+    SelectStartBuilding,
+    Main
+}
+
 export type GameState = {
+    stage: GameStages
     worker: Bucket
     buildings: Building[]
+    inventory: Inventory
 };
 
 const SpruceWood: Product = {
@@ -73,6 +75,10 @@ const CarpentryWorkshop: Building = {
 };
 
 export const InitialGameState: GameState = {
-    worker: bucket(1, 10),
-    buildings: [CarpentryWorkshop]
+    stage: GameStages.SelectStartBuilding,
+    worker: bucket(10, 10),
+    buildings: [Forest, CarpentryWorkshop],
+    inventory: {
+        values: {}
+    }
 };
