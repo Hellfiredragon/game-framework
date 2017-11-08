@@ -1,5 +1,14 @@
 import {Store} from "./store";
-import {AllBuildings, AllProducts, Building, GameStages, Product, StartingGroup} from "./state";
+import {
+    AllBuildings,
+    AllProducts,
+    Building,
+    BUY_FACTOR,
+    GameStages,
+    Product,
+    SELL_FACTOR,
+    StartingGroup
+} from "./state";
 
 export function updateFrame(duration: number) {
     const { buildings } = Store.game;
@@ -42,6 +51,9 @@ export function updateTick() {
         building.sales.forEach((seller, productId) =>
             sellProduct(seller, productId, building.inventory)
         );
+        building.purchases.forEach((buyer, productId) =>
+            buyProduct(buyer, productId, building.inventory)
+        );
     });
 }
 
@@ -60,12 +72,26 @@ function updateRouteTick(route: number[], building: Building, target: Building):
 function sellProduct(seller: number, productId: number, inventory: number[]) {
     const { game } = Store;
     const count = inventory[productId];
+    const product = AllProducts[productId];
+    const price = Math.ceil(product.value * SELL_FACTOR);
     if (count >= seller) {
         inventory[productId] -= seller;
-        game.gold += AllProducts[productId].value * seller;
+        game.gold += Math.ceil(price * seller);
     } else if (count > 0) {
         inventory[productId] = 0;
-        game.gold += AllProducts[productId].value * count;
+        game.gold += Math.ceil(price * count);
+    }
+}
+
+function buyProduct(buyer: number, productId: number, inventory: number[]) {
+    const { game } = Store;
+    const product = AllProducts[productId];
+    const price = Math.ceil(product.value * BUY_FACTOR);
+    for (let i = 0; i < buyer; i++) {
+        if (game.gold >= price) {
+            inventory[productId] = (inventory[productId] || 0) + 1;
+            game.gold -= price;
+        }
     }
 }
 
@@ -86,18 +112,34 @@ export function removeWorker(product: Product) {
 }
 
 export function addSeller(building: Building, productId: number) {
-    const { seller } = Store.game;
-    if (seller.current > 0) {
-        seller.current -= 1;
+    const { carts } = Store.game;
+    if (carts.current > 0) {
+        carts.current -= 1;
         building.sales[productId] = (building.sales[productId] || 0) + 1;
     }
 }
 
 export function removeSeller(building: Building, productId: number) {
-    const { seller } = Store.game;
-    if (seller.current < seller.max && building.sales[productId] > 0) {
-        seller.current += 1;
+    const { carts } = Store.game;
+    if (carts.current < carts.max && building.sales[productId] > 0) {
+        carts.current += 1;
         building.sales[productId] -= 1;
+    }
+}
+
+export function addBuyer(building: Building, productId: number) {
+    const { carts } = Store.game;
+    if (carts.current > 0) {
+        carts.current -= 1;
+        building.purchases[productId] = (building.purchases[productId] || 0) + 1;
+    }
+}
+
+export function removeBuyer(building: Building, productId: number) {
+    const { carts } = Store.game;
+    if (carts.current < carts.max && building.purchases[productId] > 0) {
+        carts.current += 1;
+        building.purchases[productId] -= 1;
     }
 }
 

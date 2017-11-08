@@ -21,8 +21,12 @@ export interface Product {
 
 export const AllProducts: Product[] = [];
 
+const FACTOR = 2;
+export const SELL_FACTOR = 0.8;
+export const BUY_FACTOR = 1.2;
+
 function levelToValue(level: number): number {
-    return 10 * Math.pow(3, level - 1);
+    return 10 * Math.pow(FACTOR, level - 1);
 }
 
 function product(name: string, consumes: Dict<number>, level: number, produces: number = 1): Product {
@@ -57,6 +61,7 @@ export interface Building {
     inventory: number[] // productId
     routes: number[][] // targetId -> productId
     sales: number[] // productId
+    purchases: number[] // productId
 }
 
 export const AllBuildings: Building[] = [];
@@ -71,7 +76,8 @@ function building(cost: number, name: string, products: Product[], hiddenProduct
         hiddenProducts: hiddenProducts,
         inventory: [],
         routes: [],
-        sales: []
+        sales: [],
+        purchases: []
     };
     AllBuildings.push(result);
     return result;
@@ -92,7 +98,6 @@ export interface GameState {
     stage: GameStages
     worker: Bucket
     carts: Bucket
-    seller: Bucket
     buildings: Building[]
     buildableBuildings: Building[]
     hiddenBuildings: Building[]
@@ -187,7 +192,6 @@ export const InitialGameState: GameState = {
     stage: GameStages.SelectStartBuilding,
     worker: bucket(10, 10),
     carts: bucket(10, 10),
-    seller: bucket(10, 10),
     buildings: [],
     buildableBuildings: [
         Forest, CoalMine, OreMine,
