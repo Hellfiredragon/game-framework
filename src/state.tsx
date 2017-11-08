@@ -1,3 +1,5 @@
+import {GROW_FACTOR} from "./config";
+
 export type Dict<T> = { [key: string]: T }
 
 export type Bucket = {
@@ -21,12 +23,8 @@ export interface Product {
 
 export const AllProducts: Product[] = [];
 
-const FACTOR = 2;
-export const SELL_FACTOR = 0.8;
-export const BUY_FACTOR = 1.2;
-
 function levelToValue(level: number): number {
-    return 10 * Math.pow(FACTOR, level - 1);
+    return 10 * Math.pow(GROW_FACTOR, level - 1);
 }
 
 function product(name: string, consumes: Dict<number>, level: number, produces: number = 1): Product {

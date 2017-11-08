@@ -1,14 +1,6 @@
 import {Store} from "./store";
-import {
-    AllBuildings,
-    AllProducts,
-    Building,
-    BUY_FACTOR,
-    GameStages,
-    Product,
-    SELL_FACTOR,
-    StartingGroup
-} from "./state";
+import {AllBuildings, AllProducts, Building, GameStages, Product, StartingGroup} from "./state";
+import {BUY_FACTOR, SELL_FACTOR} from "./config";
 
 export function updateFrame(duration: number) {
     const { buildings } = Store.game;

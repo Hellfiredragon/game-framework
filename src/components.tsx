@@ -1,6 +1,7 @@
 import * as React from "react";
 import {AllProducts, Building, Product} from "./state";
 import {addBuyer, addCart, addSeller, addWorker, removeBuyer, removeCart, removeSeller, removeWorker} from "./actions";
+import {BUY_FACTOR, SELL_FACTOR} from "./config";
 import classNames = require("classnames");
 
 export class Icon extends React.PureComponent<{ icon: string, onClick?: () => void }, {}> {
@@ -76,7 +77,7 @@ export class SaleComponent extends React.PureComponent<{ seller: number, buildin
             {product.name}: {seller || 0}
             <Icon icon="plus" onClick={this.handlePlus}/>
             <Icon icon="minus" onClick={this.handleMinus}/>
-            ({Math.ceil(product.value * 0.8)} <GoldIcon/>)
+            ({Math.ceil(product.value * SELL_FACTOR)} <GoldIcon/>)
         </div>
     }
 }
@@ -93,7 +94,7 @@ export class PurchaseComponent extends React.PureComponent<{ buyer: number, buil
             {product.name}: {buyer}
             <Icon icon="plus" onClick={this.handlePlus}/>
             <Icon icon="minus" onClick={this.handleMinus}/>
-            ({Math.ceil(product.value * 1.2)} <GoldIcon/>)
+            ({Math.ceil(product.value * BUY_FACTOR)} <GoldIcon/>)
         </div>
     }
 }

@@ -3,6 +3,7 @@ import {saveStorage, Store} from "./store";
 import {chooseStartBuilding, updateFrame, updateTick} from "./actions";
 import {AllProducts, Bucket, Building, GameStages, Product} from "./state";
 import {PurchaseComponent, RouteSection, SaleComponent, WorkerBox} from "./components";
+import {MIN_FRAME_DURATION} from "./config";
 
 export const BucketComponent: React.SFC<{
     text: string,
@@ -151,19 +152,23 @@ export class Game extends React.Component<{}, {}> {
 
     loop = (t: number) => {
         const duration = t - this.lastTime;
-        this.lastTime = t;
-        this.lastTimeSaved += duration;
-        if (this.lastTimeSaved > 10000) {
-            saveStorage();
-            this.lastTimeSaved = 0;
+        if(duration >= MIN_FRAME_DURATION) {
+            this.lastTime = t;
+            this.lastTimeSaved += duration;
+            if (this.lastTimeSaved > 10000) {
+                saveStorage();
+                this.lastTimeSaved = 0;
+            }
+            this.lastTickTime += duration;
+            while (this.lastTickTime > 1000) {
+                updateTick();
+                this.lastTickTime -= 1000;
+            }
+            updateFrame(duration / 1000);
+            this.forceUpdate(this.continueLoop);
+        }else{
+            this.continueLoop();
         }
-        this.lastTickTime += duration;
-        while (this.lastTickTime > 1000) {
-            updateTick();
-            this.lastTickTime -= 1000;
-        }
-        updateFrame(duration / 1000);
-        this.forceUpdate(this.continueLoop);
     };
 
     continueLoop = () => {
