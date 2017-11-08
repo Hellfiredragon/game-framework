@@ -10,25 +10,40 @@ function bucket(current: number, max: number): Bucket {
 }
 
 export interface Product {
-    id: number,
+    id: number
     name: string
-    consumes: number[];
+    consumes: number[]
+    produces: number
     time: Bucket
+    value: number
     worker: number
 }
 
 export const AllProducts: Product[] = [];
 
-function product(name: string, consumes: Dict<number>, time: Bucket): Product {
+function levelToValue(level: number): number {
+    return 10 * Math.pow(3, level - 1);
+}
+
+function product(name: string, consumes: Dict<number>, level: number, produces: number = 1): Product {
     const id = AllProducts.length;
+    const consumeArray: number[] = [];
+    Object.keys(consumes).forEach(id => consumeArray[id as any] = consumes[id]);
+    const baseValue = levelToValue(level);
+    let endValue = baseValue;
+    consumeArray.forEach((count, productId) => {
+        endValue += count * AllProducts[productId].value
+    });
+    endValue /= produces;
     const result: Product = {
         id: id,
         name: name,
-        consumes: [],
-        time: time,
+        consumes: consumeArray,
+        produces: produces,
+        time: bucket(0, baseValue),
+        value: endValue,
         worker: 0
     };
-    Object.keys(consumes).forEach(id => result.consumes[id as any] = consumes[id]);
     AllProducts.push(result);
     return result;
 }
@@ -41,6 +56,7 @@ export interface Building {
     hiddenProducts: Product[]
     inventory: number[] // productId
     routes: number[][] // targetId -> productId
+    sales: number[] // productId
 }
 
 export const AllBuildings: Building[] = [];
@@ -54,7 +70,8 @@ function building(cost: number, name: string, products: Product[], hiddenProduct
         products: products,
         hiddenProducts: hiddenProducts,
         inventory: [],
-        routes: []
+        routes: [],
+        sales: []
     };
     AllBuildings.push(result);
     return result;
@@ -75,6 +92,7 @@ export interface GameState {
     stage: GameStages
     worker: Bucket
     carts: Bucket
+    seller: Bucket
     buildings: Building[]
     buildableBuildings: Building[]
     hiddenBuildings: Building[]
@@ -84,24 +102,36 @@ export interface GameState {
 /** -------------------------------------------------------------- **/
 /** Base resources **/
 /** -------------------------------------------------------------- **/
-const SpruceWood = product(
-    "Spruce Wood",
+const SpruceTrunk = product(
+    "Spruce Trunk",
     {},
-    bucket(0, 10)
+    1
 );
 
-const OakWood = product(
-    "Oak Wood",
+const OakTrunk = product(
+    "Oak Trunk",
     {},
-    bucket(0, 100)
+    3
+);
+
+/** -------------------------------------------------------------- **/
+/** Products **/
+/** -------------------------------------------------------------- **/
+const SpruceWood = product(
+    "Spruce Wood",
+    {
+        [SpruceTrunk.id]: 1
+    },
+    2,
+    5
 );
 
 const SimpleTable = product(
     "Simple Table",
     {
-        [SpruceWood.name]: 3
+        [SpruceWood.id]: 3
     },
-    bucket(0, 30)
+    3
 );
 
 /** -------------------------------------------------------------- **/
@@ -110,8 +140,8 @@ const SimpleTable = product(
 const Forest = building(
     10000,
     "Forest",
-    [SpruceWood],
-    [OakWood]
+    [SpruceTrunk],
+    [OakTrunk]
 );
 
 const CoalMine = building(
@@ -134,7 +164,7 @@ const OreMine = building(
 const CarpentryWorkshop = building(
     10000,
     "Caprentry Workshop",
-    [SimpleTable],
+    [SpruceWood, SimpleTable],
     []
 );
 
@@ -157,6 +187,7 @@ export const InitialGameState: GameState = {
     stage: GameStages.SelectStartBuilding,
     worker: bucket(10, 10),
     carts: bucket(10, 10),
+    seller: bucket(10, 10),
     buildings: [],
     buildableBuildings: [
         Forest, CoalMine, OreMine,
