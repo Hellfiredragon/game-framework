@@ -9,23 +9,55 @@ function bucket(current: number, max: number): Bucket {
     return { current, max }
 }
 
-export interface Inventory {
-    values: Dict<number>
-}
-
 export interface Product {
+    id: number,
     name: string
-    consumes: Dict<number>
+    consumes: number[];
     time: Bucket
     worker: number
 }
 
+export const AllProducts: Product[] = [];
+
+function product(name: string, consumes: Dict<number>, time: Bucket): Product {
+    const id = AllProducts.length;
+    const result: Product = {
+        id: id,
+        name: name,
+        consumes: [],
+        time: time,
+        worker: 0
+    };
+    Object.keys(consumes).forEach(id => result.consumes[id as any] = consumes[id]);
+    AllProducts.push(result);
+    return result;
+}
+
 export interface Building {
+    id: number,
     cost: number,
     name: string
     products: Product[]
     hiddenProducts: Product[]
+    inventory: number[] // productId
+    routes: number[][] // targetId -> productId
+}
 
+export const AllBuildings: Building[] = [];
+
+function building(cost: number, name: string, products: Product[], hiddenProducts: Product[]): Building {
+    const id = AllBuildings.length;
+    const result: Building = {
+        id: id,
+        cost: cost,
+        name: name,
+        products: products,
+        hiddenProducts: hiddenProducts,
+        inventory: [],
+        routes: []
+    };
+    AllBuildings.push(result);
+    return result;
 }
 
 export enum GameStages {
@@ -42,100 +74,95 @@ export interface GameState {
     gold: number
     stage: GameStages
     worker: Bucket
+    carts: Bucket
     buildings: Building[]
     buildableBuildings: Building[]
     hiddenBuildings: Building[]
-    inventory: Inventory
     start: StartingGroup[]
 }
 
 /** -------------------------------------------------------------- **/
 /** Base resources **/
 /** -------------------------------------------------------------- **/
-const SpruceWood: Product = {
-    name: "Spruce Wood",
-    consumes: {},
-    time: bucket(0, 10),
-    worker: 0
-};
+const SpruceWood = product(
+    "Spruce Wood",
+    {},
+    bucket(0, 10)
+);
 
-const OakWood: Product = {
-    name: "Oak Wood",
-    consumes: {},
-    time: bucket(0, 100),
-    worker: 0
-};
+const OakWood = product(
+    "Oak Wood",
+    {},
+    bucket(0, 100)
+);
 
-const SimpleTable: Product = {
-    name: "Simple Table",
-    consumes: {
+const SimpleTable = product(
+    "Simple Table",
+    {
         [SpruceWood.name]: 3
     },
-    time: bucket(0, 30),
-    worker: 0
-};
+    bucket(0, 30)
+);
 
 /** -------------------------------------------------------------- **/
 /** Resource buildings **/
 /** -------------------------------------------------------------- **/
-const Forest: Building = {
-    cost: 10000,
-    name: "Forest",
-    products: [SpruceWood],
-    hiddenProducts: [OakWood]
-};
+const Forest = building(
+    10000,
+    "Forest",
+    [SpruceWood],
+    [OakWood]
+);
 
-const CoalMine: Building = {
-    cost: 5000,
-    name: "Coal Mine",
-    products: [],
-    hiddenProducts: []
-};
+const CoalMine = building(
+    5000,
+    "Coal Mine",
+    [],
+    []
+);
 
-const OreMine: Building = {
-    cost: 5000,
-    name: "Ore Mine",
-    products: [],
-    hiddenProducts: []
-};
+const OreMine = building(
+    5000,
+    "Ore Mine",
+    [],
+    []
+);
 
 /** -------------------------------------------------------------- **/
 /** Base production buildings **/
 /** -------------------------------------------------------------- **/
-const CarpentryWorkshop: Building = {
-    cost: 10000,
-    name: "Caprentry Workshop",
-    products: [SimpleTable],
-    hiddenProducts: []
-};
+const CarpentryWorkshop = building(
+    10000,
+    "Caprentry Workshop",
+    [SimpleTable],
+    []
+);
 
-const Forge: Building = {
-    cost: 10000,
-    name: "Forge",
-    products: [],
-    hiddenProducts: []
-};
+const Forge = building(
+    10000,
+    "Forge",
+    [],
+    []
+);
 
-const Tavern: Building = {
-    cost: 20000,
-    name: "Tavern",
-    products: [],
-    hiddenProducts: []
-};
+const Tavern = building(
+    20000,
+    "Tavern",
+    [],
+    []
+);
 
 export const InitialGameState: GameState = {
     gold: 22000,
     stage: GameStages.SelectStartBuilding,
     worker: bucket(10, 10),
+    carts: bucket(10, 10),
     buildings: [],
     buildableBuildings: [
         Forest, CoalMine, OreMine,
         CarpentryWorkshop, Forge, Tavern
     ],
     hiddenBuildings: [],
-    inventory: {
-        values: {}
-    },
     start: [
         { resources: [Forest], building: CarpentryWorkshop },
         { resources: [CoalMine, OreMine], building: Forge },

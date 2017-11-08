@@ -1,41 +1,56 @@
 import {Store} from "./store";
-import {Building, GameStages, Inventory, Product, StartingGroup} from "./state";
+import {AllBuildings, Building, GameStages, Product, StartingGroup} from "./state";
 
 export function updateFrame(duration: number) {
-    const { inventory, buildings } = Store.game;
+    const { buildings } = Store.game;
     buildings.forEach(building => {
-
-        building.products.forEach(p => updateProduct(duration, p, inventory));
-
+        building.products.forEach(products =>
+            updateProduct(duration, products, building)
+        );
+        building.routes.forEach((route, targetId) =>
+            updateRoute(duration, route, building, AllBuildings[targetId])
+        );
     });
 }
 
-function updateProduct(duration: number, product: Product, inventory: Inventory) {
-    const { time, worker, name, consumes } = product;
-    const { values } = inventory;
+function updateProduct(duration: number, product: Product, building: Building): void {
+    const { time, worker, id, consumes } = product;
+    const { inventory } = building;
     let rest = worker * duration;
     while (rest > 0) {
         if (time.current === 0) {
-            const keys = Object.keys(consumes);
-            const enough = keys.reduce((p, k) => p && values[k] >= consumes[k], true);
+            const enough = consumes.reduce((p, k) => p && inventory[k] >= consumes[k], true);
             if (enough) {
-                keys.forEach(k => values[k] -= consumes[k])
+                consumes.forEach(k => inventory[k] -= consumes[k])
             } else return;
         }
         time.current += rest;
         if (time.current > time.max) {
             rest = time.current - time.max;
             time.current = 0;
-            values[name] = values[name] + 1 || 1
+            inventory[id] = inventory[id] + 1 || 1
         } else {
             rest = 0
         }
     }
 }
 
+function updateRoute(duration: number, route: number[], building: Building, target: Building): void {
+
+    route.forEach((count, productId) => {
+        const transfer = count * duration;
+        if (building.inventory[productId] > transfer) {
+            building.inventory[productId] -= transfer;
+            target.inventory[productId] = (target.inventory[productId] || 0) + transfer;
+        } else {
+            target.inventory[productId] = (target.inventory[productId] || 0) + building.inventory[productId];
+            building.inventory[productId] = 0;
+        }
+    })
+}
+
 export function addWorker(product: Product) {
     const { worker } = Store.game;
-
     if (worker.current > 0) {
         worker.current -= 1;
         product.worker += 1;
@@ -47,6 +62,26 @@ export function removeWorker(product: Product) {
     if (worker.current < worker.max && product.worker > 0) {
         worker.current += 1;
         product.worker -= 1;
+    }
+}
+
+export function addCart(building: Building, targetId: number, productId: number) {
+    const { carts } = Store.game;
+    if (carts.current > 0) {
+        carts.current -= 1;
+        const route = building.routes[targetId] || [];
+        route[productId] = route[productId] + 1 || 1;
+        building.routes[targetId] = route;
+    }
+}
+
+export function removeCart(building: Building, targetId: number, productId: number) {
+    const { carts } = Store.game;
+    const route = building.routes[targetId] || {};
+    const usedCarts = route[productId] || 0;
+    if (carts.current < carts.max && usedCarts > 0) {
+        carts.current += 1;
+        route[productId] = usedCarts - 1;
     }
 }
 

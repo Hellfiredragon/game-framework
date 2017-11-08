@@ -1,8 +1,7 @@
 import * as React from "react";
 import {saveStorage, Store} from "./store";
-import {addWorker, chooseStartBuilding, removeWorker, updateFrame} from "./actions";
-import {Bucket, Building, Dict, GameStages, Inventory, Product} from "./state";
-import {dictEquals} from "./utils";
+import {addCart, addWorker, chooseStartBuilding, removeCart, removeWorker, updateFrame} from "./actions";
+import {AllProducts, Bucket, Building, GameStages, Product} from "./state";
 import classNames = require("classnames");
 
 export const Icon: React.SFC<{
@@ -26,21 +25,17 @@ export const BucketComponent: React.SFC<{
 };
 
 export interface ResourceRowProps {
-    resources: Dict<number>
+    resources: number[]
 }
 
 export class ResourceRow extends React.Component<ResourceRowProps, {}> {
-
-    shouldComponentUpdate(nextProps: ResourceRowProps) {
-        return !dictEquals(this.props, nextProps)
-    }
 
     render() {
         const { resources } = this.props;
         const keys = Object.keys(resources);
         return <div className="resources-row">
-            {keys.map(key => <div key={key}>
-                {key}: {resources[key].toFixed(0)}
+            {resources.map((resource, productId) => <div key={productId}>
+                {AllProducts[productId].name}: {resource.toFixed(0)}
             </div>)}
         </div>;
     }
@@ -50,7 +45,7 @@ export class ResourceRow extends React.Component<ResourceRowProps, {}> {
 export const ProductComponent: React.SFC<{ product: Product }> = (props) => {
     const { product } = props;
     return <div className="product">
-        <h2>{product.name}</h2>
+        <h1>{product.name}</h1>
         <ResourceRow resources={product.consumes}/>
         <div>
             Worker: {product.worker}
@@ -61,26 +56,44 @@ export const ProductComponent: React.SFC<{ product: Product }> = (props) => {
     </div>
 };
 
-export const BuildingComponent: React.SFC<{
-    building: Building
-}> = (props) => {
-    const { building } = props;
-    return <div className="building">
-        <h1>{building.name}</h1>
-        {building.products.map(product =>
-            <ProductComponent key={product.name} product={product}/>)}
+export const RouteComponent: React.SFC<{ building: Building, target: Building }> = (props) => {
+    const { building, target } = props;
+    return <div className="product">
+        <h1>{target.name}</h1>
+        {building.inventory.map((amount, productId) => <div key={productId}>
+            {AllProducts[productId].name}: {(building.routes[target.id] || {})[productId] || 0}
+            <Icon icon="plus" onClick={() => addCart(building, target.id, productId)}/>
+            <Icon icon="minus" onClick={() => removeCart(building, target.id, productId)}/>
+        </div>)}
     </div>
 };
 
-export const InventoryComponent: React.SFC<{
-    inventory: Inventory
-}> = (props) => {
-    const { inventory } = props;
-    const keys = Object.keys(inventory.values);
-    return <div className="inventory">
-        {keys.map(k => <div key={k}>{k}: {inventory.values[k]}</div>)}
-    </div>
-};
+export interface BuildingComponentProps {
+    building: Building
+}
+
+export class BuildingComponent extends React.Component<BuildingComponentProps, {}> {
+
+    render() {
+        const { building } = this.props;
+        const { buildings } = Store.game;
+        return <div className="building">
+            <h1>{building.name}</h1>
+            <h2>Inventory</h2>
+            <ResourceRow resources={building.inventory}/>
+            <h2>Products</h2>
+            {building.products.map(product =>
+                <ProductComponent key={product.name} product={product}/>
+            )}
+            <h2>Routes</h2>
+            {buildings
+                .filter(x => x != building)
+                .map((target, i) =>
+                    <RouteComponent key={i} building={building} target={target}/>
+                )}
+        </div>
+    }
+}
 
 export const BuildStartBuildingsComponent: React.SFC<{
     resources: Building[],
@@ -107,10 +120,10 @@ export class SelectStartBuildingStage extends React.Component<{}, {}> {
 
 export class MainStage extends React.Component<{}, {}> {
     render() {
-        const { worker, buildings, inventory } = Store.game;
+        const { worker, carts, buildings } = Store.game;
         return <div className="main-stage">
-            <BucketComponent text="Worker" value={worker}/>
-            <InventoryComponent inventory={inventory}/>
+            <BucketComponent text="Workers" value={worker}/>
+            <BucketComponent text="Carts" value={carts}/>
             {buildings.map(building =>
                 <BuildingComponent key={building.name} building={building}/>
             )}
