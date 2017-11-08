@@ -21,6 +21,7 @@ export interface Product {
 }
 
 export interface Building {
+    cost: number,
     name: string
     products: Product[]
     hiddenProducts: Product[]
@@ -32,13 +33,25 @@ export enum GameStages {
     Main
 }
 
-export type GameState = {
+export interface StartingGroup {
+    resources: Building[],
+    building: Building
+}
+
+export interface GameState {
+    gold: number
     stage: GameStages
     worker: Bucket
     buildings: Building[]
+    buildableBuildings: Building[]
+    hiddenBuildings: Building[]
     inventory: Inventory
-};
+    start: StartingGroup[]
+}
 
+/** -------------------------------------------------------------- **/
+/** Base resources **/
+/** -------------------------------------------------------------- **/
 const SpruceWood: Product = {
     name: "Spruce Wood",
     consumes: {},
@@ -62,23 +75,70 @@ const SimpleTable: Product = {
     worker: 0
 };
 
+/** -------------------------------------------------------------- **/
+/** Resource buildings **/
+/** -------------------------------------------------------------- **/
 const Forest: Building = {
+    cost: 10000,
     name: "Forest",
     products: [SpruceWood],
     hiddenProducts: [OakWood]
 };
 
+const CoalMine: Building = {
+    cost: 5000,
+    name: "Coal Mine",
+    products: [],
+    hiddenProducts: []
+};
+
+const OreMine: Building = {
+    cost: 5000,
+    name: "Ore Mine",
+    products: [],
+    hiddenProducts: []
+};
+
+/** -------------------------------------------------------------- **/
+/** Base production buildings **/
+/** -------------------------------------------------------------- **/
 const CarpentryWorkshop: Building = {
+    cost: 10000,
     name: "Caprentry Workshop",
     products: [SimpleTable],
     hiddenProducts: []
 };
 
+const Forge: Building = {
+    cost: 10000,
+    name: "Forge",
+    products: [],
+    hiddenProducts: []
+};
+
+const Tavern: Building = {
+    cost: 20000,
+    name: "Tavern",
+    products: [],
+    hiddenProducts: []
+};
+
 export const InitialGameState: GameState = {
+    gold: 22000,
     stage: GameStages.SelectStartBuilding,
     worker: bucket(10, 10),
-    buildings: [Forest, CarpentryWorkshop],
+    buildings: [],
+    buildableBuildings: [
+        Forest, CoalMine, OreMine,
+        CarpentryWorkshop, Forge, Tavern
+    ],
+    hiddenBuildings: [],
     inventory: {
         values: {}
-    }
+    },
+    start: [
+        { resources: [Forest], building: CarpentryWorkshop },
+        { resources: [CoalMine, OreMine], building: Forge },
+        { resources: [], building: Tavern }
+    ]
 };

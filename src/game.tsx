@@ -1,7 +1,7 @@
 import * as React from "react";
 import {saveStorage, Store} from "./store";
-import {addWorker, removeWorker, updateFrame} from "./actions";
-import {Bucket, Building, Inventory, Product} from "./state";
+import {addWorker, chooseStartBuilding, removeWorker, updateFrame} from "./actions";
+import {Bucket, Building, GameStages, Inventory, Product} from "./state";
 import classNames = require("classnames");
 
 export const Icon: React.SFC<{
@@ -44,7 +44,7 @@ export const BuildingComponent: React.SFC<{
     return <div className="building">
         {building.name}
         {building.products.map(product =>
-            <ProductComponent product={product}/>)}
+            <ProductComponent key={product.name} product={product}/>)}
     </div>
 };
 
@@ -58,14 +58,40 @@ export const InventoryComponent: React.SFC<{
     </div>
 };
 
+export const BuildStartBuildingsComponent: React.SFC<{
+    resources: Building[],
+    building: Building
+}> = (props) => {
+    const { building, resources } = props;
+    return <div className="build-building clickable" onClick={() => chooseStartBuilding(props)}>
+        <h1>{building.name}</h1>
+        <h2>{resources.map(x => x.name).join(", ")}</h2>
+    </div>
+};
+
 export class SelectStartBuildingStage extends React.Component<{}, {}> {
-
     render() {
+        const { start } = Store.game;
         return <div className="select-start-building-stage">
-
+            {start.map(s =>
+                <BuildStartBuildingsComponent key={s.building.name} {...s}/>
+            )}
         </div>
     }
 
+}
+
+export class MainStage extends React.Component<{}, {}> {
+    render() {
+        const { worker, buildings, inventory } = Store.game;
+        return <div className="main-stage">
+            <BucketComponent text="Worker" value={worker}/>
+            <InventoryComponent inventory={inventory}/>
+            {buildings.map(building =>
+                <BuildingComponent key={building.name} building={building}/>
+            )}
+        </div>
+    }
 }
 
 export class Game extends React.Component<{}, {}> {
@@ -75,14 +101,19 @@ export class Game extends React.Component<{}, {}> {
     }
 
     render() {
-        const { worker, buildings, inventory } = Store.game;
-        return <div>
-            <BucketComponent text="Worker" value={worker}/>
-            <InventoryComponent inventory={inventory}/>
-            {buildings.map(building =>
-                <BuildingComponent key={building.name} building={building}/>
-            )}
-        </div>
+        const { stage, gold } = Store.game;
+        let content: JSX.Element;
+        switch (stage) {
+            case GameStages.SelectStartBuilding:
+                content = <SelectStartBuildingStage/>;
+                break;
+            default:
+                content = <MainStage/>;
+        }
+        return <div className="game">
+            <div>Gold: {gold}</div>
+            {content}
+        </div>;
     }
 
     lastTime = 0;

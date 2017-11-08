@@ -1,5 +1,5 @@
 import {Store} from "./store";
-import {Inventory, Product} from "./state";
+import {Building, GameStages, Inventory, Product, StartingGroup} from "./state";
 
 export function updateFrame(duration: number) {
     const { inventory, buildings } = Store.game;
@@ -34,15 +34,36 @@ function updateProduct(duration: number, product: Product, inventory: Inventory)
 }
 
 export function addWorker(product: Product) {
-    if (Store.game.worker.current > 0) {
-        Store.game.worker.current -= 1;
+    const { worker } = Store.game;
+
+    if (worker.current > 0) {
+        worker.current -= 1;
         product.worker += 1;
     }
 }
 
 export function removeWorker(product: Product) {
-    if (Store.game.worker.current < Store.game.worker.max && product.worker > 0) {
-        Store.game.worker.current += 1;
+    const { worker } = Store.game;
+    if (worker.current < worker.max && product.worker > 0) {
+        worker.current += 1;
         product.worker -= 1;
     }
+}
+
+export function build(building: Building) {
+    const { game } = Store;
+    const { buildings, buildableBuildings } = Store.game;
+    const index = buildableBuildings.indexOf(building);
+    if (index > -1 && game.gold > building.cost) {
+        game.gold -= building.cost;
+        buildings.push(building);
+        buildableBuildings.splice(index, 1);
+    }
+}
+
+export function chooseStartBuilding(group: StartingGroup) {
+    const { resources, building } = group;
+    resources.forEach(build);
+    build(building);
+    Store.game.stage = GameStages.Main;
 }
