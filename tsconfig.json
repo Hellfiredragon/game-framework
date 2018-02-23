@@ -10,7 +10,8 @@
         "moduleResolution": "Node",
         "declaration": false,
         "strictNullChecks": true,
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true
     },
     "include": [
         "src/**/*"
