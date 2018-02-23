@@ -13,7 +13,7 @@ class Test extends React.Component {
 
     render() {
         return <div>
-            It Works {GameState.test.toFixed(0)}
+            It Works {GameState().test.toFixed(0)}
         </div>
     }
 }
