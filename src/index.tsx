@@ -1,41 +1,37 @@
 import "../less/index.less";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {action, observable} from "mobx";
+import {action, observable, useStrict} from "mobx";
 import {observer} from "mobx-react";
 
-class GameState {
+useStrict(true);
 
-    @observable test: number = 1;
+const GameState = observable({
+    test: 1
+});
 
-}
-
-class Controller {
-    constructor(private state: GameState) {
-
-    }
-
-    @action
-    increase(state: GameState) {
-        state.test += 1;
-    }
-
-}
+const increase = action(function () {
+    GameState.test += 1;
+});
 
 @observer
-class Test extends React.Component<{ state: GameState, controller?: Controller }> {
-
-    controller: Controller = this.props.controller || new Controller(this.props.state);
+class Test extends React.Component {
 
     render() {
-        const { state } = this.props;
         return <div>
-            It Works {state.test}
-            <button onClick={() => this.controller.increase(state)}>Click Me!</button>
+            It Works {GameState.test}
+            <button onClick={() => increase()}>Click Me!</button>
         </div>
     }
 }
 
+const gameLoop = action(function (ts: number) {
+    GameState.test += 1;
+    requestAnimationFrame(gameLoop);
+});
+
+requestAnimationFrame(gameLoop);
+
 const div = document.createElement("div");
 document.body.appendChild(div);
-ReactDOM.render(<Test state={new GameState()}/>, div);
+ReactDOM.render(<Test/>, div);

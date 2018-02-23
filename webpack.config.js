@@ -17,7 +17,7 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 include: path.resolve(__dirname, "src"),
-                use: ["babel-loader", "ts-loader"]
+                use: ["ts-loader"]
             }, {
                 test: /\.less$/,
                 include: path.resolve(__dirname, "less"),
@@ -43,5 +43,8 @@ module.exports = {
             {from: "node_modules/font-awesome/fonts/*", to: "fonts", flatten: true}
         ]),
         new ExtractTextPlugin("css/index.css")
-    ]
+    ],
+    watchOptions: {
+        poll: true
+    }
 };
