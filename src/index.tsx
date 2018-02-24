@@ -7,6 +7,8 @@ import {GameState} from "./game-state";
 import {start} from "./game-loop";
 import {chooseTab} from "./game-actions";
 import {Tab, TabList} from "./components/tabs";
+import {BuildingList} from "./game-components/building-list";
+import {EnergyBuildings, ProductionBuildings, ResourceBuildings} from "./buildings";
 
 useStrict(true);
 
@@ -18,12 +20,15 @@ class Game extends React.Component {
 
         return <div>
             <TabList selected={state.selectedTab} onChooseTab={chooseTab}>
-                    <Tab text={"Menu1"}>
-                        It Works!
-                    </Tab>
-                    <Tab text={"Menu1"}>
-                        Yessssss!
-                    </Tab>
+                <Tab text={"Resource Buildings"}>
+                    <BuildingList buildings={ResourceBuildings}/>
+                </Tab>
+                <Tab text={"Production Buildings"}>
+                    <BuildingList buildings={ProductionBuildings}/>
+                </Tab>
+                <Tab text={"Energy Buildings"}>
+                    <BuildingList buildings={EnergyBuildings}/>
+                </Tab>
             </TabList>
         </div>
     }

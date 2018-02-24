@@ -8,6 +8,8 @@ let state = observable({
     test: 1,
 
     selectedTab: 0
+
+
 });
 
 export function save() {
