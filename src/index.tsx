@@ -5,7 +5,6 @@ import {useStrict} from "mobx";
 import {observer} from "mobx-react";
 import {GameState} from "./game-state";
 import {start} from "./game-loop";
-import {chooseTab} from "./game-actions";
 import {Tab, TabList} from "./components/tabs";
 import {BuildingList} from "./game-components/building-list";
 import {EnergyBuildings, ProductionBuildings, ResourceBuildings} from "./buildings";
@@ -19,7 +18,7 @@ class Game extends React.Component {
         const state = GameState();
 
         return <div>
-            <TabList selected={state.selectedTab} onChooseTab={chooseTab}>
+            <TabList>
                 <Tab text={"Resource Buildings"}>
                     <BuildingList buildings={ResourceBuildings}/>
                 </Tab>

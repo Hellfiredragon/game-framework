@@ -12,8 +12,3 @@ export const stopBoost = action(function () {
     const state = GameState();
     state.boostActive = false;
 });
-
-export const chooseTab = action(function (tabNumber: number) {
-    const state = GameState();
-    state.selectedTab = tabNumber;
-});
