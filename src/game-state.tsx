@@ -5,7 +5,9 @@ let state = observable({
     lastSaved: Date.now(),
     boostSec: 0,
     boostActive: false,
-    test: 1
+    test: 1,
+
+    selectedTab: 0
 });
 
 export function save() {
