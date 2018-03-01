@@ -1,11 +1,12 @@
 import {observable} from "mobx";
 import {DEBUG, STORAGE_KEY} from "./constants";
+import {Earth, Moon} from "./game-model/production-cluster";
 
 let state = observable({
     lastSaved: Date.now(),
     boostSec: 0,
     boostActive: false,
-    test: 1
+    availableProductionClusters: [Earth.id, Moon.id]
 });
 
 export function save() {

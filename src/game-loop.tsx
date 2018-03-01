@@ -29,8 +29,6 @@ const gameLoop = action(function (millis: number) {
         }
     }
 
-    state.test += secs;
-
     requestAnimationFrame(gameLoop)
 });
 

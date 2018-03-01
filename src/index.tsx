@@ -7,7 +7,9 @@ import {GameState} from "./game-state";
 import {start} from "./game-loop";
 import {Tab, TabList} from "./components/tabs";
 import {BuildingList} from "./game-components/building-list";
-import {EnergyBuildings, ProductionBuildings, ResourceBuildings} from "./buildings";
+import {EnergyBuildings, ProductionBuildings, ResourceBuildings} from "./game-model/buildings";
+import {ProductionClusterView} from "./game-components/production-cluster-view";
+import {getProductionCluster, ProductionCluster} from "./game-model/production-cluster";
 
 useStrict(true);
 
@@ -17,18 +19,8 @@ class Game extends React.Component {
     render() {
         const state = GameState();
 
-        return <div>
-            <TabList>
-                <Tab text={"Resource Buildings"}>
-                    <BuildingList buildings={ResourceBuildings}/>
-                </Tab>
-                <Tab text={"Production Buildings"}>
-                    <BuildingList buildings={ProductionBuildings}/>
-                </Tab>
-                <Tab text={"Energy Buildings"}>
-                    <BuildingList buildings={EnergyBuildings}/>
-                </Tab>
-            </TabList>
+        return <div className="game-container">
+            <ProductionClusterView items={state.availableProductionClusters.map(id => getProductionCluster(id))}/>
         </div>
     }
 }
