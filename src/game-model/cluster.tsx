@@ -1,10 +1,10 @@
-import {Coal, Cost, Iron, ResourceAmount} from "./resources";
+import {Coal, Iron, ResourceAmount} from "./resources";
 
 let lastId = 0;
 
-const values: ProductionCluster[] = [];
+const values: Cluster[] = [];
 
-export class ProductionCluster {
+export class Cluster {
 
     public id: number;
 
@@ -16,16 +16,16 @@ export class ProductionCluster {
 
 }
 
-export const Earth = new ProductionCluster("Earth", [
+export const Earth = new Cluster("Earth", [
     { key: Iron, value: 1 },
     { key: Coal, value: 1 }
 ]);
 
-export const Moon = new ProductionCluster("Moon", [
+export const Moon = new Cluster("Moon", [
     { key: Iron, value: 2 },
     { key: Coal, value: 0.5 }
 ]);
 
-export function getProductionCluster(id: number): ProductionCluster {
+export function getProductionCluster(id: number): Cluster {
     return values[id];
 }

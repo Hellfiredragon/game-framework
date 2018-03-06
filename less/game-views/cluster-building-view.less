@@ -1,0 +1,44 @@
+@import "../variables.less";
+
+.cluster-building-view {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    .top, .left, .right, .main {
+        position: absolute;
+    }
+
+    .left {
+        top: 0;
+        width: @sidebar-width;
+        bottom: 0;
+        left: 0;
+        border-right: @border;
+    }
+
+    .right {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: @sidebar-width;
+        border-left: @border;
+    }
+
+    .top {
+        top: 0;
+        left: @sidebar-width;
+        height: @header-height;
+        right: @sidebar-width;
+        padding: @padding;
+        border-bottom: @border;
+    }
+
+    .main {
+        top: @header-height;
+        right: @sidebar-width;
+        bottom: 0;
+        left: @sidebar-width;
+        padding: @padding;
+    }
+}

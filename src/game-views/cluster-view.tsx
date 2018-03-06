@@ -1,29 +1,29 @@
 import * as React from "react";
-import {ProductionCluster} from "../game-model/production-cluster";
-import {ProductionClusterList} from "./production-cluster-list";
+import {Cluster} from "../game-model/cluster";
+import {ProductionClusterList} from "../game-components/cluster-list";
 
-export interface ProductionClusterViewProps {
-    items: ProductionCluster[]
+export interface ClusterViewProps {
+    items: Cluster[]
 }
 
-export class ProductionClusterView extends React.Component<ProductionClusterViewProps, {
-    selected: ProductionCluster
+export class ClusterView extends React.Component<ClusterViewProps, {
+    selected: Cluster
 }> {
 
     state = { selected: this.props.items[0] };
 
-    componentWillReceiveProps(newProps: ProductionClusterViewProps) {
+    componentWillReceiveProps(newProps: ClusterViewProps) {
         this.setState(() => ({ selected: newProps.items[0] }))
     }
 
-    handleSelect = (selected: ProductionCluster) => {
+    handleSelect = (selected: Cluster) => {
         this.setState(() => ({ selected }))
     };
 
     render() {
         const { selected } = this.state;
 
-        return <div className="production-cluster-view">
+        return <div className="cluster-view">
             <div className="top">
                 {selected.name}
             </div>

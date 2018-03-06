@@ -6,11 +6,9 @@ import {observer} from "mobx-react";
 import {GameState} from "./game-state";
 import {start} from "./game-loop";
 import {Tab, TabList} from "./components/tab-list";
-import {BuildingList} from "./game-components/building-list";
-import {EnergyBuildings, ProductionBuildings, ResourceBuildings} from "./game-model/buildings";
-import {ProductionClusterView} from "./game-components/production-cluster-view";
-import {getProductionCluster, ProductionCluster} from "./game-model/production-cluster";
-import {ProductionClusterBuildingView} from "./game-components/production-cluster-building-view";
+import {getProductionCluster} from "./game-model/cluster";
+import {ClusterView} from "./game-views/cluster-view";
+import {ClusterBuildingView} from "./game-views/cluster-building-view";
 
 useStrict(true);
 
@@ -22,13 +20,13 @@ class Game extends React.Component {
 
         return <div className="game-container">
             <TabList>
-                <Tab text={"Product Cluster View"}>
-                    <ProductionClusterView
-                        items={state.availableProductionClusters.map(id => getProductionCluster(id))}/>
+                <Tab text={"Cluster View"}>
+                    <ClusterView
+                        items={state.ownedClusters.map((b, id) => getProductionCluster(id))}/>
                 </Tab>
-                <Tab text={"Production Cluster Building View"}>
-                    <ProductionClusterBuildingView
-                        items={state.availableProductionClusters.map(id => getProductionCluster(id))}/>
+                <Tab text={"Cluster Building View"}>
+                    <ClusterBuildingView
+                        items={state.ownedClusters.map((b, id) => getProductionCluster(id))}/>
                 </Tab>
             </TabList>
         </div>
