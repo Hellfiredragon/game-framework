@@ -1,6 +1,5 @@
 const glob = require("glob");
 const path = require("path");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const entries = {};
@@ -11,20 +10,12 @@ entries["index"] = "./src/index.tsx";
 
 module.exports = {
     entry: entries,
-    devtool: "inline-source-map",
     module: {
         rules: [
             {
                 test: /\.tsx?$/,
-                include: path.resolve(__dirname, "src"),
-                use: ["ts-loader"]
-            }, {
-                test: /\.less$/,
-                include: path.resolve(__dirname, "less"),
-                use: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: ["css-loader", "less-loader"]
-                })
+                use: ["ts-loader"],
+                exclude: /node_modules/
             }
         ]
     },
@@ -41,10 +32,6 @@ module.exports = {
             {from: "src/index.html"},
             {from: "node_modules/font-awesome/css/font-awesome.min.css", to: "css"},
             {from: "node_modules/font-awesome/fonts/*", to: "fonts", flatten: true}
-        ]),
-        new ExtractTextPlugin("css/index.css")
-    ],
-    watchOptions: {
-        poll: true
-    }
+        ])
+    ]
 };

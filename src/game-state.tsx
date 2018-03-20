@@ -1,14 +1,16 @@
 import {observable} from "mobx";
 import {DEBUG, STORAGE_KEY} from "./constants";
 import {Earth, Moon} from "./game-model/cluster";
-import {Iron, ResourceAmount} from "./game-model/resources";
+import {Iron} from "./game-model/resources";
+import {CoalMine, Foundry, IronMine, SolarPowerPlant} from "./game-model/buildings";
 
 export interface _GameState {
     lastSaved: number
     boostSec: number
     boostActive: boolean
-    ownedClusters: boolean[]
-    clusterResources: number[][]; // clusterId, resourceId
+    unlockedClusters: boolean[]
+    clusterResources: number[][] // clusterId, resourceId
+    unlockedBuildings: boolean[]
 }
 
 function startOwnedClusters(): boolean[] {
@@ -26,12 +28,22 @@ function startClusterResources(): number[][] {
     return data;
 }
 
+function startUnlockedBuildings(): boolean[] {
+    const data: boolean[] = [];
+    data[SolarPowerPlant.id] = true;
+    data[IronMine.id] = true;
+    data[CoalMine.id] = false;
+    data[Foundry.id] = false;
+    return data;
+}
+
 let state: _GameState = observable({
     lastSaved: Date.now(),
     boostSec: 0,
     boostActive: false,
-    ownedClusters: startOwnedClusters(),
-    clusterResources: startClusterResources()
+    unlockedClusters: startOwnedClusters(),
+    clusterResources: startClusterResources(),
+    unlockedBuildings: startUnlockedBuildings()
 });
 
 export function save() {
@@ -52,7 +64,7 @@ export function load() {
         } else {
             loaded = JSON.parse(atob(data));
         }
-    } catch {
+    } catch(e) {
         console.error("Game data broken!");
     }
 

@@ -21,11 +21,9 @@ module.exports = function (config) {
          * list of files / patterns to load in the browser
          */
         files: [
-            {pattern: "dist/index.css", watched: true, nocache: true},
-            {pattern: 'test-target/**/*.spec*(s).js', watched: true},
             {pattern: "node_modules/font-awesome/css/font-awesome.min.css", watched: false},
-            {pattern: "node_modules/font-awesome/fonts/fontawesome-webfont.woff2", included: false}
-
+            {pattern: "node_modules/font-awesome/fonts/fontawesome-webfont.woff2", included: false},
+            {pattern: 'test-target/**/*.spec*(s).js', watched: true}
         ],
 
         /**
@@ -39,21 +37,7 @@ module.exports = function (config) {
          * use mocha for nice output on console
          * use junit for jenkins builds
          */
-        reporters: ["mocha", "junit"],
-
-        /**
-         * configuration of junit test reporter
-         */
-        junitReporter: {
-            outputDir: 'test-reports/'
-        },
-
-        /**
-         * configuration of mocha test reporter
-         */
-        mochaReporter: {
-            maxLogLines: 3
-        },
+        reporters: ["mocha"],
 
         /**
          * web server port of karma
@@ -83,20 +67,14 @@ module.exports = function (config) {
         detectBrowsers: {
             postDetection: function (availableBrowsers) {
                 if (availableBrowsers.length > 1) {
-                    const phantomAvailable = availableBrowsers.indexOf('PhantomJS') !== -1;
                     const chromeAvailable = availableBrowsers.indexOf('Chrome') !== -1;
                     const firefoxAvailable = availableBrowsers.indexOf('Firefox') !== -1;
                     const edgeAvailable = availableBrowsers.indexOf('Edge') !== -1;
-                    const ieAvailable = availableBrowsers.indexOf('IE') !== -1;
 
-// prefer any "real" browser over PhantomJS, but use only one of them
                     if (chromeAvailable) return ["Chrome"];
                     if (firefoxAvailable) return ["Firefox"];
                     if (edgeAvailable) return ["Edge"];
-                    if (ieAvailable) return ["IE"];
-                    if (phantomAvailable) return ["PhantomJS"];
 
-// if none of these are available, use whatever is there
                     return availableBrowsers;
                 } else {
                     return availableBrowsers;
