@@ -2,45 +2,30 @@
   "name": "game-framework",
   "version": "1.0.0",
   "description": "",
+  "main": "src/index.tsx",
+  "dependencies": {
+    "fork-ts-checker-webpack-plugin": "^0.4.2",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "tslint": "^5.10.0"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^4.5.2",
+    "ts-loader": "^4.4.1",
+    "typescript": "^2.9.2",
+    "webpack": "^4.12.1",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4"
+  },
   "scripts": {
-    "watch": "webpack --watch"
+    "build": "webpack --config webpack.production.config.js",
+    "start": "webpack-dev-server --progress"
   },
   "repository": {
     "type": "git",
-    "url": "O:\\\\Repositories\\\\game-framework.git"
+    "url": "O:\\Repositories\\game-framework.git"
   },
-  "author": "Jan Muthreich <jan@mutreich.eu>",
+  "author": "",
   "license": "PRIVATE",
-  "private": true,
-  "devDependencies": {
-    "@types/classnames": "^2.2.3",
-    "@types/jasmine": "^2.8.6",
-    "@types/jasmine-ajax": "^3.1.37",
-    "@types/react": "^16.0.40",
-    "@types/react-dom": "^16.0.4",
-    "classnames": "^2.2.5",
-    "copy-webpack-plugin": "^4.5.1",
-    "font-awesome": "^4.7.0",
-    "glob": "^7.1.2",
-    "jasmine": "^3.1.0",
-    "jasmine-ajax": "^3.3.1",
-    "jasmine-core": "^3.1.0",
-    "karma": "^2.0.0",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-detect-browsers": "^2.2.6",
-    "karma-edge-launcher": "^0.4.2",
-    "karma-firefox-launcher": "^1.1.0",
-    "karma-jasmine": "^1.1.1",
-    "karma-mocha-reporter": "^2.2.5",
-    "mobx": "^4.1.0",
-    "mobx-react": "^5.0.0",
-    "mobx-react-devtools": "^5.0.1",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "ts-loader": "^4.1.0",
-    "typescript": "^2.7.2",
-    "webpack": "^4.1.1",
-    "webpack-cli": "^2.0.12"
-  },
-  "dependencies": {}
+  "private": true
 }
