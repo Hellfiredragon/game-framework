@@ -1,16 +1,15 @@
 "use strict";
 
 const path = require("path");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = {
     devtool: "inline-source-map",
     entry: {
-        "index": path.resolve(__dirname, "src", "index.tsx")
+        "index": path.resolve("src", "index.tsx")
     },
     output: {
-        path: path.resolve(__dirname, "dist"),
+        path: path.resolve("dist"),
         publicPath: "/",
         filename: "[name].js",
         chunkFilename: "[id].chunk.js"
@@ -33,9 +32,6 @@ module.exports = {
         extensions: [".ts", ".tsx", ".js"]
     },
     plugins: [
-        new ForkTsCheckerWebpackPlugin(),
-        new CopyWebpackPlugin([
-            {from: path.resolve(__dirname, "src", "index.html"), to: "."}
-        ])
+        new ForkTsCheckerWebpackPlugin()
     ]
 };

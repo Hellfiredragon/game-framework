@@ -1,6 +1,9 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import ItWorks from "game-framework";
+
+console.log(ItWorks);
 
 const div = document.createElement("div");
 document.body.appendChild(div);
-ReactDOM.render(<h1>It Works better!</h1>, div);
+ReactDOM.render(<ItWorks/>, div);
