@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./packages",
     "jsx": "react",
-    "sourceMap": true
+    "sourceMap": true,
+    "strictNullChecks": true
   }
 }

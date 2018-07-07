@@ -8,7 +8,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "webpack --config webpack.production.config.js",
-    "start": "webpack-dev-server --config webpack.development.config.js --progress"
+    "watch": "webpack-dev-server --config webpack.development.config.js --progress"
   },
   "dependencies": {
     "game-framework": "^1.0.0",
