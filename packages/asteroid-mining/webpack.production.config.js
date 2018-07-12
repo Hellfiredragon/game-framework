@@ -3,6 +3,7 @@
 const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
     devtool: "inline-source-map",
@@ -26,6 +27,13 @@ module.exports = {
                         transpileOnly: false,
                     },
                 }],
+            },{
+                test: /.less$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'less-loader',
+                ],
             }
         ]
     },
@@ -36,7 +44,13 @@ module.exports = {
         new ForkTsCheckerWebpackPlugin(),
         new CopyWebpackPlugin([
             {from: path.resolve("src", "index.html"), to: "."}
-        ])
+        ]),
+        new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+            filename: "[name].css",
+            chunkFilename: "[id].css"
+        })
     ]
 };
 
