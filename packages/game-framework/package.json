@@ -9,15 +9,24 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "test": "karma start --single-run",
+    "test-watch": "karma start"
   },
   "dependencies": {
     "react": "^16.4.1",
-    "react-dom": "^16.4.1"
+    "react-dom": "^16.4.1",
+    "typescript": "^2.9.2"
   },
   "devDependencies": {
+    "@types/jasmine": "^2.8.8",
+    "@types/jasmine-ajax": "^3.1.37",
     "@types/react": "^16.4.4",
     "@types/react-dom": "^16.0.6",
-    "typescript": "^2.9.2"
+    "jasmine": "^3.1.0",
+    "jasmine-ajax": "^3.4.0",
+    "karma": "^2.0.4",
+    "karma-typescript": "^3.0.12",
+    "tslint": "^5.10.0"
   }
 }
