@@ -13,7 +13,7 @@ module.exports = function (config) {
             "**/*.tsx": "karma-typescript"
         },
 
-        reporters: ["progress", "karma-typescript"],
+        reporters: ["mocha", "karma-typescript"],
 
         port: 9876,
 

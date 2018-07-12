@@ -9,9 +9,9 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w",
+    "build:watch": "tsc -w",
     "test": "karma start --single-run",
-    "test-watch": "karma start"
+    "test:watch": "karma start"
   },
   "dependencies": {
     "react": "^16.4.1",
@@ -26,6 +26,7 @@
     "jasmine": "^3.1.0",
     "jasmine-ajax": "^3.4.0",
     "karma": "^2.0.4",
+    "karma-mocha-reporter": "^2.2.5",
     "karma-typescript": "^3.0.12",
     "tslint": "^5.10.0"
   }

@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "baseUrl": "./packages",
-    "jsx": "react",
-    "sourceMap": true,
-    "strictNullChecks": true
-  }
-}

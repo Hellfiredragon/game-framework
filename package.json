@@ -14,7 +14,9 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "lerna run start --stream",
-    "build": "lerna run build"
+    "game-framework:watch": "lerna --scope=game-framework run build:watch --stream",
+    "game-framework:test:watch": "lerna --scope=game-framework run test:watch --stream",
+    "asteroid-mining:watch": "lerna --scope=asteroid-mining run build:watch --stream",
+    "asteroid-mining:test:watch": "lerna --scope=asteroid-mining run test:watch --stream"
   }
 }
