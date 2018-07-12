@@ -1,0 +1,26 @@
+/* sizes */
+@game-width: 1280px;
+@game-height: 720px;
+
+@menu-height: 40px;
+
+/* colors */
+@foreground: white;
+@background: black;
+@active: rgba(0, 255, 255, .75);
+
+@border: 2px solid @active;
+
+/* fonts */
+.font {
+    color: white;
+    font-family: "Arial Black", sans-serif;
+    font-weight: bold;
+    font-style: italic;
+    text-transform: uppercase;
+}
+
+.font-active {
+    .font;
+    color: @active;
+}

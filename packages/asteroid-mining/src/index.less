@@ -1,3 +1,39 @@
+@import "styles/variables";
+
 body {
-    background: green;
+    padding: 0;
+    margin: 0;
+}
+
+.gf-main {
+    .font;
+    background: @background;
+    position: relative;
+    border: @border;
+    width: @game-width;
+    height: @game-height;
+}
+
+.gf-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: @menu-height;
+    border-bottom: @border;
+}
+
+.gf-menu-item {
+    user-select: none;
+    cursor: pointer;
+    display: inline-block;
+    height: @menu-height;
+    line-height: @menu-height;
+    padding: 0 10px;
+    border-right: @border;
+}
+
+.gf-active {
+    cursor: default;
+    .font-active;
 }
