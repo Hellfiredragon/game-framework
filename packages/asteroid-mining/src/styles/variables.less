@@ -8,8 +8,14 @@
 @foreground: white;
 @background: black;
 @active: rgba(0, 255, 255, .75);
+@accent: rgba(0, 100, 200, .5);
+@medium-accent: darken(@accent, 20%);
 
 @border: 2px solid @active;
+
+@gradient-background: linear-gradient(to right, black,
+    @medium-accent 25%, @accent 50%,
+    @medium-accent 75%, black 100%);
 
 /* fonts */
 .font {
