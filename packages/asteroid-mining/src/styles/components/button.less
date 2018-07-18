@@ -1,0 +1,50 @@
+@import "../variables";
+
+.gf-button {
+    position: relative;
+    cursor: pointer;
+    margin: 20px;
+    width: @button-width;
+    text-align: center;
+    transition: all 500ms ease;
+    background: @gradient-background;
+
+    &::after, &::before {
+        content: " ";
+        position: absolute;
+        top: -4px;
+        bottom: -4px;
+        left: -4px;
+        right: -4px;
+        border: 3px solid;
+        transition: all 500ms ease;
+    }
+
+    &::before {
+        border-bottom: 0;
+        bottom: 50%;
+        border-image: linear-gradient(grey, darkgrey) 1 1 round;
+    }
+
+    &::after {
+        border-top: 0;
+        top: 50%;
+        border-image: linear-gradient(darkgrey, grey) 1 1 round;
+    }
+
+
+    &.gf-active {
+        color: @active;
+        &:hover::before, &:hover::after {
+            background: transparent;
+        }
+    }
+
+    &:hover {
+        color: @active;
+
+        &::before, &::after {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    }
+}

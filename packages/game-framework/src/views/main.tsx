@@ -2,6 +2,7 @@ import * as React from "react";
 import * as classNames from "classnames";
 import {GameState} from "../state/game-state";
 import {goToPage} from "../actions/navigation";
+import {Button} from "../components/button";
 
 export interface MenuItemProps {
     id: string
@@ -41,7 +42,8 @@ export class Main extends React.Component {
 
     render() {
         return <article className="gf-main">
-            <Menu/>
+            <Button text={"Click Me"} action={() => console.log("clicked")} active={false}/>
+            <Button text={"I'm active"} action={() => console.log("clicked")} active={true}/>
         </article>;
     }
 
