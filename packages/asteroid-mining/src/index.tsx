@@ -1,8 +1,7 @@
 import "./index.less";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {Main} from "game-framework/src/views/main";
-import {createGameLoop} from "../../game-framework/src/loop";
+import {Main, createGameLoop} from "game-framework";
 
 export namespace Y {
     export const Y = 2;
