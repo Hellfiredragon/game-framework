@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as classNames from "classnames";
-import {GameState} from "../state/game-state";
+import {Border} from "./border";
 
 export interface ButtonProps {
     active: boolean
@@ -25,6 +25,7 @@ export class Button extends React.Component<ButtonProps> {
         );
 
         return <div className={cls} onClick={!active ? action : undefined}>
+            <Border/>
             {text}
         </div>
     }
