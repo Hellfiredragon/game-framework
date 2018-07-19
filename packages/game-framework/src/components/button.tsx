@@ -5,7 +5,8 @@ import {Border} from "./border";
 export interface ButtonProps {
     active: boolean
     action: () => void
-    text: string
+    text?: string
+    symbol?: string
 }
 
 export class Button extends React.Component<ButtonProps> {
@@ -17,16 +18,15 @@ export class Button extends React.Component<ButtonProps> {
     }
 
     render(): React.ReactNode {
-        console.log("render");
-        const { active, action, text } = this.props;
+        const { active, action, text, symbol } = this.props;
         this.lastActive = active;
         const cls = classNames(
-            "gf-button", active && "gf-active"
+            "gf-button", active && "gf-active", symbol && "gf-symbol"
         );
 
         return <div className={cls} onClick={!active ? action : undefined}>
             <Border/>
-            {text}
+            {text || <span className={"fas fa-" + symbol}/>}
         </div>
     }
 

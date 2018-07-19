@@ -46,6 +46,8 @@ export class Main extends React.Component {
             <Border/>
             <Button text={"Click Me"} action={() => console.log("clicked")} active={false}/>
             <Button text={"I'm active"} action={() => console.log("clicked")} active={true}/>
+            <Button symbol={"plus"} active={false} action={() => console.log("plus")}/>
+            <Button symbol={"plus"} active={true} action={() => console.log("plus")}/>
         </article>
     }
 
