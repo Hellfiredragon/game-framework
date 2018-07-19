@@ -2,8 +2,10 @@ import * as React from "react";
 import * as classNames from "classnames";
 import {Border} from "./border";
 
+export type ButtonState = "active" | "normal" | "disabled" | undefined;
+
 export interface ButtonProps {
-    active: boolean
+    state?: ButtonState
     action: () => void
     text?: string
     symbol?: string
@@ -11,20 +13,20 @@ export interface ButtonProps {
 
 export class Button extends React.Component<ButtonProps> {
 
-    lastActive = false;
+    lastState: ButtonState = "normal";
 
     shouldComponentUpdate(nextProps: Readonly<ButtonProps>): boolean {
-        return nextProps.active != this.lastActive;
+        return nextProps.state != this.lastState;
     }
 
     render(): React.ReactNode {
-        const { active, action, text, symbol } = this.props;
-        this.lastActive = active;
+        const { state, action, symbol, text } = this.props;
+        this.lastState = state;
         const cls = classNames(
-            "gf-button", active && "gf-active", symbol && "gf-symbol"
+            "gf-button", "gf-" + state, symbol && "gf-symbol"
         );
 
-        return <div className={cls} onClick={!active ? action : undefined}>
+        return <div className={cls} onClick={state == "normal" ? action : undefined}>
             <Border/>
             {text || <span className={"fas fa-" + symbol}/>}
         </div>

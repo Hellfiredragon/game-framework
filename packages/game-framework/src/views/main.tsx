@@ -44,10 +44,12 @@ export class Main extends React.Component {
     render() {
         return <article className="gf-main">
             <Border/>
-            <Button text={"Click Me"} action={() => console.log("clicked")} active={false}/>
-            <Button text={"I'm active"} action={() => console.log("clicked")} active={true}/>
-            <Button symbol={"plus"} active={false} action={() => console.log("plus")}/>
-            <Button symbol={"plus"} active={true} action={() => console.log("plus")}/>
+            <Button text={"Click Me"} action={() => console.log("clicked")} state={"normal"}/>
+            <Button text={"I'm active"} action={() => console.log("clicked")} state={"active"}/>
+            <Button text={"I'm disabled"} action={() => console.log("clicked")} state={"disabled"} enabled={false}/>
+            <Button symbol={"plus"} state={"normal"} action={() => console.log("plus")}/>
+            <Button symbol={"plus"} state={"active"} action={() => console.log("plus")}/>
+            <Button symbol={"minus"} state={"disabled"} action={() => console.log("plus")} enabled={false}/>
         </article>
     }
 

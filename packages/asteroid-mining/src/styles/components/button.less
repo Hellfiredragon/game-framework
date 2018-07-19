@@ -27,13 +27,14 @@
     &.gf-active {
         color: @active;
         cursor: default;
-
-        &:hover::after {
-            background: none;
-        }
     }
 
-    &:hover {
+    &.gf-disabled {
+        color: @disabled;
+        cursor: default;
+    }
+
+    &.gf-normal:hover {
         color: @active;
 
         &::after {
