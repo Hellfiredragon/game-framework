@@ -1,0 +1,17 @@
+import {Inventory} from "../state/game-state";
+
+export function addItems(inventory: Inventory, add: number[]) {
+    for (let i in add) {
+        inventory.items[i] = (inventory.items[i] || 0) + add[i];
+    }
+}
+
+export function removeItems(inventory: Inventory, remove: number[]): boolean {
+    for (let i in remove) {
+        if (remove[i] > inventory.items[i]) return false;
+    }
+    for (let i in remove) {
+        inventory.items[i] = (inventory.items[i] || 0) - remove[i];
+    }
+    return true;
+}
