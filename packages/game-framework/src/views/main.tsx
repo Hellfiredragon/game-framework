@@ -46,10 +46,10 @@ export class Main extends React.Component {
             <Border/>
             <Button text={"Click Me"} action={() => console.log("clicked")} state={"normal"}/>
             <Button text={"I'm active"} action={() => console.log("clicked")} state={"active"}/>
-            <Button text={"I'm disabled"} action={() => console.log("clicked")} state={"disabled"} enabled={false}/>
+            <Button text={"I'm disabled"} action={() => console.log("clicked")} state={"disabled"}/>
             <Button symbol={"plus"} state={"normal"} action={() => console.log("plus")}/>
             <Button symbol={"plus"} state={"active"} action={() => console.log("plus")}/>
-            <Button symbol={"minus"} state={"disabled"} action={() => console.log("plus")} enabled={false}/>
+            <Button symbol={"minus"} state={"disabled"} action={() => console.log("plus")}/>
         </article>
     }
 
