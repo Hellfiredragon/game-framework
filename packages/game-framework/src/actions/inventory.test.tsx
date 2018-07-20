@@ -1,22 +1,11 @@
-import {createItem, getItem} from "../state/game-state";
+import {getItem} from "../state/game-state";
 import {Inventory} from "../../dist/state/game-state";
 import {addItems, removeItems} from "./inventory";
-import {Given, params, Then, When} from "../utils/utils";
-
-const wood = createItem("Wood");
-const stone = createItem("Stone");
-const iron = createItem("Iron");
+import {Given, itemHint, obj2Arr, Then, When} from "../utils";
+import {Wood, Stone, Iron} from "../state/items.test";
 
 function empty(): Inventory {
     return { items: [] }
-}
-
-function itemHint(array: number[]): string {
-    let hint = "";
-    for (let i in array) {
-        hint += array[i] + " " + getItem(Number(i)).name + ", ";
-    }
-    return hint.substr(0, hint.length - 2);
 }
 
 export function sumUp(list: number[][]): number[] {
@@ -43,14 +32,15 @@ Given("an inventory", () => {
 
     When("When I add items", () => {
 
-        params(
-            [{ [wood.id]: 10 }],
-            [{ [wood.id]: 100, [stone.id]: 100 }],
-            [{ [wood.id]: 100, [iron.id]: 100 }],
-            [{ [stone.id]: 100, [iron.id]: 100 }],
-            [{ [wood.id]: 100, [stone.id]: 100, [iron.id]: 100 }],
-        ).forEach(param => {
-            const items = param[0];
+        [
+            [{ [Wood.id]: 10 }],
+            [{ [Wood.id]: 100, [Stone.id]: 100 }],
+            [{ [Wood.id]: 100, [Iron.id]: 100 }],
+            [{ [Stone.id]: 100, [Iron.id]: 100 }],
+            [{ [Wood.id]: 100, [Stone.id]: 100, [Iron.id]: 100 }],
+        ].forEach(param => {
+            const items = obj2Arr(param[0]);
+
             Then(`it should contain ${itemHint(items)}`, () => {
                 const inventory = empty();
 
@@ -67,19 +57,21 @@ Given("an inventory", () => {
 
     When("I add items multiple times", () => {
 
-        params(
-            [{ [wood.id]: 10 }, { [wood.id]: 10 }],
-            [{ [wood.id]: 0 }, { [wood.id]: 10 }],
-            [{ [wood.id]: 100 }, { [wood.id]: 10 }, { [stone.id]: 10 }],
-            [{ [wood.id]: 100 }, { [wood.id]: 10 }, { [stone.id]: 10 }, { [iron.id]: 10 }],
-            [{ [wood.id]: 100 }, { [wood.id]: 10 }, { [stone.id]: 10, [iron.id]: 10 }],
-            [{ [wood.id]: 100 }, { [wood.id]: 10, [stone.id]: 10, [iron.id]: 10 }],
-        ).forEach(param => {
-            const expected = sumUp(param);
+        [
+            [{ [Wood.id]: 10 }, { [Wood.id]: 10 }],
+            [{ [Wood.id]: 0 }, { [Wood.id]: 10 }],
+            [{ [Wood.id]: 100 }, { [Wood.id]: 10 }, { [Stone.id]: 10 }],
+            [{ [Wood.id]: 100 }, { [Wood.id]: 10 }, { [Stone.id]: 10 }, { [Iron.id]: 10 }],
+            [{ [Wood.id]: 100 }, { [Wood.id]: 10 }, { [Stone.id]: 10, [Iron.id]: 10 }],
+            [{ [Wood.id]: 100 }, { [Wood.id]: 10, [Stone.id]: 10, [Iron.id]: 10 }],
+        ].forEach(param => {
+            const items = param.map(obj2Arr);
+            const expected = sumUp(items);
+
             Then(`it should contain ${itemHint(expected)}`, () => {
                 const inventory = empty();
 
-                param.forEach(items => addItems(inventory, items));
+                items.forEach(i => addItems(inventory, i));
 
                 expect(inventory.items.length).toBe(expected.length, "inventory size");
                 for (let i in inventory.items) {
@@ -92,17 +84,20 @@ Given("an inventory", () => {
 
     When("I remove existing items", () => {
 
-        params(
-            [{ [wood.id]: 10 }, { [wood.id]: 10 }],
-            [{ [wood.id]: 100 }, { [wood.id]: 10 }],
-            [{ [wood.id]: 100, [stone.id]: 100 }, { [wood.id]: 10, [stone.id]: 10 }],
-            [{ [wood.id]: 100, [iron.id]: 100 }, { [wood.id]: 10, [iron.id]: 100 }],
-        ).forEach(param => {
-            const expected = subtract(param[0], param[1]);
-            Then(`it should contain ${itemHint(expected)}`, () => {
-                const inventory: Inventory = { items: param[0] };
+        [
+            [{ [Wood.id]: 10 }, { [Wood.id]: 10 }],
+            [{ [Wood.id]: 100 }, { [Wood.id]: 10 }],
+            [{ [Wood.id]: 100, [Stone.id]: 100 }, { [Wood.id]: 10, [Stone.id]: 10 }],
+            [{ [Wood.id]: 100, [Iron.id]: 100 }, { [Wood.id]: 10, [Iron.id]: 100 }],
+        ].forEach(param => {
+            const start = obj2Arr(param[0]);
+            const toRemove = obj2Arr(param[1]);
+            const expected = subtract(start, toRemove);
 
-                expect(removeItems(inventory, param[1])).toBe(true);
+            Then(`it should contain ${itemHint(expected)}`, () => {
+                const inventory: Inventory = { items: start };
+
+                expect(removeItems(inventory, toRemove)).toBe(true);
 
                 expect(inventory.items.length).toBe(expected.length, "inventory size");
                 for (let i in inventory.items) {
@@ -115,14 +110,14 @@ Given("an inventory", () => {
 
     When("I remove to many items", () => {
 
-        params(
-            [{ [wood.id]: 10 }, { [wood.id]: 20 }],
-            [{ [wood.id]: 100 }, { [wood.id]: 101 }],
-            [{ [wood.id]: 100, [stone.id]: 100 }, { [wood.id]: 200, [stone.id]: 10 }],
-            [{ [wood.id]: 100, [iron.id]: 100 }, { [wood.id]: 10, [iron.id]: 200 }],
-        ).forEach(param => {
-            const expected = param[0];
-            const items = param[1];
+        [
+            [{ [Wood.id]: 10 }, { [Wood.id]: 20 }],
+            [{ [Wood.id]: 100 }, { [Wood.id]: 101 }],
+            [{ [Wood.id]: 100, [Stone.id]: 100 }, { [Wood.id]: 200, [Stone.id]: 10 }],
+            [{ [Wood.id]: 100, [Iron.id]: 100 }, { [Wood.id]: 10, [Iron.id]: 200 }],
+        ].forEach(param => {
+            const expected = obj2Arr(param[0]);
+            const items = obj2Arr(param[1]);
 
             Then(`it should contain ${itemHint(expected)}`, () => {
                 const inventory: Inventory = { items: expected };
