@@ -8,7 +8,7 @@ export function addItems(inventory: Inventory, add: number[]) {
 
 export function removeItems(inventory: Inventory, remove: number[]): boolean {
     for (let i in remove) {
-        if (remove[i] > inventory.items[i]) return false;
+        if (remove[i] > inventory.items[i] || inventory.items[i] === undefined) return false;
     }
     for (let i in remove) {
         inventory.items[i] = (inventory.items[i] || 0) - remove[i];

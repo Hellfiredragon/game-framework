@@ -27,3 +27,7 @@ export function itemHint(array: number[]): string {
     }
     return hint.substr(0, hint.length - 2);
 }
+
+export function cloneArray<T>(array: T[]): T[] {
+    return ([] as T[]).concat(array);
+}
