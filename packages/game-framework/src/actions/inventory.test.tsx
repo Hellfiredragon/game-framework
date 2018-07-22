@@ -1,7 +1,7 @@
 import {getItem} from "../state/game-state";
 import {Inventory} from "../../dist/state/game-state";
 import {addItems, removeItems} from "./inventory";
-import {Given, itemHint, obj2Arr, Then, When} from "../utils";
+import {Given, resourceHint, obj2Arr, Then, When} from "../utils";
 import {Wood, Stone, Iron} from "../state/items.test";
 
 function empty(): Inventory {
@@ -41,7 +41,7 @@ Given("an inventory", () => {
         ].forEach(param => {
             const items = obj2Arr(param[0]);
 
-            Then(`it should contain ${itemHint(items)}`, () => {
+            Then(`it should contain ${resourceHint(items)}`, () => {
                 const inventory = empty();
 
                 addItems(inventory, items);
@@ -68,7 +68,7 @@ Given("an inventory", () => {
             const items = param.map(obj2Arr);
             const expected = sumUp(items);
 
-            Then(`it should contain ${itemHint(expected)}`, () => {
+            Then(`it should contain ${resourceHint(expected)}`, () => {
                 const inventory = empty();
 
                 items.forEach(i => addItems(inventory, i));
@@ -94,7 +94,7 @@ Given("an inventory", () => {
             const toRemove = obj2Arr(param[1]);
             const expected = subtract(start, toRemove);
 
-            Then(`it should contain ${itemHint(expected)}`, () => {
+            Then(`it should contain ${resourceHint(expected)}`, () => {
                 const inventory: Inventory = { items: start };
 
                 expect(removeItems(inventory, toRemove)).toBe(true);
@@ -119,7 +119,7 @@ Given("an inventory", () => {
             const expected = obj2Arr(param[0]);
             const items = obj2Arr(param[1]);
 
-            Then(`it should contain ${itemHint(expected)}`, () => {
+            Then(`it should contain ${resourceHint(expected)}`, () => {
                 const inventory: Inventory = { items: expected };
 
                 expect(removeItems(inventory, items)).toBe(false);
