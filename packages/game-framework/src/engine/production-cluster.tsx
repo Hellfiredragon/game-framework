@@ -1,5 +1,10 @@
-import {Building, ProductionCluster} from "../state/game-state";
-import {addItems, removeItems} from "./inventory";
+import {addItems, Inventory, removeItems} from "./inventory";
+import {Building} from "./building";
+
+export interface ProductionCluster {
+    resources: Inventory;
+    buildings: number[];
+}
 
 export function getCost(productionCluster: ProductionCluster, building: Building, levels: number): number[] {
     const current = productionCluster.buildings[building.id] || 0;

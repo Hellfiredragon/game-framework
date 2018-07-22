@@ -1,5 +1,5 @@
-import {createBuilding, Building} from "./game-state";
-import {Iron, Stone, Wood} from "./items.test";
+import {createBuilding, Building} from "./building";
+import {Iron, Stone, Wood} from "./resource.test";
 
 export const Lumberjack = createBuilding("Lumberjack", { [Wood.id]: 10 }, { [Wood.id]: 2 });
 export const StoneWorker = createBuilding("StoneWorker", { [Wood.id]: 10, [Stone.id]: 10 }, { [Wood.id]: 2, [Stone.id]: 3 });

@@ -1,8 +1,7 @@
-import {getItem} from "../state/game-state";
-import {Inventory} from "../../dist/state/game-state";
-import {addItems, removeItems} from "./inventory";
+import {addItems, Inventory, removeItems} from "./inventory";
 import {Given, resourceHint, obj2Arr, Then, When} from "../utils";
-import {Wood, Stone, Iron} from "../state/items.test";
+import {Iron, Stone, Wood} from "./resource.test";
+import {getResource} from "./resource";
 
 function empty(): Inventory {
     return { items: [] }
@@ -48,7 +47,7 @@ Given("an inventory", () => {
 
                 expect(inventory.items.length).toBe(items.length, "inventory size");
                 for (let i in inventory.items) {
-                    expect(inventory.items[i]).toBe(items[i], getItem(i).name);
+                    expect(inventory.items[i]).toBe(items[i], getResource(i).name);
                 }
             });
         });
@@ -75,7 +74,7 @@ Given("an inventory", () => {
 
                 expect(inventory.items.length).toBe(expected.length, "inventory size");
                 for (let i in inventory.items) {
-                    expect(inventory.items[i]).toBe(expected[i], getItem(i).name);
+                    expect(inventory.items[i]).toBe(expected[i], getResource(i).name);
                 }
             });
         })
@@ -101,7 +100,7 @@ Given("an inventory", () => {
 
                 expect(inventory.items.length).toBe(expected.length, "inventory size");
                 for (let i in inventory.items) {
-                    expect(inventory.items[i]).toBe(expected[i], getItem(i).name);
+                    expect(inventory.items[i]).toBe(expected[i], getResource(i).name);
                 }
             });
         });
@@ -126,7 +125,7 @@ Given("an inventory", () => {
 
                 expect(inventory.items.length).toBe(expected.length, "inventory size");
                 for (let i in inventory.items) {
-                    expect(inventory.items[i]).toBe(expected[i], getItem(i).name);
+                    expect(inventory.items[i]).toBe(expected[i], getResource(i).name);
                 }
             });
         });

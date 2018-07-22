@@ -1,8 +1,8 @@
 import {buildingHint, cloneArray, Given, obj2Arr, resourceHint, Then, When} from "../utils";
-import {Iron, Stone, Wood} from "../state/items.test";
-import {IronMine, Lumberjack, StoneWorker} from "../state/buildings.test";
-import {addBuilding, removeBuilding} from "./productionCluster";
-import {Building, getBuilding} from "../state/game-state";
+import {addBuilding, removeBuilding} from "./production-cluster";
+import {Iron, Stone, Wood} from "./resource.test";
+import {IronMine, Lumberjack, StoneWorker} from "./buildings.test";
+import {Building, getBuilding} from "./building";
 
 Given("an production cluster", () => {
 

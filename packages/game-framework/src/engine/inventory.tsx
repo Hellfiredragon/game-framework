@@ -1,4 +1,6 @@
-import {Inventory} from "../state/game-state";
+export interface Inventory {
+    items: number[];
+}
 
 export function addItems(inventory: Inventory, add: number[]) {
     for (let i in add) {

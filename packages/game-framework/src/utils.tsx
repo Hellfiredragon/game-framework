@@ -1,4 +1,5 @@
-import {getBuilding, getItem} from "./state/game-state";
+import {getResource} from "./engine/resource";
+import {getBuilding} from "./engine/building";
 
 export function obj2Arr(obj: any): number[] {
     const result: number[] = [];
@@ -23,7 +24,7 @@ export function Then(result: string, f: () => any) {
 export function resourceHint(array: number[]): string {
     let hint = "";
     for (let i in array) {
-        hint += array[i] + " " + getItem(Number(i)).name + ", ";
+        hint += array[i] + " " + getResource(Number(i)).name + ", ";
     }
     return hint.substr(0, hint.length - 2);
 }
@@ -35,7 +36,6 @@ export function buildingHint(array: number[]): string {
     }
     return hint.substr(0, hint.length - 2);
 }
-
 
 export function cloneArray<T>(array: T[]): T[] {
     return ([] as T[]).concat(array);
