@@ -1,10 +1,26 @@
 import {addItems, Inventory, removeItems} from "./inventory";
 import {Building} from "./building";
 import {Global} from "./global";
+import {obj2Arr} from "../utils";
 
 export interface ProductionCluster {
+    id: number;
+    name: string;
     resources: Inventory;
     buildings: number[];
+}
+
+let lastProductionClusterId = -1;
+const productionClusters: ProductionCluster[] = [];
+
+export function createProductionCluster(name: string): ProductionCluster {
+    lastProductionClusterId += 1;
+    productionClusters[lastProductionClusterId] = { id: lastProductionClusterId, name, resources: { items: [] }, buildings: [] };
+    return productionClusters[lastProductionClusterId];
+}
+
+export function getProductionCluster(id: string | number): ProductionCluster {
+    return productionClusters[id];
 }
 
 export function getCost(productionCluster: ProductionCluster, building: Building, levels: number): number[] {

@@ -1,8 +1,10 @@
 import {buildingHint, cloneArray, Given, obj2Arr, resourceHint, Then, When} from "../utils";
-import {addBuilding, removeBuilding} from "./production-cluster";
+import {addBuilding, createProductionCluster, removeBuilding, ProductionCluster} from "./production-cluster";
 import {Iron, Stone, Wood} from "./resource.test";
 import {IronMine, Lumberjack, StoneWorker} from "./buildings.test";
-import {Building, getBuilding} from "./building";
+import {Building, createBuilding, getBuilding} from "./building";
+
+export const MagicForest = createProductionCluster("MagicForest");
 
 Given("an production cluster", () => {
 
@@ -75,7 +77,7 @@ Given("an production cluster", () => {
             const expectedBuildings = obj2Arr(param.expectedBuildings);
 
             Then(`it should contain ${resourceHint(expectedResources)} and ${buildingHint(expectedBuildings)}`, () => {
-                const cluster = { resources: { items: cloneArray(startResources) }, buildings: cloneArray(startBuildings) };
+                const cluster = { id: 1, name: "", resources: { items: cloneArray(startResources) }, buildings: cloneArray(startBuildings) };
 
                 for (let i in buildingsToAdd) {
                     const building = getBuilding(i);
@@ -129,7 +131,7 @@ Given("an production cluster", () => {
             const expectedBuildings = obj2Arr(param.expectedBuildings);
 
             Then(`it should contain ${resourceHint(expectedResources)} and ${buildingHint(expectedBuildings)}`, () => {
-                const cluster = { resources: { items: cloneArray(startResources) }, buildings: cloneArray(startBuildings) };
+                const cluster = { id: 1, name: "", resources: { items: cloneArray(startResources) }, buildings: cloneArray(startBuildings) };
 
                 for (let i in buildingsToAdd) {
                     const building = getBuilding(i);
@@ -241,7 +243,7 @@ Given("an production cluster", () => {
             const expectedBuildings = obj2Arr(param.expectedBuildings);
 
             Then(`it should contain ${resourceHint(expectedResources)} and ${buildingHint(expectedBuildings)}`, () => {
-                const cluster = { resources: { items: cloneArray(startResources) }, buildings: cloneArray(startBuildings) };
+                const cluster = { id: 1, name: "", resources: { items: cloneArray(startResources) }, buildings: cloneArray(startBuildings) };
 
                 for (let i in buildingsToRemove) {
                     const building = getBuilding(i);
