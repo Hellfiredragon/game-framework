@@ -21,7 +21,7 @@ export function getCost(productionCluster: ProductionCluster, building: Building
 
 export function getRevenue(productionCluster: ProductionCluster, building: Building, levels: number): number[] {
     const current = productionCluster.buildings[building.id] || 0;
-    const prev = current - levels;
+    const prev = (current - levels) >= 0 ? current - levels : 0;
     const cost: number[] = [];
     for (let i in building.cost) {
         let c = 0;
@@ -34,6 +34,7 @@ export function getRevenue(productionCluster: ProductionCluster, building: Build
 }
 
 export function addBuilding(productionCluster: ProductionCluster, building: Building, levels: number): boolean {
+    if (levels <= 0) return false;
     const cost = getCost(productionCluster, building, levels);
     if (!removeItems(productionCluster.resources, cost)) return false;
 
@@ -42,12 +43,15 @@ export function addBuilding(productionCluster: ProductionCluster, building: Buil
 }
 
 export function removeBuilding(productionCluster: ProductionCluster, building: Building, levels: number) {
+    if (levels <= 0) return;
     if (productionCluster.buildings[building.id] === undefined) return;
-    if (productionCluster.buildings[building.id] >= levels) {
+    if (productionCluster.buildings[building.id] < levels) {
         const revenue = getRevenue(productionCluster, building, levels);
-        productionCluster.buildings[building.id] -= levels;
+        productionCluster.buildings[building.id] = 0;
         addItems(productionCluster.resources, revenue);
     } else {
+        const revenue = getRevenue(productionCluster, building, levels);
         productionCluster.buildings[building.id] = productionCluster.buildings[building.id] - levels;
+        addItems(productionCluster.resources, revenue);
     }
 }

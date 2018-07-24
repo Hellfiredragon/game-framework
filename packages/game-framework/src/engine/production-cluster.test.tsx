@@ -101,6 +101,13 @@ Given("an production cluster", () => {
                 expectedBuildings: {}
             },
             {
+                startResources: { [Wood.id]: 10000, [Stone.id]: 10000, [Iron.id]: 10000 },
+                startBuildings: {},
+                buildingsToAdd: { [Lumberjack.id]: -1 },
+                expectedResources: { [Wood.id]: 10000, [Stone.id]: 10000, [Iron.id]: 10000 },
+                expectedBuildings: {}
+            },
+            {
                 startResources: { [Wood.id]: 5 },
                 startBuildings: {},
                 buildingsToAdd: { [Lumberjack.id]: 1 },
@@ -151,6 +158,20 @@ Given("an production cluster", () => {
             },
             {
                 startResources,
+                startBuildings: { [Lumberjack.id]: 1 },
+                buildingsToRemove: { [Lumberjack.id]: -1 },
+                expectedResources: { [Wood.id]: 10000, [Stone.id]: 10000, [Iron.id]: 10000 },
+                expectedBuildings: { [Lumberjack.id]: 1 }
+            },
+            {
+                startResources,
+                startBuildings: {},
+                buildingsToRemove: { [Lumberjack.id]: 1 },
+                expectedResources: { [Wood.id]: 10000, [Stone.id]: 10000, [Iron.id]: 10000 },
+                expectedBuildings: {}
+            },
+            {
+                startResources,
                 startBuildings: { [Lumberjack.id]: 2 },
                 buildingsToRemove: { [Lumberjack.id]: 1 },
                 expectedResources: { [Wood.id]: 10010, [Stone.id]: 10000, [Iron.id]: 10000 },
@@ -158,8 +179,22 @@ Given("an production cluster", () => {
             },
             {
                 startResources,
+                startBuildings: { [Lumberjack.id]: 2 },
+                buildingsToRemove: { [StoneWorker.id]: 1 },
+                expectedResources: { [Wood.id]: 10000, [Stone.id]: 10000, [Iron.id]: 10000 },
+                expectedBuildings: { [Lumberjack.id]: 2 }
+            },
+            {
+                startResources,
                 startBuildings: { [Lumberjack.id]: 5 },
                 buildingsToRemove: { [Lumberjack.id]: 5 },
+                expectedResources: { [Wood.id]: 10155, [Stone.id]: 10000, [Iron.id]: 10000 },
+                expectedBuildings: { [Lumberjack.id]: 0 }
+            },
+            {
+                startResources,
+                startBuildings: { [Lumberjack.id]: 5 },
+                buildingsToRemove: { [Lumberjack.id]: 10 },
                 expectedResources: { [Wood.id]: 10155, [Stone.id]: 10000, [Iron.id]: 10000 },
                 expectedBuildings: { [Lumberjack.id]: 0 }
             },
