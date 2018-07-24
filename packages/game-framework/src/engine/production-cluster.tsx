@@ -1,5 +1,5 @@
 import {addResources, Inventory, removeResources} from "./inventory";
-import {Building} from "./building";
+import {Building, getBuilding} from "./building";
 import {Global} from "./global";
 import {obj2Arr} from "../utils";
 
@@ -69,4 +69,14 @@ export function removeBuilding(productionCluster: ProductionCluster, building: B
         productionCluster.buildings[building.id] = productionCluster.buildings[building.id] - levels;
         addResources(productionCluster, revenue);
     }
+}
+
+export function updateCluster(productionCluster: ProductionCluster, time: number) {
+    productionCluster.buildings.forEach((level, buildingId) => {
+        const building = getBuilding(buildingId);
+        building.produces.forEach((amount, resourceId) => {
+            const produced = amount * level * time;
+            productionCluster.resources[resourceId] = (productionCluster.resources[resourceId] || 0) + produced;
+        });
+    });
 }

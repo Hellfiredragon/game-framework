@@ -1,5 +1,5 @@
 import {buildingHint, cloneArray, Given, obj2Arr, resourceHint, Then, When} from "../utils";
-import {addBuilding, createProductionCluster, removeBuilding, ProductionCluster} from "./production-cluster";
+import {addBuilding, createProductionCluster, removeBuilding, ProductionCluster, updateCluster} from "./production-cluster";
 import {Iron, Stone, Wood} from "./resource.test";
 import {IronMine, Lumberjack, StoneWorker} from "./buildings.test";
 import {Building, createBuilding, getBuilding} from "./building";
@@ -251,6 +251,73 @@ Given("an production cluster", () => {
                 }
 
                 expect(cluster.buildings).toEqual(expectedBuildings, "buildings");
+                expect(cluster.resources).toEqual(expectedResources, "resources");
+            });
+
+        });
+
+    });
+
+    When("I have build a building", () => {
+
+        [
+            {
+                startBuildings: { [Lumberjack.id]: 1 },
+                frameCount: 5 * 60,
+                frameLength: 1 / 60, // ~16.66 ms
+                expectedResources: { [Wood.id]: 5 },
+            },
+            {
+                startBuildings: { [Lumberjack.id]: 2 },
+                frameCount: 5 * 60,
+                frameLength: 1 / 60, // ~16.66 ms
+                expectedResources: { [Wood.id]: 10 },
+            },
+            {
+                startBuildings: { [Lumberjack.id]: 10 },
+                frameCount: 5 * 60,
+                frameLength: 1, // 1 second
+                expectedResources: { [Wood.id]: 3000 },
+            },
+            {
+                startBuildings: { [Lumberjack.id]: 10, [StoneWorker.id]: 5, [IronMine.id]: 2 },
+                frameCount: 5 * 60,
+                frameLength: 1 / 60, // ~16.66 ms
+                expectedResources: { [Wood.id]: 50, [Stone.id]: 25, [Iron.id]: 10 },
+            },
+            {
+                startBuildings: { [Lumberjack.id]: 10, [StoneWorker.id]: 5, [IronMine.id]: 2 },
+                frameCount: 5 * 30,
+                frameLength: 1 / 30, // ~33.33 ms
+                expectedResources: { [Wood.id]: 50, [Stone.id]: 25, [Iron.id]: 10 },
+            },
+            {
+                startBuildings: { [Lumberjack.id]: 10, [StoneWorker.id]: 5, [IronMine.id]: 2 },
+                frameCount: 5 * 10,
+                frameLength: 1 / 10, // 100 ms
+                expectedResources: { [Wood.id]: 50, [Stone.id]: 25, [Iron.id]: 10 },
+            },
+            {
+                startBuildings: { [Lumberjack.id]: 10, [StoneWorker.id]: 5, [IronMine.id]: 2 },
+                frameCount: 5 * 60,
+                frameLength: 1, // 1 second
+                expectedResources: { [Wood.id]: 3000, [Stone.id]: 1500, [Iron.id]: 600 },
+            }
+        ].forEach(param => {
+            const startBuildings = obj2Arr(param.startBuildings);
+            const expectedResources = obj2Arr(param.expectedResources);
+
+            Then(`it should produce ${resourceHint(expectedResources)} in ${param.frameCount * param.frameLength} seconds (~${Math.round(param.frameLength * 1000)} ms frame length)`, () => {
+                const cluster: ProductionCluster = { id: 1, name: "", resources: [], buildings: cloneArray(startBuildings) };
+
+                for (let i = 0; i < param.frameCount; i++) {
+                    updateCluster(cluster, param.frameLength)
+                }
+
+                cluster.resources.forEach((p, i) => {
+                    cluster.resources[i] = Math.round(p);
+                });
+
                 expect(cluster.resources).toEqual(expectedResources, "resources");
             });
 
