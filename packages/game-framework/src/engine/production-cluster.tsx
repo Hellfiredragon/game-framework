@@ -1,12 +1,11 @@
-import {addItems, Inventory, removeItems} from "./inventory";
+import {addResources, Inventory, removeResources} from "./inventory";
 import {Building} from "./building";
 import {Global} from "./global";
 import {obj2Arr} from "../utils";
 
-export interface ProductionCluster {
+export interface ProductionCluster extends Inventory {
     id: number;
     name: string;
-    resources: Inventory;
     buildings: number[];
 }
 
@@ -15,7 +14,7 @@ const productionClusters: ProductionCluster[] = [];
 
 export function createProductionCluster(name: string): ProductionCluster {
     lastProductionClusterId += 1;
-    productionClusters[lastProductionClusterId] = { id: lastProductionClusterId, name, resources: { items: [] }, buildings: [] };
+    productionClusters[lastProductionClusterId] = { id: lastProductionClusterId, name, resources: [], buildings: [] };
     return productionClusters[lastProductionClusterId];
 }
 
@@ -52,7 +51,7 @@ export function getRevenue(productionCluster: ProductionCluster, building: Build
 export function addBuilding(productionCluster: ProductionCluster, building: Building, levels: number): boolean {
     if (levels <= 0) return false;
     const cost = getCost(productionCluster, building, levels);
-    if (!removeItems(productionCluster.resources, cost)) return false;
+    if (!removeResources(productionCluster, cost)) return false;
 
     productionCluster.buildings[building.id] = (productionCluster.buildings[building.id] || 0) + levels;
     return true;
@@ -64,10 +63,10 @@ export function removeBuilding(productionCluster: ProductionCluster, building: B
     if (productionCluster.buildings[building.id] < levels) {
         const revenue = getRevenue(productionCluster, building, levels);
         productionCluster.buildings[building.id] = 0;
-        addItems(productionCluster.resources, revenue);
+        addResources(productionCluster, revenue);
     } else {
         const revenue = getRevenue(productionCluster, building, levels);
         productionCluster.buildings[building.id] = productionCluster.buildings[building.id] - levels;
-        addItems(productionCluster.resources, revenue);
+        addResources(productionCluster, revenue);
     }
 }

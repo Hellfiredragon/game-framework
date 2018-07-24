@@ -77,7 +77,7 @@ Given("an production cluster", () => {
             const expectedBuildings = obj2Arr(param.expectedBuildings);
 
             Then(`it should contain ${resourceHint(expectedResources)} and ${buildingHint(expectedBuildings)}`, () => {
-                const cluster = { id: 1, name: "", resources: { items: cloneArray(startResources) }, buildings: cloneArray(startBuildings) };
+                const cluster = { id: 1, name: "", resources: cloneArray(startResources), buildings: cloneArray(startBuildings) };
 
                 for (let i in buildingsToAdd) {
                     const building = getBuilding(i);
@@ -86,7 +86,7 @@ Given("an production cluster", () => {
                 }
 
                 expect(cluster.buildings).toEqual(expectedBuildings, "buildings");
-                expect(cluster.resources.items).toEqual(expectedResources, "resources");
+                expect(cluster.resources).toEqual(expectedResources, "resources");
             });
         });
 
@@ -131,7 +131,7 @@ Given("an production cluster", () => {
             const expectedBuildings = obj2Arr(param.expectedBuildings);
 
             Then(`it should contain ${resourceHint(expectedResources)} and ${buildingHint(expectedBuildings)}`, () => {
-                const cluster = { id: 1, name: "", resources: { items: cloneArray(startResources) }, buildings: cloneArray(startBuildings) };
+                const cluster = { id: 1, name: "", resources: cloneArray(startResources), buildings: cloneArray(startBuildings) };
 
                 for (let i in buildingsToAdd) {
                     const building = getBuilding(i);
@@ -140,7 +140,7 @@ Given("an production cluster", () => {
                 }
 
                 expect(cluster.buildings).toEqual(expectedBuildings, "buildings");
-                expect(cluster.resources.items).toEqual(expectedResources, "resources");
+                expect(cluster.resources).toEqual(expectedResources, "resources");
             });
         });
 
@@ -243,7 +243,7 @@ Given("an production cluster", () => {
             const expectedBuildings = obj2Arr(param.expectedBuildings);
 
             Then(`it should contain ${resourceHint(expectedResources)} and ${buildingHint(expectedBuildings)}`, () => {
-                const cluster = { id: 1, name: "", resources: { items: cloneArray(startResources) }, buildings: cloneArray(startBuildings) };
+                const cluster = { id: 1, name: "", resources: cloneArray(startResources), buildings: cloneArray(startBuildings) };
 
                 for (let i in buildingsToRemove) {
                     const building = getBuilding(i);
@@ -251,7 +251,7 @@ Given("an production cluster", () => {
                 }
 
                 expect(cluster.buildings).toEqual(expectedBuildings, "buildings");
-                expect(cluster.resources.items).toEqual(expectedResources, "resources");
+                expect(cluster.resources).toEqual(expectedResources, "resources");
             });
 
         });

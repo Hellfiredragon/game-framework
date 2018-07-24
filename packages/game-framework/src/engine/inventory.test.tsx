@@ -1,10 +1,10 @@
-import {addItems, Inventory, removeItems} from "./inventory";
+import {addResources, Inventory, removeResources} from "./inventory";
 import {Given, resourceHint, obj2Arr, Then, When} from "../utils";
 import {Iron, Stone, Wood} from "./resource.test";
 import {getResource} from "./resource";
 
 function empty(): Inventory {
-    return { items: [] }
+    return { resources: [] }
 }
 
 export function sumUp(list: number[][]): number[] {
@@ -26,7 +26,7 @@ Given("an inventory", () => {
 
     Then("it should be empty", () => {
         const inventory = empty();
-        expect(inventory.items.length).toBe(0);
+        expect(inventory.resources.length).toBe(0);
     });
 
     When("When I add items", () => {
@@ -43,11 +43,11 @@ Given("an inventory", () => {
             Then(`it should contain ${resourceHint(items)}`, () => {
                 const inventory = empty();
 
-                addItems(inventory, items);
+                addResources(inventory, items);
 
-                expect(inventory.items.length).toBe(items.length, "inventory size");
-                for (let i in inventory.items) {
-                    expect(inventory.items[i]).toBe(items[i], getResource(i).name);
+                expect(inventory.resources.length).toBe(items.length, "inventory size");
+                for (let i in inventory.resources) {
+                    expect(inventory.resources[i]).toBe(items[i], getResource(i).name);
                 }
             });
         });
@@ -70,11 +70,11 @@ Given("an inventory", () => {
             Then(`it should contain ${resourceHint(expected)}`, () => {
                 const inventory = empty();
 
-                items.forEach(i => addItems(inventory, i));
+                items.forEach(i => addResources(inventory, i));
 
-                expect(inventory.items.length).toBe(expected.length, "inventory size");
-                for (let i in inventory.items) {
-                    expect(inventory.items[i]).toBe(expected[i], getResource(i).name);
+                expect(inventory.resources.length).toBe(expected.length, "inventory size");
+                for (let i in inventory.resources) {
+                    expect(inventory.resources[i]).toBe(expected[i], getResource(i).name);
                 }
             });
         })
@@ -94,13 +94,13 @@ Given("an inventory", () => {
             const expected = subtract(start, toRemove);
 
             Then(`it should contain ${resourceHint(expected)}`, () => {
-                const inventory: Inventory = { items: start };
+                const inventory: Inventory = { resources: start };
 
-                expect(removeItems(inventory, toRemove)).toBe(true);
+                expect(removeResources(inventory, toRemove)).toBe(true);
 
-                expect(inventory.items.length).toBe(expected.length, "inventory size");
-                for (let i in inventory.items) {
-                    expect(inventory.items[i]).toBe(expected[i], getResource(i).name);
+                expect(inventory.resources.length).toBe(expected.length, "inventory size");
+                for (let i in inventory.resources) {
+                    expect(inventory.resources[i]).toBe(expected[i], getResource(i).name);
                 }
             });
         });
@@ -119,13 +119,13 @@ Given("an inventory", () => {
             const items = obj2Arr(param[1]);
 
             Then(`it should contain ${resourceHint(expected)}`, () => {
-                const inventory: Inventory = { items: expected };
+                const inventory: Inventory = { resources: expected };
 
-                expect(removeItems(inventory, items)).toBe(false);
+                expect(removeResources(inventory, items)).toBe(false);
 
-                expect(inventory.items.length).toBe(expected.length, "inventory size");
-                for (let i in inventory.items) {
-                    expect(inventory.items[i]).toBe(expected[i], getResource(i).name);
+                expect(inventory.resources.length).toBe(expected.length, "inventory size");
+                for (let i in inventory.resources) {
+                    expect(inventory.resources[i]).toBe(expected[i], getResource(i).name);
                 }
             });
         });
