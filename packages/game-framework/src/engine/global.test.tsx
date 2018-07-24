@@ -1,5 +1,5 @@
 import {Given, Then, When} from "../utils";
-import {configure, Global} from "./global";
+import {configure, Defaults, Global} from "./global";
 
 Given("the global state", () => {
 
@@ -9,11 +9,16 @@ Given("the global state", () => {
 
             configure({
                 framesPerSecond: 45,
-                saleFactor: 0.9
+                revenueFactor: 0.9
             });
 
             expect(Global.framesPerSecond).toBe(45);
-            expect(Global.saleFactor).toBe(0.9);
+            expect(Global.revenueFactor).toBe(0.9);
+
+            configure(Defaults);
+
+            expect(Global.framesPerSecond).toBe(30);
+            expect(Global.revenueFactor).toBe(0.5);
 
         });
 
