@@ -40,3 +40,20 @@ export function buildingHint(array: number[]): string {
 export function cloneArray<T>(array: T[]): T[] {
     return ([] as T[]).concat(array);
 }
+
+export interface FrameContainer {
+    frameCount: number;
+    frameLength: number;
+}
+
+export function withFrameVariation<T extends object>(arr: T[]): Array<T & FrameContainer> {
+    const result: Array<T & FrameContainer> = [];
+    arr.forEach(t => {
+        result.push({ ...(t as any), frameCount: 100 * 120, frameLength: 1 / 120 });
+        result.push({ ...(t as any), frameCount: 100 * 60, frameLength: 1 / 60 });
+        result.push({ ...(t as any), frameCount: 100 * 30, frameLength: 1 / 30 });
+        result.push({ ...(t as any), frameCount: 100 * 10, frameLength: 1 / 10 });
+        result.push({ ...(t as any), frameCount: 100, frameLength: 1 });
+    });
+    return result;
+}

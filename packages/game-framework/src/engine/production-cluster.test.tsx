@@ -1,7 +1,7 @@
-import {buildingHint, cloneArray, Given, obj2Arr, resourceHint, Then, When} from "../utils";
+import {buildingHint, cloneArray, Given, obj2Arr, resourceHint, Then, When, withFrameVariation} from "../utils";
 import {addBuilding, createProductionCluster, removeBuilding, ProductionCluster, updateCluster} from "./production-cluster";
 import {Iron, Stone, Wood} from "./resource.test";
-import {IronMine, Lumberjack, StoneWorker} from "./buildings.test";
+import {Bonfire, IronMine, Lumberjack, StoneWorker} from "./buildings.test";
 import {Building, createBuilding, getBuilding} from "./building";
 
 export const MagicForest = createProductionCluster("MagicForest");
@@ -130,7 +130,7 @@ Given("an production cluster", () => {
             const expectedResources = obj2Arr(param.expectedResources);
             const expectedBuildings = obj2Arr(param.expectedBuildings);
 
-            Then(`it should contain ${resourceHint(expectedResources)} and ${buildingHint(expectedBuildings)}`, () => {
+            Then(`it should contain\t${resourceHint(expectedResources)} and\t${buildingHint(expectedBuildings)}`, () => {
                 const cluster = { id: 1, name: "", resources: cloneArray(startResources), buildings: cloneArray(startBuildings) };
 
                 for (let i in buildingsToAdd) {
@@ -242,7 +242,7 @@ Given("an production cluster", () => {
             const expectedResources = obj2Arr(param.expectedResources);
             const expectedBuildings = obj2Arr(param.expectedBuildings);
 
-            Then(`it should contain ${resourceHint(expectedResources)} and ${buildingHint(expectedBuildings)}`, () => {
+            Then(`it should contain\t${resourceHint(expectedResources)} and\t${buildingHint(expectedBuildings)}`, () => {
                 const cluster = { id: 1, name: "", resources: cloneArray(startResources), buildings: cloneArray(startBuildings) };
 
                 for (let i in buildingsToRemove) {
@@ -260,55 +260,71 @@ Given("an production cluster", () => {
 
     When("I have build a building", () => {
 
-        [
+        withFrameVariation([
             {
                 startBuildings: { [Lumberjack.id]: 1 },
-                frameCount: 5 * 60,
-                frameLength: 1 / 60, // ~16.66 ms
-                expectedResources: { [Wood.id]: 5 },
+                expectedResources: { [Wood.id]: 100 },
             },
             {
                 startBuildings: { [Lumberjack.id]: 2 },
-                frameCount: 5 * 60,
-                frameLength: 1 / 60, // ~16.66 ms
-                expectedResources: { [Wood.id]: 10 },
+                expectedResources: { [Wood.id]: 200 },
             },
             {
                 startBuildings: { [Lumberjack.id]: 10 },
-                frameCount: 5 * 60,
-                frameLength: 1, // 1 second
-                expectedResources: { [Wood.id]: 3000 },
+                expectedResources: { [Wood.id]: 1000 },
             },
             {
                 startBuildings: { [Lumberjack.id]: 10, [StoneWorker.id]: 5, [IronMine.id]: 2 },
-                frameCount: 5 * 60,
-                frameLength: 1 / 60, // ~16.66 ms
-                expectedResources: { [Wood.id]: 50, [Stone.id]: 25, [Iron.id]: 10 },
+                expectedResources: { [Wood.id]: 1000, [Stone.id]: 500, [Iron.id]: 200 },
             },
-            {
-                startBuildings: { [Lumberjack.id]: 10, [StoneWorker.id]: 5, [IronMine.id]: 2 },
-                frameCount: 5 * 30,
-                frameLength: 1 / 30, // ~33.33 ms
-                expectedResources: { [Wood.id]: 50, [Stone.id]: 25, [Iron.id]: 10 },
-            },
-            {
-                startBuildings: { [Lumberjack.id]: 10, [StoneWorker.id]: 5, [IronMine.id]: 2 },
-                frameCount: 5 * 10,
-                frameLength: 1 / 10, // 100 ms
-                expectedResources: { [Wood.id]: 50, [Stone.id]: 25, [Iron.id]: 10 },
-            },
-            {
-                startBuildings: { [Lumberjack.id]: 10, [StoneWorker.id]: 5, [IronMine.id]: 2 },
-                frameCount: 5 * 60,
-                frameLength: 1, // 1 second
-                expectedResources: { [Wood.id]: 3000, [Stone.id]: 1500, [Iron.id]: 600 },
-            }
-        ].forEach(param => {
+        ]).forEach(param => {
             const startBuildings = obj2Arr(param.startBuildings);
             const expectedResources = obj2Arr(param.expectedResources);
 
-            Then(`it should produce ${resourceHint(expectedResources)} in ${param.frameCount * param.frameLength} seconds (~${Math.round(param.frameLength * 1000)} ms frame length)`, () => {
+            Then(`it should produce\t${resourceHint(expectedResources)} in\t${param.frameCount * param.frameLength} seconds\t(~${Math.round(param.frameLength * 1000)} ms frame length)`, () => {
                 const cluster: ProductionCluster = { id: 1, name: "", resources: [], buildings: cloneArray(startBuildings) };
+
+                for (let i = 0; i < param.frameCount; i++) {
+                    updateCluster(cluster, param.frameLength)
+                }
+
+                cluster.resources.forEach((p, i) => {
+                    cluster.resources[i] = Math.round(p);
+                });
+
+                expect(cluster.resources).toEqual(expectedResources, "resources");
+            });
+
+        });
+
+        withFrameVariation([
+            {
+                startResources: { [Wood.id]: 1000 },
+                startBuildings: { [Bonfire.id]: 1 },
+                expectedResources: { [Wood.id]: 900 },
+            },
+            {
+                startResources: { [Wood.id]: 100 },
+                startBuildings: { [Bonfire.id]: 1 },
+                expectedResources: { [Wood.id]: 0 },
+            },
+            {
+                startResources: { [Wood.id]: 50 },
+                startBuildings: { [Bonfire.id]: 1 },
+                expectedResources: { [Wood.id]: 0 },
+            },
+        ]).forEach(param => {
+            const startResources = obj2Arr(param.startResources);
+            const startBuildings = obj2Arr(param.startBuildings);
+            const expectedResources = obj2Arr(param.expectedResources);
+
+            const consumedResources: number[] = [];
+            startResources.forEach((_, resourceId) => {
+                consumedResources[resourceId] = startResources[resourceId] - expectedResources[resourceId];
+            });
+
+            Then(`it should consume\t${resourceHint(consumedResources)} in ${param.frameCount * param.frameLength} seconds\t(~${Math.round(param.frameLength * 1000)} ms frame length)`, () => {
+                const cluster: ProductionCluster = { id: 1, name: "", resources: startResources, buildings: cloneArray(startBuildings) };
 
                 for (let i = 0; i < param.frameCount; i++) {
                     updateCluster(cluster, param.frameLength)

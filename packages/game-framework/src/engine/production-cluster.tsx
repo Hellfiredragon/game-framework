@@ -74,9 +74,20 @@ export function removeBuilding(productionCluster: ProductionCluster, building: B
 export function updateCluster(productionCluster: ProductionCluster, time: number) {
     productionCluster.buildings.forEach((level, buildingId) => {
         const building = getBuilding(buildingId);
-        building.produces.forEach((amount, resourceId) => {
-            const produced = amount * level * time;
-            productionCluster.resources[resourceId] = (productionCluster.resources[resourceId] || 0) + produced;
+        let enough = true;
+        building.consumes.forEach((amount, resourceId) => {
+            const consumed = amount * level * time;
+            if(productionCluster.resources[resourceId] < consumed) enough = false;
         });
+        if (enough) {
+            building.produces.forEach((amount, resourceId) => {
+                const produced = amount * level * time;
+                productionCluster.resources[resourceId] = (productionCluster.resources[resourceId] || 0) + produced;
+            });
+            building.consumes.forEach((amount, resourceId) => {
+                const consumed = amount * level * time;
+                productionCluster.resources[resourceId] = (productionCluster.resources[resourceId] || 0) - consumed;
+            });
+        }
     });
 }
