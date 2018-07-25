@@ -1,5 +1,5 @@
 import {createBuilding, Building} from "./building";
-import {Brick, Hydrogen, Iron, Stone, Wood} from "./resource.test";
+import {Brick, Coal, Hydrogen, Iron, Stone, Wood} from "./resource.test";
 import {Given, Then, When} from "../utils";
 import {addBuilding, createProductionCluster} from "./production-cluster";
 import {createGameLoop} from "../loop";
@@ -34,6 +34,11 @@ export const IronMine = createBuilding("Iron Mine", "Resource",
         [Iron.id]: 1
     }, {},
     0, 0);
+export const CoalMine = createBuilding("Coal Mine", "Resource",
+    {}, {}, {
+        [Coal.id]: 1
+    }, {},
+    0, 0);
 
 export const Bonfire = createBuilding("Bonfire", "Furniture",
     {}, {}, {}, { [Wood.id]: 1 },
@@ -48,4 +53,7 @@ export const HydrogenKatalysator = createBuilding("Hydrogen Catalysator", "Resou
 
 export const FuelCell = createBuilding("Fuel Cell", "Energy",
     {}, {}, {}, { [Hydrogen.id]: 1 },
+    0, 100);
+export const PowerPlant = createBuilding("Power Plant", "Energy",
+    {}, {}, {}, { [Coal.id]: 1 },
     0, 100);

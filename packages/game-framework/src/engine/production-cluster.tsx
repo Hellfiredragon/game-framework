@@ -71,12 +71,19 @@ export function removeBuilding(productionCluster: ProductionCluster, building: B
     }
 }
 
-function calcEnergy(productionCluster: ProductionCluster): number {
+function calcEnergy(productionCluster: ProductionCluster, time: number): number {
     let energyProduction = 0;
     let energyConsumption = 0;
     productionCluster.buildings.forEach((level, buildingId) => {
         const building = getBuilding(buildingId);
-        energyProduction += building.producesEnergy * level;
+        if (building.producesEnergy) {
+            let enough = true;
+            building.consumes.forEach((amount, resourceId) => {
+                const consumed = amount * level * time;
+                if (productionCluster.resources[resourceId] < consumed) enough = false;
+            });
+            if (enough) energyProduction += building.producesEnergy * level;
+        }
         energyConsumption += building.consumesEnergy * level;
     });
     const percent = energyProduction / energyConsumption;
@@ -87,7 +94,7 @@ function calcEnergy(productionCluster: ProductionCluster): number {
 }
 
 export function updateCluster(productionCluster: ProductionCluster, time: number) {
-    const energyPercent = calcEnergy(productionCluster);
+    const energyPercent = calcEnergy(productionCluster, time);
     productionCluster.buildings.forEach((level, buildingId) => {
         const building = getBuilding(buildingId);
         let enough = true;

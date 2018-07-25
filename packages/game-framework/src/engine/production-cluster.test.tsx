@@ -1,9 +1,10 @@
 import {buildingHint, cloneArray, Given, obj2Arr, resourceHint, Then, When, withFrameVariation} from "../utils";
 import {addBuilding, createProductionCluster, removeBuilding, ProductionCluster, updateCluster} from "./production-cluster";
-import {Brick, Hydrogen, Iron, Stone, Wood} from "./resource.test";
-import {Bonfire, BrickFurnace, FuelCell, HydrogenKatalysator, IronMine, Lumberjack, StoneWorker} from "./buildings.test";
+import {Brick, Coal, Hydrogen, Iron, Stone, Wood} from "./resource.test";
+import {Bonfire, BrickFurnace, FuelCell, HydrogenKatalysator, IronMine, Lumberjack, PowerPlant, StoneWorker} from "./buildings.test";
 import {Building, createBuilding, getBuilding} from "./building";
 import {Global} from "./global";
+import {getResource} from "./resource";
 
 export const MagicForest = createProductionCluster("MagicForest");
 
@@ -409,12 +410,29 @@ Given("an production cluster", () => {
                 startBuildings: { [HydrogenKatalysator.id]: 10, [FuelCell.id]: 4 },
                 expectedResources: { [Hydrogen.id]: 900 },
             },
+            {
+                startResources: { [Hydrogen.id]: 0 },
+                startBuildings: { [HydrogenKatalysator.id]: 10, [FuelCell.id]: 4 },
+                expectedResources: { [Hydrogen.id]: 0 },
+            },
+            {
+                startResources: { [Hydrogen.id]: 0, [Coal.id]: 10000 },
+                startBuildings: { [HydrogenKatalysator.id]: 10, [PowerPlant.id]: 10, [FuelCell.id]: 4 },
+                expectedResources: { [Hydrogen.id]: 1600, [Coal.id]: 9000 },
+            },
         ]).forEach(param => {
             const startResources = obj2Arr(param.startResources);
             const startBuildings = obj2Arr(param.startBuildings);
             const expectedResources = obj2Arr(param.expectedResources);
 
-            Then(`with energy it should produce partially \t${resourceHint(expectedResources)} in\t${param.frameCount * param.frameLength} seconds\t(~${Math.round(param.frameLength * 1000)} ms frame length)`, () => {
+            const producedResources: number[] = [];
+            expectedResources.forEach((_, resourceId) => {
+                if (expectedResources[resourceId] > (startResources[resourceId] || 0)) {
+                    producedResources[resourceId] = expectedResources[resourceId] - (startResources[resourceId] || 0)
+                }
+            });
+
+            Then(`with energy it should produce partially \t${resourceHint(producedResources)} in\t${param.frameCount * param.frameLength} seconds\t(~${Math.round(param.frameLength * 1000)} ms frame length)`, () => {
                 const cluster: ProductionCluster = { id: 1, name: "", resources: cloneArray(startResources), buildings: cloneArray(startBuildings) };
 
                 for (let i = 0; i < param.frameCount; i++) {
@@ -426,6 +444,51 @@ Given("an production cluster", () => {
                 });
 
                 expect(cluster.resources).toEqual(expectedResources, "resources");
+            });
+
+        });
+
+        withFrameVariation([
+            {
+                startResources: { [Hydrogen.id]: 0, [Coal.id]: 10000 },
+                startBuildings: { [HydrogenKatalysator.id]: 10, [PowerPlant.id]: 3, [FuelCell.id]: 2 },
+                expectedResourcesMin: { [Hydrogen.id]: 1768, [Coal.id]: 9700 },
+                expectedResourcesMax: { [Hydrogen.id]: 1800, [Coal.id]: 9700 },
+            },
+        ]).forEach(param => {
+            const startResources = obj2Arr(param.startResources);
+            const startBuildings = obj2Arr(param.startBuildings);
+            const expectedResourcesMin = obj2Arr(param.expectedResourcesMin);
+            const expectedResourcesMax = obj2Arr(param.expectedResourcesMax);
+
+            const producedResourcesMin: number[] = [];
+            const producedResourcesMax: number[] = [];
+            expectedResourcesMin.forEach((_, resourceId) => {
+                if (expectedResourcesMin[resourceId] > (startResources[resourceId] || 0)) {
+                    producedResourcesMin[resourceId] = expectedResourcesMin[resourceId] - (startResources[resourceId] || 0)
+                }
+            });
+            expectedResourcesMax.forEach((_, resourceId) => {
+                if (expectedResourcesMax[resourceId] > (startResources[resourceId] || 0)) {
+                    producedResourcesMax[resourceId] = expectedResourcesMax[resourceId] - (startResources[resourceId] || 0)
+                }
+            });
+
+            Then(`with energy it should produce between \t${resourceHint(producedResourcesMin)} and \t${resourceHint(producedResourcesMax)} in\t${param.frameCount * param.frameLength} seconds\t(~${Math.round(param.frameLength * 1000)} ms frame length)`, () => {
+                const cluster: ProductionCluster = { id: 1, name: "", resources: cloneArray(startResources), buildings: cloneArray(startBuildings) };
+
+                for (let i = 0; i < param.frameCount; i++) {
+                    updateCluster(cluster, param.frameLength)
+                }
+
+                cluster.resources.forEach((p, i) => {
+                    cluster.resources[i] = Math.round(p);
+                });
+
+                for (let i in cluster.resources) {
+                    expect(cluster.resources[i]).toBeGreaterThanOrEqual(expectedResourcesMin[i], getResource(i).name);
+                    expect(cluster.resources[i]).toBeLessThanOrEqual(expectedResourcesMax[i], getResource(i).name);
+                }
             });
 
         });
