@@ -1,8 +1,9 @@
 import {buildingHint, cloneArray, Given, obj2Arr, resourceHint, Then, When, withFrameVariation} from "../utils";
 import {addBuilding, createProductionCluster, removeBuilding, ProductionCluster, updateCluster} from "./production-cluster";
-import {Brick, Iron, Stone, Wood} from "./resource.test";
-import {Bonfire, BrickFurnace, IronMine, Lumberjack, StoneWorker} from "./buildings.test";
+import {Brick, Hydrogen, Iron, Stone, Wood} from "./resource.test";
+import {Bonfire, BrickFurnace, FuelCell, HydrogenKatalysator, IronMine, Lumberjack, StoneWorker} from "./buildings.test";
 import {Building, createBuilding, getBuilding} from "./building";
+import {Global} from "./global";
 
 export const MagicForest = createProductionCluster("MagicForest");
 
@@ -373,6 +374,48 @@ Given("an production cluster", () => {
 
             Then(`it should produce\t${resourceHint(producedResources)} and consume\t${resourceHint(consumedResources)} in ${param.frameCount * param.frameLength} seconds\t(~${Math.round(param.frameLength * 1000)} ms frame length)`, () => {
                 const cluster: ProductionCluster = { id: 1, name: "", resources: startResources, buildings: cloneArray(startBuildings) };
+
+                for (let i = 0; i < param.frameCount; i++) {
+                    updateCluster(cluster, param.frameLength)
+                }
+
+                cluster.resources.forEach((p, i) => {
+                    cluster.resources[i] = Math.round(p);
+                });
+
+                expect(cluster.resources).toEqual(expectedResources, "resources");
+            });
+
+        });
+
+        withFrameVariation([
+            {
+                startResources: { [Hydrogen.id]: 100 },
+                startBuildings: { [HydrogenKatalysator.id]: 1, [FuelCell.id]: 1 },
+                expectedResources: { [Hydrogen.id]: 200 },
+            },
+            {
+                startResources: { [Hydrogen.id]: 100 },
+                startBuildings: { [HydrogenKatalysator.id]: 2, [FuelCell.id]: 1 },
+                expectedResources: { [Hydrogen.id]: 400 },
+            },
+            {
+                startResources: { [Hydrogen.id]: 100 },
+                startBuildings: { [HydrogenKatalysator.id]: 3, [FuelCell.id]: 1 },
+                expectedResources: { [Hydrogen.id]: 200 },
+            },
+            {
+                startResources: { [Hydrogen.id]: 100 },
+                startBuildings: { [HydrogenKatalysator.id]: 10, [FuelCell.id]: 4 },
+                expectedResources: { [Hydrogen.id]: 900 },
+            },
+        ]).forEach(param => {
+            const startResources = obj2Arr(param.startResources);
+            const startBuildings = obj2Arr(param.startBuildings);
+            const expectedResources = obj2Arr(param.expectedResources);
+
+            Then(`with energy it should produce partially \t${resourceHint(expectedResources)} in\t${param.frameCount * param.frameLength} seconds\t(~${Math.round(param.frameLength * 1000)} ms frame length)`, () => {
+                const cluster: ProductionCluster = { id: 1, name: "", resources: cloneArray(startResources), buildings: cloneArray(startBuildings) };
 
                 for (let i = 0; i < param.frameCount; i++) {
                     updateCluster(cluster, param.frameLength)

@@ -71,21 +71,37 @@ export function removeBuilding(productionCluster: ProductionCluster, building: B
     }
 }
 
+function calcEnergy(productionCluster: ProductionCluster): number {
+    let energyProduction = 0;
+    let energyConsumption = 0;
+    productionCluster.buildings.forEach((level, buildingId) => {
+        const building = getBuilding(buildingId);
+        energyProduction += building.producesEnergy * level;
+        energyConsumption += building.consumesEnergy * level;
+    });
+    const percent = energyProduction / energyConsumption;
+    if (percent >= 1) return 1;
+    const result = percent - (1 - percent);
+    if (result < 0) return 0;
+    return result;
+}
+
 export function updateCluster(productionCluster: ProductionCluster, time: number) {
+    const energyPercent = calcEnergy(productionCluster);
     productionCluster.buildings.forEach((level, buildingId) => {
         const building = getBuilding(buildingId);
         let enough = true;
         building.consumes.forEach((amount, resourceId) => {
-            const consumed = amount * level * time;
-            if(productionCluster.resources[resourceId] < consumed) enough = false;
+            const consumed = amount * level * time * (building.consumesEnergy > 0 ? energyPercent : 1);
+            if (productionCluster.resources[resourceId] < consumed) enough = false;
         });
         if (enough) {
             building.produces.forEach((amount, resourceId) => {
-                const produced = amount * level * time;
+                const produced = amount * level * time * (building.consumesEnergy > 0 ? energyPercent : 1);
                 productionCluster.resources[resourceId] = (productionCluster.resources[resourceId] || 0) + produced;
             });
             building.consumes.forEach((amount, resourceId) => {
-                const consumed = amount * level * time;
+                const consumed = amount * level * time * (building.consumesEnergy > 0 ? energyPercent : 1);
                 productionCluster.resources[resourceId] = (productionCluster.resources[resourceId] || 0) - consumed;
             });
         }
