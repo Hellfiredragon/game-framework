@@ -18,9 +18,9 @@ Given("a building list", () => {
 
             Then(`it should render ${category} buildings`, () => {
                 Global.navigation.buildingCategory = category;
-                const items = scryComponentsWithType(<BuildingList/>, BuildingListItem);
+                const items = scryComponentsWithType(<BuildingList clusterId={Europe.id}/>, BuildingListItem);
 
-                expect(items.map(x => x.props.id)).toEqual(getBuildingsByCategory(category).map(x => x.id));
+                expect(items.map(x => x.props.buildingId)).toEqual(getBuildingsByCategory(category).map(x => x.id));
             });
 
         });
@@ -33,7 +33,7 @@ Given("a building list item", () => {
     When("it is rendered with a building id", () => {
 
         Then("it should render the building", () => {
-            const item = findComponentWithType(<BuildingListItem id={IronMine.id}/>, ResourceList);
+            const item = findComponentWithType(<BuildingListItem clusterId={Europe.id} buildingId={IronMine.id}/>, ResourceList);
 
             expect(item.props.resources).toEqual(IronMine.cost);
         });

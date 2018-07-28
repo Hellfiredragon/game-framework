@@ -38,7 +38,7 @@ export class ProductionClusterView extends React.Component<{
             <BuildingMenu buildingCategory={Global.navigation.buildingCategory}/>
             <Button action={showProductionClusterList} symbol="chevron-left"/>
             Name: {cluster.name}
-            <BuildingList/>
+            <BuildingList clusterId={cluster.id}/>
         </article>
     }
 

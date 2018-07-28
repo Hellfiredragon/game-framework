@@ -7,10 +7,6 @@ import {Global} from "./global";
 import {getResource} from "./resource";
 import {S_PER_UPDATE} from "./constants";
 
-export const MagicForest = createProductionCluster({
-    name: "MagicForest"
-});
-
 export const Europe = createProductionCluster({ name: "Europe", explored: true });
 export const Asia = createProductionCluster({ name: "Asia", explored: true });
 export const Russia = createProductionCluster({ name: "Russia" });

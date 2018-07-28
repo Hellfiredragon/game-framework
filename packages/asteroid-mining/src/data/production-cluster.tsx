@@ -1,8 +1,12 @@
 import {createProductionCluster} from "game-framework";
+import {Iron} from "./resource";
 
 export const Moon = createProductionCluster({
     name: "Moon",
-    explored: true
+    explored: true,
+    resources: {
+        [Iron.id]: 10
+    }
 });
 
 export const AsteroidZG54G = createProductionCluster({

@@ -3,6 +3,9 @@ import {getBuildingsByCategory} from "../engine/building";
 import {Global} from "../engine/global";
 import {getBuilding} from "../engine/building";
 import {getResource} from "../engine/resource";
+import {addBuilding, getCost, getProductionCluster, removeBuilding} from "../engine/production-cluster";
+import {Button} from "../components/button";
+import {enoughResources} from "../engine/inventory";
 
 export class ResourceListItem extends React.PureComponent<{
     id: number,
@@ -34,27 +37,51 @@ export class ResourceList extends React.Component<{
 }
 
 export class BuildingListItem extends React.PureComponent<{
-    id: number
+    clusterId: number,
+    buildingId: number
 }> {
 
+    handleClickPlusOne = () => {
+        const cluster = getProductionCluster(this.props.clusterId);
+        const building = getBuilding(this.props.buildingId);
+
+        addBuilding(cluster, building, 1);
+        this.forceUpdate();
+    };
+
+    handleClickMinusOne = () => {
+        const cluster = getProductionCluster(this.props.clusterId);
+        const building = getBuilding(this.props.buildingId);
+
+        removeBuilding(cluster, building, 1);
+        this.forceUpdate();
+    };
+
     render() {
-        const building = getBuilding(this.props.id);
+        const cluster = getProductionCluster(this.props.clusterId);
+        const building = getBuilding(this.props.buildingId);
+        const currentLevel = cluster.buildings[building.id] || 0;
+        const cost = getCost(cluster, building, 1);
 
         return <article className="gf-building-list-item">
-            {building.name}
-            <ResourceList resources={building.cost}/>
+            {building.name} ({currentLevel})
+            <ResourceList resources={cost}/>
+            <Button action={this.handleClickPlusOne} symbol={"plus"} state={enoughResources(cluster, cost) ? "normal" : "disabled"}/>
+            <Button action={this.handleClickMinusOne} symbol={"minus"} state={cluster.buildings[building.id] > 0 ? "normal" : "disabled"}/>
         </article>;
     }
 
 }
 
-export class BuildingList extends React.Component {
+export class BuildingList extends React.Component<{
+    clusterId: number
+}> {
 
     render() {
         const buildings = getBuildingsByCategory(Global.navigation.buildingCategory);
 
         return <article className="gf-building-list">
-            {buildings.map(b => <BuildingListItem key={b.id} id={b.id}/>)}
+            {buildings.map(b => <BuildingListItem key={b.id} buildingId={b.id} clusterId={this.props.clusterId}/>)}
         </article>
     }
 

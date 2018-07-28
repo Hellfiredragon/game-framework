@@ -5,7 +5,7 @@ export const IronMine = createBuilding({
     name: "Iron Mine",
     category: "Resource",
     cost: { [Iron.id]: 10 },
-    costFactor: {},
+    costFactor: { [Iron.id]: 1.1 },
     produces: {},
     consumes: {}
 });
