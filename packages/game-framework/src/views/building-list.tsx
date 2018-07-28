@@ -6,39 +6,12 @@ import {getResource} from "../engine/resource";
 import {addBuilding, getCost, getProductionCluster, removeBuilding} from "../engine/production-cluster";
 import {Button} from "../components/button";
 import {enoughResources} from "../engine/inventory";
-
-export class ResourceListItem extends React.PureComponent<{
-    id: number,
-    amount: number
-}> {
-
-    render() {
-        const { id, amount } = this.props;
-        const resource = getResource(id);
-
-        return <article className="gf-resource-list-item">
-            {resource.name}: {amount}
-        </article>;
-    }
-
-}
-
-export class ResourceList extends React.Component<{
-    resources: number[]
-}> {
-
-    render() {
-        const { resources } = this.props;
-        return <article className="gf-resource-list">
-            {resources.map((amount, id) => <ResourceListItem key={id} id={id} amount={amount}/>)}
-        </article>
-    }
-
-}
+import {ResourceList} from "./resource-list";
 
 export class BuildingListItem extends React.PureComponent<{
     clusterId: number,
-    buildingId: number
+    buildingId: number,
+    enoughResources: boolean
 }> {
 
     handleClickPlusOne = () => {
@@ -66,7 +39,7 @@ export class BuildingListItem extends React.PureComponent<{
         return <article className="gf-building-list-item">
             {building.name} ({currentLevel})
             <ResourceList resources={cost}/>
-            <Button action={this.handleClickPlusOne} symbol={"plus"} state={enoughResources(cluster, cost) ? "normal" : "disabled"}/>
+            <Button action={this.handleClickPlusOne} symbol={"plus"} state={this.props.enoughResources ? "normal" : "disabled"}/>
             <Button action={this.handleClickMinusOne} symbol={"minus"} state={cluster.buildings[building.id] > 0 ? "normal" : "disabled"}/>
         </article>;
     }
@@ -78,10 +51,16 @@ export class BuildingList extends React.Component<{
 }> {
 
     render() {
+        const cluster = getProductionCluster(this.props.clusterId);
         const buildings = getBuildingsByCategory(Global.navigation.buildingCategory);
 
         return <article className="gf-building-list">
-            {buildings.map(b => <BuildingListItem key={b.id} buildingId={b.id} clusterId={this.props.clusterId}/>)}
+            {buildings.map(building => {
+                return <BuildingListItem key={building.id}
+                                         clusterId={this.props.clusterId}
+                                         buildingId={building.id}
+                                         enoughResources={enoughResources(cluster, getCost(cluster, building, 1))}/>
+            })}
         </article>
     }
 

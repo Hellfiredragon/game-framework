@@ -5,7 +5,7 @@ module.exports = function (config) {
 
         frameworks: ["jasmine", "karma-typescript"],
 
-        files: ["src/**/*.tsx"],
+        files: ["src/**/*.tsx", "src/**/*.d.ts", "src/**/*.json"],
 
         exclude: [],
 

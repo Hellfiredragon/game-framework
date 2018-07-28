@@ -5,7 +5,7 @@ export const Moon = createProductionCluster({
     name: "Moon",
     explored: true,
     resources: {
-        [Iron.id]: 10
+        [Iron.id]: 100
     }
 });
 

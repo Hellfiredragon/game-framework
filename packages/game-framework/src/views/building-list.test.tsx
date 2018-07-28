@@ -1,15 +1,11 @@
 import * as React from "react";
-import * as ReactTestUtils from 'react-dom/test-utils';
-import {Simulate} from "react-dom/test-utils";
-import {findComponentWithClass, findComponentWithType, Given, scryComponentsWithType, Then, When} from "../utils";
-import {createProductionCluster} from "..";
-import {ProductionClusterList, ProductionClusterListItem} from "./production-cluster-list";
+import {findComponentWithType, Given, scryComponentsWithType, Then, When} from "../utils";
 import {Global} from "../engine/global";
-import {Asia, Europe, Russia} from "../engine/production-cluster.test";
-import {BuildingList, BuildingListItem, ResourceList, ResourceListItem} from "./building-list";
-import {IronMine, Lumberjack, StoneWorker, CoalMine, HydrogenKatalysator, BrickFurnace, Bonfire} from "../engine/buildings.test";
+import {Europe} from "../engine/production-cluster.test";
+import {BuildingList, BuildingListItem} from "./building-list";
+import {IronMine} from "../engine/buildings.test";
 import {BuildingCategories, getBuildingsByCategory} from "../engine/building";
-import {getResource} from "../engine/resource";
+import {ResourceList} from "./resource-list";
 
 Given("a building list", () => {
 
@@ -33,7 +29,7 @@ Given("a building list item", () => {
     When("it is rendered with a building id", () => {
 
         Then("it should render the building", () => {
-            const item = findComponentWithType(<BuildingListItem clusterId={Europe.id} buildingId={IronMine.id}/>, ResourceList);
+            const item = findComponentWithType(<BuildingListItem clusterId={Europe.id} buildingId={IronMine.id} enoughResources={true}/>, ResourceList);
 
             expect(item.props.resources).toEqual(IronMine.cost);
         });

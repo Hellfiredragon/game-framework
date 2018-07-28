@@ -8,6 +8,7 @@ import {
 import {Global} from "../engine/global";
 import {BuildingCategories, BuildingCategorySymbols, getBuildingsByCategory} from "../engine/building";
 import {BuildingList} from "./building-list";
+import {ResourceList} from "./resource-list";
 
 export class BuildingMenu extends React.PureComponent<{
     buildingCategory: string
@@ -38,6 +39,7 @@ export class ProductionClusterView extends React.Component<{
             <BuildingMenu buildingCategory={Global.navigation.buildingCategory}/>
             <Button action={showProductionClusterList} symbol="chevron-left"/>
             Name: {cluster.name}
+            <ResourceList resources={cluster.resources}/>
             <BuildingList clusterId={cluster.id}/>
         </article>
     }
