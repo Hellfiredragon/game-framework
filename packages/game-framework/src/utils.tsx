@@ -62,6 +62,14 @@ export function withFrameVariation<T extends object>(arr: T[]): Array<T & FrameC
     return result;
 }
 
+export function findComponentWithType<T extends Component, C extends ComponentClass>(
+    element: ReactElement<any>,
+    type: ClassType<any, T, C>
+) {
+    const output = ReactTestUtils.renderIntoDocument(element) as React.Component;
+    return ReactTestUtils.findRenderedComponentWithType(output, type);
+}
+
 export function scryComponentsWithType<T extends Component, C extends ComponentClass>(
     element: ReactElement<any>,
     type: ClassType<any, T, C>

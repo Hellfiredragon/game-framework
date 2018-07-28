@@ -12,18 +12,18 @@ export interface Resource {
 }
 
 let lastItemId = -1;
-const items: Resource[] = [];
+const resources: Resource[] = [];
 
 export function createResource(props: ResourceProps): Resource {
     lastItemId += 1;
-    items[lastItemId] = {
+    resources[lastItemId] = {
         id: lastItemId,
         name: props.name,
         category: props.category || "Resource"
     };
-    return items[lastItemId];
+    return resources[lastItemId];
 }
 
 export function getResource(id: string | number): Resource {
-    return items[id];
+    return resources[id];
 }
