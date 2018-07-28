@@ -1,7 +1,10 @@
 import {obj2Arr} from "../utils";
 import {Inventory} from "./inventory";
 
-export type Pages = "production-cluster-list" | "production-cluster-view";
+export type Pages =
+    | "production-cluster/overview"
+    | "production-cluster/item"
+    | "research/overview"
 
 export interface GlobalState {
     framesPerSecond: number;
@@ -16,7 +19,7 @@ export const Defaults: GlobalState = {
     framesPerSecond: 30,
     revenueFactor: 0.5,
     navigation: {
-        page: "production-cluster-list",
+        page: "production-cluster/overview",
         id: -1
     }
 };

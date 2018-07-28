@@ -1,20 +1,17 @@
 import * as React from "react";
-import {getProductionCluster, showProductionClusterList} from "../engine/production-cluster";
+import {getProductionCluster} from "../engine/production-cluster";
 import {Button} from "../components/button";
+import {showProductionClusterList} from "../engine/navigation";
 
 export class ProductionClusterView extends React.Component<{
     id: number
 }> {
 
-    handleBackButtonClick = () => {
-        showProductionClusterList();
-    };
-
     render() {
         const cluster = getProductionCluster(this.props.id);
 
         return <article className="gf-production-cluster-view">
-            <Button action={this.handleBackButtonClick} symbol="chevron-left"/>
+            <Button action={showProductionClusterList} symbol="chevron-left"/>
             Name: {cluster.name}
         </article>
     }

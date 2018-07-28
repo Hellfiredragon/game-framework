@@ -141,12 +141,3 @@ export function updateCluster(productionCluster: ProductionCluster) {
         }
     });
 }
-
-export function showProductionClusterList() {
-    Global.navigation.page = "production-cluster-list";
-}
-
-export function showProductionCluster(id: number) {
-    Global.navigation.page = "production-cluster-view";
-    Global.navigation.id = id;
-}

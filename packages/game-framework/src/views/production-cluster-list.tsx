@@ -1,5 +1,6 @@
 import * as React from "react";
-import {getExploredProductionCluster, getProductionCluster, showProductionCluster} from "../engine/production-cluster";
+import {getExploredProductionCluster, getProductionCluster} from "../engine/production-cluster";
+import {showProductionCluster} from "../engine/navigation";
 
 export class ProductionClusterListItem extends React.PureComponent<{
     id: number
