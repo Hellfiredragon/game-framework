@@ -7,7 +7,9 @@ import {Global} from "./global";
 import {getResource} from "./resource";
 import {S_PER_UPDATE} from "./constants";
 
-export const MagicForest = createProductionCluster("MagicForest");
+export const MagicForest = createProductionCluster({
+    name: "MagicForest"
+});
 
 Given("an production cluster", () => {
 
@@ -73,14 +75,16 @@ Given("an production cluster", () => {
                 expectedBuildings: { [Lumberjack.id]: 9, [StoneWorker.id]: 3, [IronMine.id]: 3 }
             },
         ].forEach(param => {
-            const startResources = obj2Arr(param.startResources);
-            const startBuildings = obj2Arr(param.startBuildings);
             const buildingsToAdd = obj2Arr(param.buildingsToAdd);
             const expectedResources = obj2Arr(param.expectedResources);
             const expectedBuildings = obj2Arr(param.expectedBuildings);
 
             Then(`it should contain ${resourceHint(expectedResources)} and ${buildingHint(expectedBuildings)}`, () => {
-                const cluster = { id: 1, name: "", resources: cloneArray(startResources), buildings: cloneArray(startBuildings) };
+                const cluster = createProductionCluster({
+                    name: "",
+                    resources: param.startResources,
+                    buildings: param.startBuildings
+                });
 
                 for (let i in buildingsToAdd) {
                     const building = getBuilding(i);
@@ -127,14 +131,16 @@ Given("an production cluster", () => {
                 expectedBuildings: { [Lumberjack.id]: 1 }
             },
         ].forEach(param => {
-            const startResources = obj2Arr(param.startResources);
-            const startBuildings = obj2Arr(param.startBuildings);
             const buildingsToAdd = obj2Arr(param.buildingsToAdd);
             const expectedResources = obj2Arr(param.expectedResources);
             const expectedBuildings = obj2Arr(param.expectedBuildings);
 
             Then(`it should contain\t${resourceHint(expectedResources)} and\t${buildingHint(expectedBuildings)}`, () => {
-                const cluster = { id: 1, name: "", resources: cloneArray(startResources), buildings: cloneArray(startBuildings) };
+                const cluster = createProductionCluster({
+                    name: "",
+                    resources: param.startResources,
+                    buildings: param.startBuildings
+                });
 
                 for (let i in buildingsToAdd) {
                     const building = getBuilding(i);
@@ -239,14 +245,16 @@ Given("an production cluster", () => {
                 expectedBuildings: { [Lumberjack.id]: 9, [StoneWorker.id]: 2, [IronMine.id]: 2 }
             },
         ].forEach(param => {
-            const startResources = obj2Arr(param.startResources);
-            const startBuildings = obj2Arr(param.startBuildings);
             const buildingsToRemove = obj2Arr(param.buildingsToRemove);
             const expectedResources = obj2Arr(param.expectedResources);
             const expectedBuildings = obj2Arr(param.expectedBuildings);
 
             Then(`it should contain\t${resourceHint(expectedResources)} and\t${buildingHint(expectedBuildings)}`, () => {
-                const cluster = { id: 1, name: "", resources: cloneArray(startResources), buildings: cloneArray(startBuildings) };
+                const cluster = createProductionCluster({
+                    name: "",
+                    resources: param.startResources,
+                    buildings: param.startBuildings
+                });
 
                 for (let i in buildingsToRemove) {
                     const building = getBuilding(i);
@@ -281,11 +289,13 @@ Given("an production cluster", () => {
                 expectedResources: { [Wood.id]: 1000, [Stone.id]: 500, [Iron.id]: 200 },
             },
         ]).forEach(param => {
-            const startBuildings = obj2Arr(param.startBuildings);
             const expectedResources = obj2Arr(param.expectedResources);
 
             Then(`it should produce\t${resourceHint(expectedResources)} in\t${param.frameCount * S_PER_UPDATE} seconds`, () => {
-                const cluster: ProductionCluster = { id: 1, name: "", resources: [], buildings: cloneArray(startBuildings) };
+                const cluster = createProductionCluster({
+                    name: "",
+                    buildings: param.startBuildings
+                });
 
                 for (let i = 0; i < param.frameCount; i++) {
                     updateCluster(cluster)
@@ -318,7 +328,6 @@ Given("an production cluster", () => {
             },
         ]).forEach(param => {
             const startResources = obj2Arr(param.startResources);
-            const startBuildings = obj2Arr(param.startBuildings);
             const expectedResources = obj2Arr(param.expectedResources);
 
             const consumedResources: number[] = [];
@@ -327,7 +336,11 @@ Given("an production cluster", () => {
             });
 
             Then(`it should consume\t${resourceHint(consumedResources)} in ${param.frameCount * S_PER_UPDATE} seconds`, () => {
-                const cluster: ProductionCluster = { id: 1, name: "", resources: startResources, buildings: cloneArray(startBuildings) };
+                const cluster = createProductionCluster({
+                    name: "",
+                    resources: param.startResources,
+                    buildings: param.startBuildings
+                });
 
                 for (let i = 0; i < param.frameCount; i++) {
                     updateCluster(cluster)
@@ -360,7 +373,6 @@ Given("an production cluster", () => {
             },
         ]).forEach(param => {
             const startResources = obj2Arr(param.startResources);
-            const startBuildings = obj2Arr(param.startBuildings);
             const expectedResources = obj2Arr(param.expectedResources);
 
             const producedResources: number[] = [];
@@ -375,7 +387,11 @@ Given("an production cluster", () => {
             });
 
             Then(`it should produce\t${resourceHint(producedResources)} and consume\t${resourceHint(consumedResources)} in ${param.frameCount * S_PER_UPDATE} seconds`, () => {
-                const cluster: ProductionCluster = { id: 1, name: "", resources: startResources, buildings: cloneArray(startBuildings) };
+                const cluster = createProductionCluster({
+                    name: "",
+                    resources: param.startResources,
+                    buildings: param.startBuildings
+                });
 
                 for (let i = 0; i < param.frameCount; i++) {
                     updateCluster(cluster)
@@ -433,7 +449,6 @@ Given("an production cluster", () => {
             },
         ]).forEach(param => {
             const startResources = obj2Arr(param.startResources);
-            const startBuildings = obj2Arr(param.startBuildings);
             const expectedResources = obj2Arr(param.expectedResources);
 
             const producedResources: number[] = [];
@@ -444,7 +459,11 @@ Given("an production cluster", () => {
             });
 
             Then(`with energy it should produce partially \t${resourceHint(producedResources)} in\t${param.frameCount * S_PER_UPDATE} seconds`, () => {
-                const cluster: ProductionCluster = { id: 1, name: "", resources: cloneArray(startResources), buildings: cloneArray(startBuildings) };
+                const cluster = createProductionCluster({
+                    name: "",
+                    resources: param.startResources,
+                    buildings: param.startBuildings
+                });
 
                 for (let i = 0; i < param.frameCount; i++) {
                     updateCluster(cluster)

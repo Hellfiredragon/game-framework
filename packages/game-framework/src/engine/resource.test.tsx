@@ -1,8 +1,26 @@
 import {createResource, Resource} from "./resource";
 
-export const Wood = createResource("Wood");
-export const Stone = createResource("Stone");
-export const Iron = createResource("Iron");
-export const Brick = createResource("Brick");
-export const Hydrogen = createResource("Hydrogen");
-export const Coal = createResource("Coal");
+export const Wood = createResource({
+    name: "Wood"
+});
+
+export const Stone = createResource({
+    name: "Stone"
+});
+
+export const Iron = createResource({
+    name: "Iron"
+});
+
+export const Brick = createResource({
+    name: "Brick"
+});
+
+export const Hydrogen = createResource({
+    name: "Hydrogen"
+});
+
+export const Coal = createResource({
+    name: "Coal"
+});
+

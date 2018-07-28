@@ -4,18 +4,33 @@ import {Global} from "./global";
 import {obj2Arr} from "../utils";
 import {MS_PER_UPDATE, S_PER_UPDATE} from "./constants";
 
+export interface ProductionClusterProps {
+    name: string,
+    resources?: { [id: number]: number }
+    buildings?: { [id: number]: number }
+}
+
 export interface ProductionCluster extends Inventory {
     id: number;
     name: string;
     buildings: number[];
+    resources: number[];
 }
 
 let lastProductionClusterId = -1;
 const productionClusters: ProductionCluster[] = [];
 
-export function createProductionCluster(name: string): ProductionCluster {
+export function createProductionCluster(props: ProductionClusterProps): ProductionCluster {
+    const resources = obj2Arr(props.resources);
+    const buildings = obj2Arr(props.buildings);
+
     lastProductionClusterId += 1;
-    productionClusters[lastProductionClusterId] = { id: lastProductionClusterId, name, resources: [], buildings: [] };
+    productionClusters[lastProductionClusterId] = {
+        id: lastProductionClusterId,
+        name: props.name,
+        resources,
+        buildings
+    };
     return productionClusters[lastProductionClusterId];
 }
 
@@ -77,15 +92,15 @@ function calcEnergy(productionCluster: ProductionCluster): number {
     let energyConsumption = 0;
     productionCluster.buildings.forEach((level, buildingId) => {
         const building = getBuilding(buildingId);
-        if (building.producesEnergy) {
+        if (building.energy.produces) {
             let enough = true;
             building.consumes.forEach((amount, resourceId) => {
                 const consumed = amount * level * S_PER_UPDATE;
                 if (productionCluster.resources[resourceId] < consumed) enough = false;
             });
-            if (enough) energyProduction += building.producesEnergy * level;
+            if (enough) energyProduction += building.energy.produces * level;
         }
-        energyConsumption += building.consumesEnergy * level;
+        energyConsumption += building.energy.consumes * level;
     });
     const percent = energyProduction / energyConsumption;
     if (percent >= 1) return 1;
@@ -100,16 +115,16 @@ export function updateCluster(productionCluster: ProductionCluster) {
         const building = getBuilding(buildingId);
         let enough = true;
         building.consumes.forEach((amount, resourceId) => {
-            const consumed = amount * level * S_PER_UPDATE * (building.consumesEnergy > 0 ? energyPercent : 1);
+            const consumed = amount * level * S_PER_UPDATE * (building.energy.consumes > 0 ? energyPercent : 1);
             if (productionCluster.resources[resourceId] < consumed) enough = false;
         });
         if (enough) {
             building.produces.forEach((amount, resourceId) => {
-                const produced = amount * level * S_PER_UPDATE * (building.consumesEnergy > 0 ? energyPercent : 1);
+                const produced = amount * level * S_PER_UPDATE * (building.energy.consumes > 0 ? energyPercent : 1);
                 productionCluster.resources[resourceId] = (productionCluster.resources[resourceId] || 0) + produced;
             });
             building.consumes.forEach((amount, resourceId) => {
-                const consumed = amount * level * S_PER_UPDATE * (building.consumesEnergy > 0 ? energyPercent : 1);
+                const consumed = amount * level * S_PER_UPDATE * (building.energy.consumes > 0 ? energyPercent : 1);
                 productionCluster.resources[resourceId] = (productionCluster.resources[resourceId] || 0) - consumed;
             });
         }

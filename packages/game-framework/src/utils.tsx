@@ -4,8 +4,10 @@ import {S_PER_UPDATE} from "./engine/constants";
 
 export function obj2Arr(obj: any): number[] {
     const result: number[] = [];
-    for (let i in obj) {
-        result[i] = obj[i];
+    if(obj) {
+        for (let i in obj) {
+            result[i] = obj[i];
+        }
     }
     return result;
 }

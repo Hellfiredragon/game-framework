@@ -1,3 +1,7 @@
+export interface ResourceProps {
+    name: string;
+}
+
 export interface Resource {
     id: number;
     name: string;
@@ -6,9 +10,12 @@ export interface Resource {
 let lastItemId = -1;
 const items: Resource[] = [];
 
-export function createResource(name: string): Resource {
+export function createResource(props: ResourceProps): Resource {
     lastItemId += 1;
-    items[lastItemId] = { id: lastItemId, name };
+    items[lastItemId] = {
+        id: lastItemId,
+        name: props.name
+    };
     return items[lastItemId];
 }
 

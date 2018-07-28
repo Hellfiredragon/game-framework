@@ -4,56 +4,113 @@ import {Given, Then, When} from "../utils";
 import {addBuilding, createProductionCluster} from "./production-cluster";
 import {createGameLoop} from "../loop";
 
-export const Lumberjack = createBuilding("Lumberjack", "Resource",
-    {
+export const Lumberjack = createBuilding({
+    name: "Lumberjack",
+    category: "Resource",
+    cost: {
         [Wood.id]: 10
-    }, {
+    },
+    costFactor: {
         [Wood.id]: 2
-    }, {
+    },
+    produces: {
         [Wood.id]: 1
-    }, {},
-    0, 0);
-export const StoneWorker = createBuilding("Stone Worker", "Resource",
-    {
+    }
+});
+
+export const StoneWorker = createBuilding({
+    name: "Stone Worker",
+    category: "Resource",
+    cost: {
         [Wood.id]: 10, [Stone.id]: 10
-    }, {
+    }, costFactor: {
         [Wood.id]: 2,
         [Stone.id]: 3
-    }, {
+    }, produces: {
         [Stone.id]: 1
-    }, {},
-    0, 0);
-export const IronMine = createBuilding("Iron Mine", "Resource",
-    {
+    }
+});
+
+export const IronMine = createBuilding({
+    name: "Iron Mine",
+    category: "Resource",
+    cost: {
         [Stone.id]: 10,
         [Iron.id]: 20
-    }, {
+    }, costFactor: {
         [Stone.id]: 3,
         [Iron.id]: 4
-    }, {
+    }, produces: {
         [Iron.id]: 1
-    }, {},
-    0, 0);
-export const CoalMine = createBuilding("Coal Mine", "Resource",
-    {}, {}, {
+    }
+});
+
+export const CoalMine = createBuilding({
+    name: "Coal Mine",
+    category: "Resource",
+    cost: {},
+    costFactor: {},
+    produces: {
         [Coal.id]: 1
-    }, {},
-    0, 0);
+    }
+});
 
-export const Bonfire = createBuilding("Bonfire", "Furniture",
-    {}, {}, {}, { [Wood.id]: 1 },
-    0, 0);
-export const BrickFurnace = createBuilding("BrickFurnace", "Processing",
-    {}, {}, { [Brick.id]: 1 }, { [Wood.id]: 1, [Stone.id]: 1 },
-    0, 0);
+export const Bonfire = createBuilding({
+    name: "Bonfire", category: "Furniture",
+    cost: {},
+    costFactor: {},
+    consumes: {
+        [Wood.id]: 1
+    }
+});
 
-export const HydrogenKatalysator = createBuilding("Hydrogen Catalysator", "Resource",
-    {}, {}, { [Hydrogen.id]: 2 }, {},
-    50, 0);
+export const BrickFurnace = createBuilding({
+    name: "BrickFurnace",
+    category: "Processing",
+    cost: {},
+    costFactor: {},
+    produces: {
+        [Brick.id]: 1
+    },
+    consumes: {
+        [Wood.id]: 1,
+        [Stone.id]: 1
+    }
+});
 
-export const FuelCell = createBuilding("Fuel Cell", "Energy",
-    {}, {}, {}, { [Hydrogen.id]: 1 },
-    0, 100);
-export const PowerPlant = createBuilding("Power Plant", "Energy",
-    {}, {}, {}, { [Coal.id]: 1 },
-    0, 100);
+export const HydrogenKatalysator = createBuilding({
+    name: "Hydrogen Catalysator",
+    category: "Resource",
+    cost: {},
+    costFactor: {},
+    produces: {
+        [Hydrogen.id]: 2
+    },
+    energy: {
+        consumes: 50
+    }
+});
+
+export const FuelCell = createBuilding({
+    name: "Fuel Cell",
+    category: "Energy",
+    cost: {},
+    costFactor: {},
+    consumes: {
+        [Hydrogen.id]: 1
+    },
+    energy: {
+        produces: 100
+    }
+});
+
+export const PowerPlant = createBuilding({
+    name: "Power Plant",
+    category: "Energy",
+    cost: {},
+    costFactor: {},
+    consumes: { [Coal.id]: 1 },
+    energy: {
+        produces: 100
+    }
+});

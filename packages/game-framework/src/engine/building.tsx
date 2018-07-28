@@ -1,5 +1,18 @@
 import {obj2Arr} from "../utils";
 
+export interface BuildingProps {
+    name: string;
+    category: string;
+    cost: { [id: number]: number };
+    costFactor: { [id: number]: number };
+    produces?: { [id: number]: number };
+    consumes?: { [id: number]: number };
+    energy?: {
+        consumes?: number;
+        produces?: number;
+    }
+}
+
 export interface Building {
     id: number;
     name: string;
@@ -8,31 +21,31 @@ export interface Building {
     costFactor: number[];
     produces: number[];
     consumes: number[];
-    consumesEnergy: number,
-    producesEnergy: number
+    energy: {
+        produces: number;
+        consumes: number;
+    }
 }
 
 let lastBuildingId = -1;
 const buildings: Building[] = [];
 
-export function createBuilding(
-    name: string,
-    category: string,
-    costObj: { [id: number]: number },
-    costFactorObj: { [id: number]: number },
-    producesObj: { [id: number]: number },
-    consumesObj: { [id: number]: number },
-    consumesEnergy: number,
-    producesEnergy: number
-): Building {
-    const cost = obj2Arr(costObj);
-    const costFactor = obj2Arr(costFactorObj);
-    const produces = obj2Arr(producesObj);
-    const consumes = obj2Arr(consumesObj);
+export function createBuilding(props: BuildingProps): Building {
+    const cost = obj2Arr(props.cost);
+    const costFactor = obj2Arr(props.costFactor);
+    const produces = obj2Arr(props.produces);
+    const consumes = obj2Arr(props.consumes);
     lastBuildingId += 1;
     buildings[lastBuildingId] = {
-        id: lastBuildingId, name, category, cost, costFactor,
-        produces, consumes, consumesEnergy, producesEnergy
+        id: lastBuildingId,
+        name: props.name,
+        category: props.category,
+        cost, costFactor,
+        produces, consumes,
+        energy: {
+            produces: props.energy && props.energy.produces ? props.energy.produces : 0,
+            consumes: props.energy && props.energy.consumes ? props.energy.consumes : 0
+        }
     };
     return buildings[lastBuildingId];
 }
