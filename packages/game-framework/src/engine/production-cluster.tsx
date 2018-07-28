@@ -6,6 +6,7 @@ import {MS_PER_UPDATE, S_PER_UPDATE} from "./constants";
 
 export interface ProductionClusterProps {
     name: string,
+    explored?: boolean,
     resources?: { [id: number]: number }
     buildings?: { [id: number]: number }
 }
@@ -13,6 +14,7 @@ export interface ProductionClusterProps {
 export interface ProductionCluster extends Inventory {
     id: number;
     name: string;
+    explored: boolean
     buildings: number[];
     resources: number[];
 }
@@ -28,6 +30,7 @@ export function createProductionCluster(props: ProductionClusterProps): Producti
     productionClusters[lastProductionClusterId] = {
         id: lastProductionClusterId,
         name: props.name,
+        explored: props.explored || false,
         resources,
         buildings
     };
@@ -36,6 +39,14 @@ export function createProductionCluster(props: ProductionClusterProps): Producti
 
 export function getProductionCluster(id: string | number): ProductionCluster {
     return productionClusters[id];
+}
+
+export function getExploredProductionCluster(): ProductionCluster[] {
+    return productionClusters.filter(p => p.explored)
+}
+
+export function updateAllProductionCluster() {
+    productionClusters.forEach(updateCluster);
 }
 
 export function getCost(productionCluster: ProductionCluster, building: Building, levels: number): number[] {
@@ -129,4 +140,13 @@ export function updateCluster(productionCluster: ProductionCluster) {
             });
         }
     });
+}
+
+export function showProductionClusterList() {
+    Global.navigation.page = "production-cluster-list";
+}
+
+export function showProductionCluster(id: number) {
+    Global.navigation.page = "production-cluster-view";
+    Global.navigation.id = id;
 }
