@@ -18,7 +18,10 @@ export class Button extends React.PureComponent<ButtonProps> {
         const myState: ButtonState = state || "normal";
 
         const cls = classNames(
-            "gf-button", "gf-" + myState, symbol && "gf-symbol"
+            "gf-button",
+            "gf-" + myState,
+            symbol && "gf-" + symbol,
+            symbol && "gf-symbol"
         );
 
         return <div className={cls} onClick={myState == "normal" ? action : undefined}>

@@ -11,6 +11,10 @@ export const MagicForest = createProductionCluster({
     name: "MagicForest"
 });
 
+export const Europe = createProductionCluster({ name: "Europe", explored: true });
+export const Asia = createProductionCluster({ name: "Asia", explored: true });
+export const Russia = createProductionCluster({ name: "Russia" });
+
 Given("an production cluster", () => {
 
     When("I increase the building level", () => {
