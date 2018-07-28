@@ -7,6 +7,7 @@ import {
 } from "../engine/navigation";
 import {Global} from "../engine/global";
 import {BuildingCategories, BuildingCategorySymbols, getBuildingsByCategory} from "../engine/building";
+import {BuildingList} from "./building-list";
 
 export class BuildingMenu extends React.PureComponent<{
     buildingCategory: string
@@ -21,18 +22,6 @@ export class BuildingMenu extends React.PureComponent<{
                         symbol={BuildingCategorySymbols[category]}
                         state={buildingCategory == category ? "active" : "normal"}/>
             )}
-        </article>
-    }
-
-}
-
-export class BuildingList extends React.Component {
-
-    render() {
-        const buildings = getBuildingsByCategory(Global.navigation.buildingCategory);
-
-        return <article className="gf-building-list">
-            {buildings.map(b => b.name)}
         </article>
     }
 
