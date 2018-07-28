@@ -1,26 +1,21 @@
 import {obj2Arr} from "../utils";
 import {Inventory} from "./inventory";
-
-export type Pages =
-    | "production-cluster/overview"
-    | "production-cluster/item"
-    | "research/overview"
+import {Navigation, Pages} from "./navigation";
 
 export interface GlobalState {
     framesPerSecond: number;
     revenueFactor: number;
-    navigation: {
-        page: Pages
-        id: number
-    }
+    navigation: Navigation
 }
 
 export const Defaults: GlobalState = {
     framesPerSecond: 30,
     revenueFactor: 0.5,
     navigation: {
-        page: "production-cluster/overview",
-        id: -1
+        main: "production-cluster",
+        sub: "overview",
+        buildingCategory: "Resource",
+        id: 0
     }
 };
 

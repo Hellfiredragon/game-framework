@@ -22,7 +22,8 @@ Given("a production cluster view", () => {
             const div = findComponentWithClass<HTMLDivElement>(<ProductionClusterView id={Europe.id}/>, "gf-chevron-left");
             Simulate.click(div);
 
-            expect(Global.navigation.page).toBe("production-cluster-list");
+            expect(Global.navigation.main).toBe("production-cluster");
+            expect(Global.navigation.sub).toBe("overview");
         });
 
     });

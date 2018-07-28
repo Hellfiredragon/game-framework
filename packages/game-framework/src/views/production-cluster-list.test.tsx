@@ -41,7 +41,8 @@ Given("a production cluster list item", () => {
             const div = findComponentWithClass<HTMLDivElement>(<ProductionClusterListItem id={Europe.id}/>, "gf-production-cluster-list-item");
             Simulate.click(div);
 
-            expect(Global.navigation.page).toBe("production-cluster-view");
+            expect(Global.navigation.main).toBe("production-cluster");
+            expect(Global.navigation.sub).toBe("details");
             expect(Global.navigation.id).toBe(Europe.id);
         });
 

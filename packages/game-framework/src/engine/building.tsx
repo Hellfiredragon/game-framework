@@ -2,6 +2,15 @@ import {obj2Arr} from "../utils";
 
 export type BuildingCategory = "Resource" | "Processing" | "Energy" | "Research"
 
+export const BuildingCategories: BuildingCategory[] = ["Resource", "Processing", "Energy", "Research"];
+
+export const BuildingCategorySymbols: { [K in BuildingCategory]: string } = {
+    "Resource": "gavel",
+    "Processing": "cog",
+    "Energy": "bolt",
+    "Research": "flask"
+};
+
 export interface BuildingProps {
     name: string;
     category?: BuildingCategory;
@@ -54,4 +63,8 @@ export function createBuilding(props: BuildingProps): Building {
 
 export function getBuilding(id: string | number): Building {
     return buildings[id];
+}
+
+export function getBuildingsByCategory(category: BuildingCategory): Building[] {
+    return buildings.filter(b => b.category == category);
 }
