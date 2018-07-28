@@ -24,3 +24,7 @@ export const Coal = createResource({
     name: "Coal"
 });
 
+export const ResearchPoints = createResource({
+    name: "Research Points",
+    category: "Research"
+});

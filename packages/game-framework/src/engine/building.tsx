@@ -1,8 +1,10 @@
 import {obj2Arr} from "../utils";
 
+export type BuildingCategory = "Resource" | "Processing" | "Energy" | "Research"
+
 export interface BuildingProps {
     name: string;
-    category: string;
+    category?: BuildingCategory;
     cost: { [id: number]: number };
     costFactor: { [id: number]: number };
     produces?: { [id: number]: number };
@@ -16,7 +18,7 @@ export interface BuildingProps {
 export interface Building {
     id: number;
     name: string;
-    category: string;
+    category: BuildingCategory;
     cost: number[];
     costFactor: number[];
     produces: number[];
@@ -39,7 +41,7 @@ export function createBuilding(props: BuildingProps): Building {
     buildings[lastBuildingId] = {
         id: lastBuildingId,
         name: props.name,
-        category: props.category,
+        category: props.category || "Resource",
         cost, costFactor,
         produces, consumes,
         energy: {

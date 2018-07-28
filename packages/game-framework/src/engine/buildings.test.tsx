@@ -1,12 +1,11 @@
 import {createBuilding, Building} from "./building";
-import {Brick, Coal, Hydrogen, Iron, Stone, Wood} from "./resource.test";
+import {Brick, Coal, Hydrogen, Iron, ResearchPoints, Stone, Wood} from "./resource.test";
 import {Given, Then, When} from "../utils";
 import {addBuilding, createProductionCluster} from "./production-cluster";
 import {createGameLoop} from "../loop";
 
 export const Lumberjack = createBuilding({
     name: "Lumberjack",
-    category: "Resource",
     cost: {
         [Wood.id]: 10
     },
@@ -20,7 +19,6 @@ export const Lumberjack = createBuilding({
 
 export const StoneWorker = createBuilding({
     name: "Stone Worker",
-    category: "Resource",
     cost: {
         [Wood.id]: 10, [Stone.id]: 10
     }, costFactor: {
@@ -33,7 +31,6 @@ export const StoneWorker = createBuilding({
 
 export const IronMine = createBuilding({
     name: "Iron Mine",
-    category: "Resource",
     cost: {
         [Stone.id]: 10,
         [Iron.id]: 20
@@ -47,7 +44,6 @@ export const IronMine = createBuilding({
 
 export const CoalMine = createBuilding({
     name: "Coal Mine",
-    category: "Resource",
     cost: {},
     costFactor: {},
     produces: {
@@ -56,11 +52,15 @@ export const CoalMine = createBuilding({
 });
 
 export const Bonfire = createBuilding({
-    name: "Bonfire", category: "Furniture",
+    name: "Bonfire",
+    category: "Energy",
     cost: {},
     costFactor: {},
     consumes: {
         [Wood.id]: 1
+    },
+    energy: {
+        produces: 1
     }
 });
 
@@ -80,7 +80,6 @@ export const BrickFurnace = createBuilding({
 
 export const HydrogenKatalysator = createBuilding({
     name: "Hydrogen Catalysator",
-    category: "Resource",
     cost: {},
     costFactor: {},
     produces: {
@@ -109,8 +108,23 @@ export const PowerPlant = createBuilding({
     category: "Energy",
     cost: {},
     costFactor: {},
-    consumes: { [Coal.id]: 1 },
+    consumes: {
+        [Coal.id]: 1
+    },
     energy: {
         produces: 100
+    }
+});
+
+export const Lab = createBuilding({
+    name: "Lab",
+    category: "Research",
+    cost: {},
+    costFactor: {},
+    produces: {
+        [ResearchPoints.id]: 100
+    },
+    energy: {
+        consumes: 100
     }
 });

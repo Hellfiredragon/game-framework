@@ -1,7 +1,7 @@
 import {buildingHint, cloneArray, Given, obj2Arr, resourceHint, Then, When, withFrameVariation} from "../utils";
 import {addBuilding, createProductionCluster, removeBuilding, ProductionCluster, updateCluster} from "./production-cluster";
-import {Brick, Coal, Hydrogen, Iron, Stone, Wood} from "./resource.test";
-import {Bonfire, BrickFurnace, FuelCell, HydrogenKatalysator, IronMine, Lumberjack, PowerPlant, StoneWorker} from "./buildings.test";
+import {Brick, Coal, Hydrogen, Iron, ResearchPoints, Stone, Wood} from "./resource.test";
+import {Bonfire, BrickFurnace, FuelCell, HydrogenKatalysator, IronMine, Lab, Lumberjack, PowerPlant, StoneWorker} from "./buildings.test";
 import {Building, createBuilding, getBuilding} from "./building";
 import {Global} from "./global";
 import {getResource} from "./resource";
@@ -447,6 +447,16 @@ Given("an production cluster", () => {
                 startBuildings: { [HydrogenKatalysator.id]: 10, [PowerPlant.id]: 2, [FuelCell.id]: 2 },
                 expectedResources: { [Hydrogen.id]: 0, [Coal.id]: 9800 },
             },
+            {
+                startResources: { [Coal.id]: 10000 },
+                startBuildings: { [Lab.id]: 1, [PowerPlant.id]: 1 },
+                expectedResources: { [Coal.id]: 9900, [ResearchPoints.id]: 10000 }
+            },
+            {
+                startResources: { [Coal.id]: 10000 },
+                startBuildings: { [Lab.id]: 6, [PowerPlant.id]: 4 },
+                expectedResources: { [Coal.id]: 9600, [ResearchPoints.id]: 20000 }
+            }
         ]).forEach(param => {
             const startResources = obj2Arr(param.startResources);
             const expectedResources = obj2Arr(param.expectedResources);
