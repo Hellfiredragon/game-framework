@@ -11,22 +11,17 @@ export interface ButtonProps {
     symbol?: string
 }
 
-export class Button extends React.Component<ButtonProps> {
-
-    lastState: ButtonState = "normal";
-
-    shouldComponentUpdate(nextProps: Readonly<ButtonProps>): boolean {
-        return nextProps.state != this.lastState;
-    }
+export class Button extends React.PureComponent<ButtonProps> {
 
     render(): React.ReactNode {
         const { state, action, symbol, text } = this.props;
-        this.lastState = state;
+        const myState: ButtonState = state || "normal";
+
         const cls = classNames(
-            "gf-button", "gf-" + state, symbol && "gf-symbol"
+            "gf-button", "gf-" + myState, symbol && "gf-symbol"
         );
 
-        return <div className={cls} onClick={state == "normal" ? action : undefined}>
+        return <div className={cls} onClick={myState == "normal" ? action : undefined}>
             <Border/>
             {text || <span className={"fas fa-" + symbol}/>}
         </div>
