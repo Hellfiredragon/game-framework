@@ -44,8 +44,15 @@ export const IronMine = createBuilding({
 
 export const CoalMine = createBuilding({
     name: "Coal Mine",
-    cost: {},
-    costFactor: {},
+    cost: {
+        [Iron.id]: 100
+    },
+    costFactor: {
+        [Iron.id]: 2
+    },
+    costLevel: {
+        [Iron.id]: 11
+    },
     produces: {
         [Coal.id]: 1
     }

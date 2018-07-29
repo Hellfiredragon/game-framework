@@ -55,7 +55,14 @@ export function getCost(productionCluster: ProductionCluster, building: Building
     const cost: number[] = [];
     for (let i in building.cost) {
         let c = 0;
-        for (let j = current; j < next; j++) c += Math.pow(building.costFactor[i], j);
+        for (let j = current; j < next; j++) {
+            if (building.costLevel[i]) {
+                if (j < building.costLevel[i] - 1) continue;
+                c += Math.pow(building.costFactor[i], j - building.costLevel[i] + 1);
+            } else {
+                c += Math.pow(building.costFactor[i], j);
+            }
+        }
         cost[i] = building.cost[i] * c;
     }
     return cost;

@@ -1,7 +1,7 @@
 import {buildingHint, cloneArray, Given, obj2Arr, resourceHint, Then, When, withFrameVariation} from "../utils";
-import {addBuilding, createProductionCluster, removeBuilding, ProductionCluster, updateCluster} from "./production-cluster";
+import {addBuilding, createProductionCluster, removeBuilding, ProductionCluster, updateCluster, getCost} from "./production-cluster";
 import {Brick, Coal, Hydrogen, Iron, ResearchPoints, Stone, Wood} from "./resource.test";
-import {Bonfire, BrickFurnace, FuelCell, HydrogenKatalysator, IronMine, Lab, Lumberjack, PowerPlant, StoneWorker} from "./buildings.test";
+import {Bonfire, BrickFurnace, CoalMine, FuelCell, HydrogenKatalysator, IronMine, Lab, Lumberjack, PowerPlant, StoneWorker} from "./buildings.test";
 import {Building, createBuilding, getBuilding} from "./building";
 import {Global} from "./global";
 import {getResource} from "./resource";
@@ -73,6 +73,27 @@ Given("an production cluster", () => {
                 buildingsToAdd: { [StoneWorker.id]: 3, [IronMine.id]: 3 },
                 expectedResources: { [Wood.id]: 9930, [Stone.id]: 9740, [Iron.id]: 9580 },
                 expectedBuildings: { [Lumberjack.id]: 9, [StoneWorker.id]: 3, [IronMine.id]: 3 }
+            },
+            {
+                startResources,
+                startBuildings: { [CoalMine.id]: 9 },
+                buildingsToAdd: { [CoalMine.id]: 1 },
+                expectedResources: { [Wood.id]: 10000, [Stone.id]: 10000, [Iron.id]: 10000 },
+                expectedBuildings: { [CoalMine.id]: 10 }
+            },
+            {
+                startResources,
+                startBuildings: { [CoalMine.id]: 10 },
+                buildingsToAdd: { [CoalMine.id]: 1 },
+                expectedResources: { [Wood.id]: 10000, [Stone.id]: 10000, [Iron.id]: 9900 },
+                expectedBuildings: { [CoalMine.id]: 11 }
+            },
+            {
+                startResources,
+                startBuildings: { [CoalMine.id]: 10 },
+                buildingsToAdd: { [CoalMine.id]: 5 },
+                expectedResources: { [Wood.id]: 10000, [Stone.id]: 10000, [Iron.id]: 6900 },
+                expectedBuildings: { [CoalMine.id]: 15 }
             },
         ].forEach(param => {
             const buildingsToAdd = obj2Arr(param.buildingsToAdd);

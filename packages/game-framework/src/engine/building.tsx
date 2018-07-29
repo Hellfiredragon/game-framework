@@ -16,6 +16,7 @@ export interface BuildingProps {
     category?: BuildingCategory;
     cost: { [id: number]: number };
     costFactor: { [id: number]: number };
+    costLevel?: { [id: number]: number };
     produces?: { [id: number]: number };
     consumes?: { [id: number]: number };
     energy?: {
@@ -30,6 +31,7 @@ export interface Building {
     category: BuildingCategory;
     cost: number[];
     costFactor: number[];
+    costLevel: number[];
     produces: number[];
     consumes: number[];
     energy: {
@@ -44,6 +46,7 @@ const buildings: Building[] = [];
 export function createBuilding(props: BuildingProps): Building {
     const cost = obj2Arr(props.cost);
     const costFactor = obj2Arr(props.costFactor);
+    const costLevel = obj2Arr(props.costLevel);
     const produces = obj2Arr(props.produces);
     const consumes = obj2Arr(props.consumes);
     lastBuildingId += 1;
@@ -51,8 +54,11 @@ export function createBuilding(props: BuildingProps): Building {
         id: lastBuildingId,
         name: props.name,
         category: props.category || "Resource",
-        cost, costFactor,
-        produces, consumes,
+        cost,
+        costFactor,
+        costLevel,
+        produces,
+        consumes,
         energy: {
             produces: props.energy && props.energy.produces ? props.energy.produces : 0,
             consumes: props.energy && props.energy.consumes ? props.energy.consumes : 0

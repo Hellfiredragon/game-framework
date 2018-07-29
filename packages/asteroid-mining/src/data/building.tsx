@@ -1,13 +1,19 @@
 import {createBuilding} from "game-framework";
-import {Iron, IronOre} from "./resource";
+import {Iron, IronOre, RP} from "./resource";
 
 export const IronMine = createBuilding({
     name: "Iron Mine",
-    category: "Resource",
-    cost: { [Iron.id]: 10 },
+    cost: { [Iron.id]: 100 },
     costFactor: { [Iron.id]: 1.1 },
     produces: { [IronOre.id]: 1 },
     consumes: {}
+});
+
+export const Quarry = createBuilding({
+    name: "Quarry",
+    cost: { [Iron.id]: 100 },
+    costFactor: { [Iron.id]: 10 },
+    produces: {}
 });
 
 export const IronBlastFurnace = createBuilding({
