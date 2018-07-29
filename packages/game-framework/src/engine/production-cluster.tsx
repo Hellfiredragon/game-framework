@@ -127,24 +127,31 @@ function calcEnergy(productionCluster: ProductionCluster): number {
     return result;
 }
 
-export function updateCluster(productionCluster: ProductionCluster) {
+export function calcProduction(productionCluster: ProductionCluster): number[] {
     const energyPercent = calcEnergy(productionCluster);
+    const production: number[] = [];
     productionCluster.buildings.forEach((level, buildingId) => {
         const building = getBuilding(buildingId);
         let enough = true;
         building.consumes.forEach((amount, resourceId) => {
-            const consumed = amount * level * S_PER_UPDATE * (building.energy.consumes > 0 ? energyPercent : 1);
+            const consumed = amount * level * (building.energy.consumes > 0 ? energyPercent : 1);
             if (productionCluster.resources[resourceId] < consumed) enough = false;
         });
         if (enough) {
             building.produces.forEach((amount, resourceId) => {
-                const produced = amount * level * S_PER_UPDATE * (building.energy.consumes > 0 ? energyPercent : 1);
-                productionCluster.resources[resourceId] = (productionCluster.resources[resourceId] || 0) + produced;
+                production[resourceId] = (production[resourceId] || 0) + amount * level * (building.energy.consumes > 0 ? energyPercent : 1);
             });
             building.consumes.forEach((amount, resourceId) => {
-                const consumed = amount * level * S_PER_UPDATE * (building.energy.consumes > 0 ? energyPercent : 1);
-                productionCluster.resources[resourceId] = (productionCluster.resources[resourceId] || 0) - consumed;
+                production[resourceId] = (production[resourceId] || 0) - amount * level * (building.energy.consumes > 0 ? energyPercent : 1);
             });
         }
+    });
+    return production;
+}
+
+export function updateCluster(productionCluster: ProductionCluster) {
+    const production = calcProduction(productionCluster);
+    production.forEach((amount, resourceId) => {
+        productionCluster.resources[resourceId] = (productionCluster.resources[resourceId] || 0) + amount * S_PER_UPDATE;
     });
 }

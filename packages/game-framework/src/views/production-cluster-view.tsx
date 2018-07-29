@@ -1,5 +1,5 @@
 import * as React from "react";
-import {getProductionCluster} from "../engine/production-cluster";
+import {calcProduction, getProductionCluster} from "../engine/production-cluster";
 import {Button} from "../components/button";
 import {
     showBuildingList,
@@ -8,8 +8,42 @@ import {
 import {Global} from "../engine/global";
 import {BuildingCategories, BuildingCategorySymbols, getBuildingsByCategory} from "../engine/building";
 import {BuildingList} from "./building-list";
-import {ResourceList} from "./resource-list";
 import {Text} from "../components/text";
+import {formatNumber} from "../engine/render-utils";
+import {getResource} from "../engine/resource";
+
+export class ResourceProductionListItem extends React.PureComponent<{
+    id: number;
+    amount: number;
+    production: number;
+}> {
+
+    render() {
+        const { id, amount, production } = this.props;
+        const resource = getResource(id);
+        const productionStyle = production > 0 ? "production" : production < 0 ? "consumption" : "neutral";
+
+        return <article className="gf-resource-list-item">
+            <Text style="accent">{resource.name}:</Text> <Text>{formatNumber(amount)}</Text> <Text style={productionStyle}>({formatNumber(production)}/s)</Text>
+        </article>;
+    }
+
+}
+
+export class ResourceProductionList extends React.Component<{
+    clusterId: number;
+}> {
+
+    render() {
+        const cluster = getProductionCluster(this.props.clusterId);
+        const production = calcProduction(cluster);
+
+        return <article className="gf-resource-list">
+            {cluster.resources.map((amount, id) => <ResourceProductionListItem key={id} id={id} amount={amount} production={production[id]}/>)}
+        </article>
+    }
+
+}
 
 export class BuildingMenu extends React.PureComponent<{
     buildingCategory: string
@@ -42,7 +76,7 @@ export class ProductionClusterView extends React.Component<{
                 <Text>{cluster.name}</Text>
             </header>
             <BuildingMenu buildingCategory={Global.navigation.buildingCategory}/>
-            <ResourceList resources={cluster.resources}/>
+            <ResourceProductionList clusterId={cluster.id}/>
             <BuildingList clusterId={cluster.id}/>
         </article>
     }

@@ -6,6 +6,7 @@ function log10(x: number): number {
 }
 
 export function formatNumber(n: number): string {
+    if(n === undefined) return "0";
     if(n > 1) {
         const exp = Math.floor(log10(n * 1.11) / 3);
         const suffix = suffixes.short[exp];

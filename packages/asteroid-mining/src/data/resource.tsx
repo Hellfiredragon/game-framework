@@ -1,4 +1,4 @@
-import {createResource} from "game-framework";
+import {createResource, Resource} from "game-framework";
 
 export const IronOre = createResource({
     name: "Iron Ore"

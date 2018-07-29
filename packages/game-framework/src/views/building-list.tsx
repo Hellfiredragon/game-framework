@@ -6,7 +6,37 @@ import {getResource} from "../engine/resource";
 import {addBuilding, getCost, getProductionCluster, removeBuilding} from "../engine/production-cluster";
 import {Button} from "../components/button";
 import {enoughResources} from "../engine/inventory";
-import {ResourceList} from "./resource-list";
+import {formatNumber} from "../engine/render-utils";
+import {Text} from "../components/text";
+
+export class CostListItem extends React.PureComponent<{
+    id: number,
+    amount: number
+}> {
+
+    render() {
+        const { id, amount } = this.props;
+        const resource = getResource(id);
+
+        return <article className="gf-cost-list-item">
+            <Text style="accent">{resource.name}:</Text> <Text>{formatNumber(amount)}</Text>
+        </article>;
+    }
+
+}
+
+export class CostList extends React.Component<{
+    resources: number[]
+}> {
+
+    render() {
+        const { resources } = this.props;
+        return <article className="gf-cost-list">
+            {resources.map((amount, id) => <CostListItem key={id} id={id} amount={amount}/>)}
+        </article>
+    }
+
+}
 
 export class BuildingListItem extends React.PureComponent<{
     clusterId: number,
@@ -38,7 +68,7 @@ export class BuildingListItem extends React.PureComponent<{
 
         return <article className="gf-building-list-item">
             {building.name} ({currentLevel})
-            <ResourceList resources={cost}/>
+            <CostList resources={cost}/>
             <Button action={this.handleClickPlusOne} icon={"plus"} state={this.props.enoughResources ? "normal" : "disabled"}/>
             <Button action={this.handleClickMinusOne} icon={"minus"} state={cluster.buildings[building.id] > 0 ? "normal" : "disabled"}/>
         </article>;

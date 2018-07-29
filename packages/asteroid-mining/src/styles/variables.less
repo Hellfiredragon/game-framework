@@ -13,13 +13,15 @@
 
 /* colors */
 @foreground: white;
-@accent: rgba(0, 255, 255, 1);
+@accent: rgba(0, 200, 200, 1);
 @bg-accent: fadeout(@accent, 80%);
 @active: lighten(@accent, 20%);
 @disabled: rgb(150, 150, 150);
-@border-color: rgb(100, 100, 100);
 
-@body-background: linear-gradient(darken(@accent, 40%), black);
+@green: rgba(0, 200, 0, 1);
+@red: rgba(200, 0, 0, 1);
+
+@body-background: linear-gradient(darken(@accent, 30%), black);
 @main-background: linear-gradient(0deg, transparent 24%, @bg-accent 25%, @bg-accent 26%, transparent 27%, transparent 74%, @bg-accent 75%, @bg-accent 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, @bg-accent 25%, @bg-accent 26%, transparent 27%, transparent 74%, @bg-accent 75%, @bg-accent 76%, transparent 77%, transparent);
 
 @border-size: 1px;
@@ -55,4 +57,22 @@
     font-family: Xolonium, sans-serif;
     font-weight: bold;
 
+}
+
+.scrollbar {
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: @accent;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: lighten(@accent, 20%);;
+    }
 }
