@@ -39,8 +39,8 @@ export class BuildingListItem extends React.PureComponent<{
         return <article className="gf-building-list-item">
             {building.name} ({currentLevel})
             <ResourceList resources={cost}/>
-            <Button action={this.handleClickPlusOne} symbol={"plus"} state={this.props.enoughResources ? "normal" : "disabled"}/>
-            <Button action={this.handleClickMinusOne} symbol={"minus"} state={cluster.buildings[building.id] > 0 ? "normal" : "disabled"}/>
+            <Button action={this.handleClickPlusOne} icon={"plus"} state={this.props.enoughResources ? "normal" : "disabled"}/>
+            <Button action={this.handleClickMinusOne} icon={"minus"} state={cluster.buildings[building.id] > 0 ? "normal" : "disabled"}/>
         </article>;
     }
 

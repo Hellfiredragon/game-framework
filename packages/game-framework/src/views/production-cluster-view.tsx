@@ -9,6 +9,7 @@ import {Global} from "../engine/global";
 import {BuildingCategories, BuildingCategorySymbols, getBuildingsByCategory} from "../engine/building";
 import {BuildingList} from "./building-list";
 import {ResourceList} from "./resource-list";
+import {Text} from "../components/text";
 
 export class BuildingMenu extends React.PureComponent<{
     buildingCategory: string
@@ -20,7 +21,7 @@ export class BuildingMenu extends React.PureComponent<{
             {BuildingCategories.map(category =>
                 <Button key={category}
                         action={() => showBuildingList(category)}
-                        symbol={BuildingCategorySymbols[category]}
+                        icon={BuildingCategorySymbols[category]}
                         state={buildingCategory == category ? "active" : "normal"}/>
             )}
         </article>
@@ -36,9 +37,11 @@ export class ProductionClusterView extends React.Component<{
         const cluster = getProductionCluster(this.props.id);
 
         return <article className="gf-production-cluster-view">
+            <header>
+                <Button action={showProductionClusterList} icon="chevron-left"/>
+                <Text>{cluster.name}</Text>
+            </header>
             <BuildingMenu buildingCategory={Global.navigation.buildingCategory}/>
-            <Button action={showProductionClusterList} symbol="chevron-left"/>
-            Name: {cluster.name}
             <ResourceList resources={cluster.resources}/>
             <BuildingList clusterId={cluster.id}/>
         </article>

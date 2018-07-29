@@ -1,0 +1,65 @@
+@import "../variables";
+
+.gf-production-cluster-view, .gf-production-cluster-list {
+    position: absolute;
+    top: 0;
+    left: @block-height + @border-size;
+    right: 0;
+    bottom: 0;
+    border-left: @border;
+}
+
+.gf-production-cluster-list-item {
+    cursor: pointer;
+    height: @block-height;
+    line-height: @line-height;
+    padding: @padding;
+
+    &:hover {
+        color: @active;
+    }
+}
+
+.gf-production-cluster-view {
+
+    > header {
+        position: absolute;
+        top: 1px;
+        left: 0;
+        right: 0;
+        height: @block-height;
+        line-height: @line-height;
+        padding: @padding;
+        border-bottom: @border;
+    }
+
+    > .gf-resource-list {
+        position: absolute;
+        top: @block-height + @border-size;
+        left: 0;
+        bottom: 0;
+        width: @resource-list-size;
+    }
+
+    > .gf-building-list {
+        position: absolute;
+        top: @block-height + @border-size;
+        left: @resource-list-size;
+        bottom: 0;
+        right: 0;
+    }
+
+}
+
+.gf-building-menu {
+    position: absolute;
+    left: -@block-height - @border-size;
+    top: 0;
+    bottom: 0;
+    width: @block-height;
+    padding: @padding;
+
+    .gf-button + .gf-button {
+        margin-top: @padding;
+    }
+}

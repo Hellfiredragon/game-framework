@@ -1,6 +1,8 @@
 import * as React from "react";
 import {getExploredProductionCluster, getProductionCluster} from "../engine/production-cluster";
 import {showProductionCluster} from "../engine/navigation";
+import {Icon} from "../components/icon";
+import {Text} from "../components/text";
 
 export class ProductionClusterListItem extends React.PureComponent<{
     id: number
@@ -14,7 +16,8 @@ export class ProductionClusterListItem extends React.PureComponent<{
         const cluster = getProductionCluster(this.props.id);
 
         return <div className="gf-production-cluster-list-item" onClick={this.handleClick}>
-            Name: {cluster.name}
+            <Icon icon="chevron-right"/>
+            <Text>{cluster.name}</Text>
         </div>
     }
 

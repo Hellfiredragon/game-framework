@@ -1,6 +1,7 @@
 import * as React from "react";
 import {getResource} from "../engine/resource";
 import {formatNumber} from "../engine/render-utils";
+import {Text} from "../components/text";
 
 export class ResourceListItem extends React.PureComponent<{
     id: number,
@@ -12,7 +13,7 @@ export class ResourceListItem extends React.PureComponent<{
         const resource = getResource(id);
 
         return <article className="gf-resource-list-item">
-            {resource.name}: {formatNumber(amount)}
+            <Text style="accent">{resource.name}:</Text> <Text>{formatNumber(amount)}</Text>
         </article>;
     }
 

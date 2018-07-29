@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as classNames from "classnames";
 import {Button} from "../components/button";
-import {Border} from "../components/border";
 import {ProductionClusterList} from "./production-cluster-list";
 import {Global} from "../engine/global";
 import {ProductionClusterView} from "./production-cluster-view";
@@ -12,8 +11,8 @@ export class MainMenu extends React.PureComponent<{ page: string }> {
     render() {
         const { page } = this.props;
         return <article className="gf-main-menu">
-            <Button action={showProductionClusterList} symbol={"cogs"} state={page.indexOf("production-cluster") == -1 ? "normal" : "active"}/>
-            <Button action={showResearchList} symbol={"flask"} state={page.indexOf("research") == -1 ? "normal" : "active"}/>
+            <Button action={showProductionClusterList} icon={"cogs"} state={page.indexOf("production-cluster") == -1 ? "normal" : "active"}/>
+            <Button action={showResearchList} icon={"flask"} state={page.indexOf("research") == -1 ? "normal" : "active"}/>
         </article>
     }
 
@@ -42,7 +41,9 @@ export class Main extends React.Component {
 
         return <article className="gf-main">
             <MainMenu page={Global.navigation.main}/>
+            <div className="gf-main-content">
             {body}
+            </div>
         </article>
     }
 

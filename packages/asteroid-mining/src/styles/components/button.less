@@ -4,25 +4,11 @@
     position: relative;
     display: inline-block;
     cursor: pointer;
-    height: @button-height;
-    line-height: @button-height;
+    height: @line-height;
+    line-height: @line-height;
     width: @button-width;
     text-align: center;
-    transition: all 500ms ease;
-    background: @gradient-background;
     user-select: none;
-    margin: 10px;
-
-    &::after {
-        content: " ";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: transparent;
-        transition: all 500ms ease;
-    }
 
     &.gf-active {
         color: @active;
@@ -46,16 +32,8 @@
         background: none;
     }
 
-    &.gf-symbol {
-        width: @button-height;
-        border-radius: @button-height;
-        .gf-border, .gf-border::before {
-            border-radius: @button-height;
-        }
-
-        &::after {
-            border-radius: @button-height;
-        }
+    &.gf-icon {
+        width: @line-height;
     }
 
 }

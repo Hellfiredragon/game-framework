@@ -24,6 +24,10 @@ export const Copper = createResource({
     name: "Copper"
 });
 
+export const Silicon = createResource({
+    name: "Silicon"
+});
+
 export const RP = createResource({
     name: "RP",
     category: "Research"

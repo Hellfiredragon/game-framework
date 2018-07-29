@@ -1,5 +1,10 @@
-@import "styles/components/border";
 @import "styles/components/button";
+@import "styles/components/icon";
+@import "styles/components/text";
+@import "styles/views/building";
+@import "styles/views/main";
+@import "styles/views/production-cluster";
+@import "styles/views/resource";
 @import "styles/variables";
 
 * {
@@ -7,16 +12,8 @@
 }
 
 body {
+    background-image: @body-background;
+    .font;
     padding: 0;
     margin: 0;
 }
-
-.gf-main {
-    .font;
-    background: @background;
-    position: relative;
-    width: @game-width;
-    height: @game-height;
-    border: 4px solid black;
-}
-

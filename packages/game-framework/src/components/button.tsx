@@ -1,33 +1,31 @@
 import * as React from "react";
 import * as classNames from "classnames";
-import {Border} from "./border";
 
 export type ButtonState = "active" | "normal" | "disabled" | undefined;
 
-export interface ButtonProps {
+export interface Props {
     state?: ButtonState;
     action: () => void;
     text?: string;
-    symbol?: string;
+    icon?: string;
     hint?: string;
 }
 
-export class Button extends React.PureComponent<ButtonProps> {
+export class Button extends React.PureComponent<Props> {
 
     render(): React.ReactNode {
-        const { state, action, symbol, text, hint } = this.props;
+        const { state, action, icon, text, hint } = this.props;
         const myState: ButtonState = state || "normal";
 
         const cls = classNames(
             "gf-button",
             "gf-" + myState,
-            symbol && "gf-" + symbol,
-            symbol && "gf-symbol"
+            icon && "gf-" + icon,
+            icon && "gf-icon"
         );
 
         return <div className={cls} onClick={myState == "normal" ? action : undefined}>
-            <Border/>
-            {text || <span className={"fas fa-" + symbol}/>}
+            {text || <span className={"fas fa-" + icon}/>}
             {hint && <span className="hint">{hint}</span> }
         </div>
     }

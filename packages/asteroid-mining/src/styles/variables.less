@@ -2,32 +2,57 @@
 @game-width: 1280px;
 @game-height: 720px;
 
-@menu-height: 40px;
+@padding: 9px;
 
-@button-height: 25px;
+@line-height: 18px;
+@block-height: @line-height + (2 * @padding);
+
+@resource-list-size: 150px + (2 * @padding);
+
 @button-width: 150px;
 
 /* colors */
 @foreground: white;
-@background: black;
-@active: rgba(0, 255, 255, 1);
-@accent: rgba(0, 255, 255, .6);
+@accent: rgba(0, 255, 255, 1);
+@bg-accent: fadeout(@accent, 80%);
+@active: lighten(@accent, 20%);
 @disabled: rgb(150, 150, 150);
-@medium-accent: rgba(0, 255, 255, .2);
 @border-color: rgb(100, 100, 100);
 
-@gradient-background: linear-gradient(to right, @medium-accent 0%, @accent 50%, @medium-accent 100%);
-@metal-frame: repeating-radial-gradient(grey 5px, rgb(100, 100, 100) 10px, grey 5px);
+@body-background: linear-gradient(darken(@accent, 40%), black);
+@main-background: linear-gradient(0deg, transparent 24%, @bg-accent 25%, @bg-accent 26%, transparent 27%, transparent 74%, @bg-accent 75%, @bg-accent 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, @bg-accent 25%, @bg-accent 26%, transparent 27%, transparent 74%, @bg-accent 75%, @bg-accent 76%, transparent 77%, transparent);
+
+@border-size: 1px;
+@border: @border-size solid @active;
+
+@font-face {
+    font-family: Xolonium;
+    src: url(font/Xolonium-Regular.otf);
+    src: url(font/Xolonium-Regular.ttf);
+}
+
+@font-face {
+    font-family: Xolonium;
+    src: url(font/Xolonium-Bold.otf);
+    src: url(font/Xolonium-Bold.ttf);
+    font-weight: bold;
+}
+
+.small-font {
+    font-size: 12px;
+    vertical-align: 1px;
+}
+
+.big-font {
+    font-size: 16px;
+    vertical-align: 0;
+}
 
 /* fonts */
 .font {
     color: white;
-    font-family: "Arial Black", sans-serif;
+    font-size: 12px;
+    font-family: Xolonium, sans-serif;
     font-weight: bold;
-    text-transform: uppercase;
-}
 
-.font-active {
-    .font;
-    color: @active;
 }
