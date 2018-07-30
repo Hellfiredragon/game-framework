@@ -1,5 +1,5 @@
 import * as React from "react";
-import {calcProduction, getProductionCluster} from "../engine/production-cluster";
+import {calcProduction, getEnergyConsumption, getEnergyProduction, getEnergyProductionFactor, getProductionCluster} from "../engine/production-cluster";
 import {Button} from "../components/button";
 import {
     showBuildingList,
@@ -9,7 +9,7 @@ import {Global} from "../engine/global";
 import {BuildingCategories, BuildingCategorySymbols, getBuildingsByCategory} from "../engine/building";
 import {BuildingList} from "./building-list";
 import {Text} from "../components/text";
-import {formatNumber} from "../engine/render-utils";
+import {formatNumber, formatPercent} from "../engine/render-utils";
 import {getResource} from "../engine/resource";
 
 export class ResourceProductionListItem extends React.PureComponent<{
@@ -21,7 +21,7 @@ export class ResourceProductionListItem extends React.PureComponent<{
     render() {
         const { id, amount, production } = this.props;
         const resource = getResource(id);
-        const productionStyle = production > 0 ? "production" : production < 0 ? "consumption" : "neutral";
+        const productionStyle = production > 0 ? "green" : production < 0 ? "red" : "grey";
 
         return <article className="gf-resource-list-item">
             <Text style="accent">{resource.name}:</Text> <Text>{formatNumber(amount)}</Text> <Text style={productionStyle}>({formatNumber(production)}/s)</Text>
@@ -63,6 +63,21 @@ export class BuildingMenu extends React.PureComponent<{
 
 }
 
+export class EnergyProduction extends React.PureComponent<{
+    production: number;
+    consumption: number;
+}> {
+    render() {
+        const { production, consumption } = this.props;
+        const energyProductionFactor = getEnergyProductionFactor(production, consumption);
+        const style = energyProductionFactor == 1 ? "green" : "red";
+
+        return <article className="gf-energy-production">
+            <Text style="accent">Energy:</Text> <Text>{production}/{consumption}</Text> <Text style={style}>({formatPercent(energyProductionFactor)})</Text>
+        </article>
+    }
+}
+
 export class ProductionClusterView extends React.Component<{
     id: number
 }> {
@@ -75,6 +90,7 @@ export class ProductionClusterView extends React.Component<{
                 <Button action={showProductionClusterList} icon="chevron-left"/>
                 <Text>{cluster.name}</Text>
             </header>
+            <EnergyProduction production={getEnergyProduction(cluster)} consumption={getEnergyConsumption(cluster)}/>
             <BuildingMenu buildingCategory={Global.navigation.buildingCategory}/>
             <ResourceProductionList clusterId={cluster.id}/>
             <BuildingList clusterId={cluster.id}/>

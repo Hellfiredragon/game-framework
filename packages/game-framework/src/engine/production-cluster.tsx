@@ -105,22 +105,35 @@ export function removeBuilding(productionCluster: ProductionCluster, building: B
     }
 }
 
-function calcEnergy(productionCluster: ProductionCluster): number {
+export function getEnergyProduction(cluster: ProductionCluster): number {
     let energyProduction = 0;
-    let energyConsumption = 0;
-    productionCluster.buildings.forEach((level, buildingId) => {
+    cluster.buildings.forEach((level, buildingId) => {
         const building = getBuilding(buildingId);
         if (building.energy.produces) {
             let enough = true;
             building.consumes.forEach((amount, resourceId) => {
                 const consumed = amount * level * S_PER_UPDATE;
-                if (productionCluster.resources[resourceId] < consumed) enough = false;
+                if (cluster.resources[resourceId] < consumed) enough = false;
             });
             if (enough) energyProduction += building.energy.produces * level;
         }
+    });
+    return energyProduction;
+}
+
+export function getEnergyConsumption(cluster: ProductionCluster) {
+    let energyConsumption = 0;
+    cluster.buildings.forEach((level, buildingId) => {
+        const building = getBuilding(buildingId);
         energyConsumption += building.energy.consumes * level;
     });
-    const percent = energyProduction / energyConsumption;
+    return energyConsumption;
+}
+
+export function getEnergyProductionFactor(production: number, consumption: number): number {
+    if(consumption == 0) return 1;
+    const percent = production / consumption;
+    if (isNaN(percent)) return 0;
     if (percent >= 1) return 1;
     const result = percent - (1 - percent);
     if (result < 0) return 0;
@@ -128,21 +141,21 @@ function calcEnergy(productionCluster: ProductionCluster): number {
 }
 
 export function calcProduction(productionCluster: ProductionCluster): number[] {
-    const energyPercent = calcEnergy(productionCluster);
+    const energyProductionFactor = getEnergyProductionFactor(getEnergyProduction(productionCluster), getEnergyConsumption(productionCluster));
     const production: number[] = [];
     productionCluster.buildings.forEach((level, buildingId) => {
         const building = getBuilding(buildingId);
         let enough = true;
         building.consumes.forEach((amount, resourceId) => {
-            const consumed = amount * level * (building.energy.consumes > 0 ? energyPercent : 1);
+            const consumed = amount * level * (building.energy.consumes > 0 ? energyProductionFactor : 1);
             if (productionCluster.resources[resourceId] < consumed) enough = false;
         });
         if (enough) {
             building.produces.forEach((amount, resourceId) => {
-                production[resourceId] = (production[resourceId] || 0) + amount * level * (building.energy.consumes > 0 ? energyPercent : 1);
+                production[resourceId] = (production[resourceId] || 0) + amount * level * (building.energy.consumes > 0 ? energyProductionFactor : 1);
             });
             building.consumes.forEach((amount, resourceId) => {
-                production[resourceId] = (production[resourceId] || 0) - amount * level * (building.energy.consumes > 0 ? energyPercent : 1);
+                production[resourceId] = (production[resourceId] || 0) - amount * level * (building.energy.consumes > 0 ? energyProductionFactor : 1);
             });
         }
     });

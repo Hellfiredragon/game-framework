@@ -17,3 +17,8 @@ export function formatNumber(n: number): string {
         return n.toFixed(FRACTION_DIGITS);
     }
 }
+
+export function formatPercent(n: number): string {
+    if(n === undefined) return "0%";
+    return (n * 100).toFixed(0) + "%";
+}
