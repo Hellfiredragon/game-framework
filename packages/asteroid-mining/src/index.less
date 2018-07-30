@@ -12,8 +12,18 @@
 }
 
 body {
-    background-image: @body-background;
+    background: url("images/galaxy.png");
     .font;
     padding: 0;
     margin: 0;
+    animation: background-move 60s infinite linear;
+}
+
+@keyframes background-move {
+    from {
+        background-position-x: 0;
+    }
+    to {
+        background-position-x: 1280px;
+    }
 }

@@ -31,12 +31,9 @@ module.exports = {
                 test: /.less$/,
                 use: [
                     MiniCssExtractPlugin.loader,
-                    'css-loader',
+                    'css-loader?url=false',
                     'less-loader',
                 ],
-            }, {
-                test: /.[ot]tf$/,
-                use: "ignore-loader"
             }
         ]
     },
@@ -47,7 +44,8 @@ module.exports = {
         new ForkTsCheckerWebpackPlugin(),
         new CopyWebpackPlugin([
             {from: path.resolve("src", "index.html"), to: "."},
-            {from: path.resolve("src", "styles", "font", "*"), to: "./font", flatten: true}
+            {from: path.resolve("src", "font", "*"), to: "./font", flatten: true},
+            {from: path.resolve("src", "images", "*"), to: "./images", flatten: true}
         ]),
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
