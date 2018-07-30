@@ -32,3 +32,13 @@ export const RP = createResource({
     name: "RP",
     category: "Research"
 });
+
+
+export const TestResources: {[id: number]: number} = {};
+
+for(let i = 0; i < 100; i++) {
+    const r = createResource({
+        name: i + ""
+    });
+    TestResources[r.id] = 1;
+}

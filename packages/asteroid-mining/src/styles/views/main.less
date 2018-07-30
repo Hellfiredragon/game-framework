@@ -5,9 +5,12 @@
     background-size: 50px 50px;
 
     position: relative;
-    width: @game-width;
-    height: @game-height;
+    width: @game-width - 40px;
+    height: @game-height - 40px;
     border: @border;
+    margin: 20px;
+    box-shadow: inset 0 0 800px 200px fadeout(@active, 90%), 0 0 2px 2px @active, 3px 3px 100px 20px rgba(0,0,0,1);
+
 }
 
 .gf-main-menu {

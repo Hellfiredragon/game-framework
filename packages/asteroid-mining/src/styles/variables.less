@@ -2,20 +2,20 @@
 @game-width: 1280px;
 @game-height: 720px;
 
-@padding: 9px;
+@padding: 18px;
 
-@line-height: 18px;
+@line-height: 24px;
 @block-height: @line-height + (2 * @padding);
 
-@resource-list-size: 200px + (2 * @padding);
+@resource-list-size: 250px + (2 * @padding);
 
 @button-width: 150px;
 
 /* colors */
 @foreground: white;
 @accent: rgba(0, 200, 200, 1);
+@active: rgba(0, 255, 255, 1);
 @bg-accent: fadeout(@accent, 80%);
-@active: lighten(@accent, 20%);
 @disabled: rgb(150, 150, 150);
 
 @green: rgba(0, 200, 0, 1);
@@ -41,12 +41,12 @@
 }
 
 .small-font {
-    font-size: 13px;
-    vertical-align: 2px;
+    font-size: 17px;
+    vertical-align: 3px;
 }
 
 .big-font {
-    font-size: 16px;
+    font-size: 24px;
     vertical-align: 0;
 }
 
@@ -61,7 +61,7 @@
 
 .scrollbar {
     &::-webkit-scrollbar {
-        width: 5px;
+        width: 10px;
     }
 
     &::-webkit-scrollbar-track {
@@ -73,6 +73,6 @@
     }
 
     &::-webkit-scrollbar-thumb:hover {
-        background: lighten(@accent, 20%);;
+        background: @active;
     }
 }
