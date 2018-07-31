@@ -1,5 +1,10 @@
 import {createResource, Resource} from "./resource";
 
+export const ResearchPoints = createResource({
+    name: "Research Points",
+    category: "Research"
+});
+
 export const Wood = createResource({
     name: "Wood"
 });
@@ -22,9 +27,4 @@ export const Hydrogen = createResource({
 
 export const Coal = createResource({
     name: "Coal"
-});
-
-export const ResearchPoints = createResource({
-    name: "Research Points",
-    category: "Research"
 });

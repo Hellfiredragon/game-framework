@@ -4,13 +4,19 @@ import {Navigation, Pages} from "./navigation";
 import {GlobalBuildings} from "./building";
 import {GlobalResources} from "./resource";
 import {GlobalClusters} from "./production-cluster";
+import {GlobalResearch} from "./research";
 
-export interface GlobalState extends GlobalBuildings,
-    GlobalResources,
-    GlobalClusters {
+export interface GlobalState
+    extends Inventory,
+        GlobalBuildings,
+        GlobalResources,
+        GlobalClusters,
+        GlobalResearch {
     framesPerSecond: number;
     revenueFactor: number;
-    navigation: Navigation
+    navigation: Navigation;
+    resources: number[];
+    researchLevels: number[];
 }
 
 export const Defaults: GlobalState = {
@@ -22,12 +28,17 @@ export const Defaults: GlobalState = {
         buildingCategory: "Resource",
         id: 0
     },
-    lastBuildingId: -1,
-    buildings: [],
-    lastResourceId: -1,
     resources: [],
+    researchLevels: [],
+
+    lastBuildingId: -1,
+    buildingTemplates: [],
+    lastResourceId: -1,
+    resourceTemplates: [],
     lastClusterId: -1,
-    clusters: []
+    clusters: [],
+    lastResearchId: -1,
+    researchProjects: []
 };
 
 export const Global: GlobalState = {

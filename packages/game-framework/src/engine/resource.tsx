@@ -15,19 +15,19 @@ export interface Resource {
 
 export interface GlobalResources {
     lastResourceId: number;
-    resources: Resource[];
+    resourceTemplates: Resource[];
 }
 
 export function createResource(props: ResourceProps): Resource {
     Global.lastResourceId += 1;
-    Global.resources[Global.lastResourceId] = {
+    Global.resourceTemplates[Global.lastResourceId] = {
         id: Global.lastResourceId,
         name: props.name,
         category: props.category || "Resource"
     };
-    return Global.resources[Global.lastResourceId];
+    return Global.resourceTemplates[Global.lastResourceId];
 }
 
 export function getResource(id: string | number): Resource {
-    return Global.resources[id];
+    return Global.resourceTemplates[id];
 }

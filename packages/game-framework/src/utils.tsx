@@ -9,6 +9,7 @@ import {ReactElement} from "react";
 import {Component} from "react";
 import {ComponentClass} from "react";
 import classNames = require("classnames");
+import {getResearch} from "./engine/research";
 
 export function obj2Arr(obj: any): number[] {
     const result: number[] = [];
@@ -33,7 +34,7 @@ export function Then(result: string, f: () => any) {
 export function resourceHint(array: number[]): string {
     let hint = "";
     for (let i in array) {
-        hint += array[i] + " " + getResource(Number(i)).name + ", ";
+        hint += array[i] + " " + getResource(i).name + ", ";
     }
     return hint.substr(0, hint.length - 2);
 }
@@ -41,7 +42,15 @@ export function resourceHint(array: number[]): string {
 export function buildingHint(array: number[]): string {
     let hint = "";
     for (let i in array) {
-        hint += getBuilding(Number(i)).name + " level " + array[i] + ", ";
+        hint += getBuilding(i).name + " level " + array[i] + ", ";
+    }
+    return hint.substr(0, hint.length - 2);
+}
+
+export function researchHint(array: number[]): string {
+    let hint = "";
+    for (let i in array) {
+        hint += getResearch(i).name + " level " + array[i] + ", ";
     }
     return hint.substr(0, hint.length - 2);
 }

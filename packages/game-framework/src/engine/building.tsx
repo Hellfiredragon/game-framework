@@ -18,6 +18,7 @@ export interface BuildingProps {
     cost: { [id: number]: number };
     costFactor: { [id: number]: number };
     costLevel?: { [id: number]: number };
+    explored?: boolean;
     produces?: { [id: number]: number };
     consumes?: { [id: number]: number };
     energy?: {
@@ -33,6 +34,7 @@ export interface Building {
     cost: number[];
     costFactor: number[];
     costLevel: number[];
+    explored: boolean;
     produces: number[];
     consumes: number[];
     energy: {
@@ -43,7 +45,7 @@ export interface Building {
 
 export interface GlobalBuildings {
     lastBuildingId: number;
-    buildings: Building[];
+    buildingTemplates: Building[];
 }
 
 export function createBuilding(props: BuildingProps): Building {
@@ -53,13 +55,14 @@ export function createBuilding(props: BuildingProps): Building {
     const produces = obj2Arr(props.produces);
     const consumes = obj2Arr(props.consumes);
     Global.lastBuildingId += 1;
-    Global.buildings[Global.lastBuildingId] = {
+    Global.buildingTemplates[Global.lastBuildingId] = {
         id: Global.lastBuildingId,
         name: props.name,
         category: props.category || "Resource",
         cost,
         costFactor,
         costLevel,
+        explored: props.explored || false,
         produces,
         consumes,
         energy: {
@@ -67,13 +70,13 @@ export function createBuilding(props: BuildingProps): Building {
             consumes: props.energy && props.energy.consumes ? props.energy.consumes : 0
         }
     };
-    return Global.buildings[Global.lastBuildingId];
+    return Global.buildingTemplates[Global.lastBuildingId];
 }
 
 export function getBuilding(id: string | number): Building {
-    return Global.buildings[id];
+    return Global.buildingTemplates[id];
 }
 
 export function getBuildingsByCategory(category: BuildingCategory): Building[] {
-    return Global.buildings.filter(b => b.category == category);
+    return Global.buildingTemplates.filter(b => b.category == category);
 }
