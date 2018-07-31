@@ -1,7 +1,7 @@
 import {buildingHint, cloneArray, Given, obj2Arr, resourceHint, Then, When, withFrameVariation} from "../utils";
 import {addBuilding, createProductionCluster, removeBuilding, ProductionCluster, updateCluster, getCost} from "./production-cluster";
 import {Brick, Coal, Hydrogen, Iron, ResearchPoints, Stone, Wood} from "./resource.test";
-import {Bonfire, BrickFurnace, CoalMine, FuelCell, HydrogenKatalysator, IronMine, Lab, Lumberjack, PowerPlant, StoneWorker} from "./buildings.test";
+import {Bonfire, BrickFurnace, CoalMine, FuelCell, HydrogenKatalysator, IronMine, Lab, Lumberjack, PowerPlant, StoneWorker} from "./building.test";
 import {Building, createBuilding, getBuilding} from "./building";
 import {Global} from "./global";
 import {getResource} from "./resource";
@@ -370,7 +370,7 @@ Given("an production cluster", () => {
                 cluster.resources.forEach((p, i) => {
                     cluster.resources[i] = Math.round(p);
                 });
-
+                console.log(cluster.resources);
                 expect(cluster.resources).toEqual(expectedResources, "resources");
             });
 
@@ -461,7 +461,7 @@ Given("an production cluster", () => {
             {
                 startResources: { [Hydrogen.id]: 0, [Coal.id]: 10000 },
                 startBuildings: { [HydrogenKatalysator.id]: 10, [PowerPlant.id]: 3, [FuelCell.id]: 2 },
-                expectedResources: { [Hydrogen.id]: 1799, [Coal.id]: 9700 },
+                expectedResources: { [Hydrogen.id]: 1800, [Coal.id]: 9700 },
             },
             {
                 startResources: { [Hydrogen.id]: 0, [Coal.id]: 10000 },

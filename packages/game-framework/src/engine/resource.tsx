@@ -1,3 +1,5 @@
+import {Global} from "./global";
+
 export type ResourceCategory = "Resource" | "Research";
 
 export interface ResourceProps {
@@ -11,19 +13,21 @@ export interface Resource {
     category: ResourceCategory;
 }
 
-let lastItemId = -1;
-const resources: Resource[] = [];
+export interface GlobalResources {
+    lastResourceId: number;
+    resources: Resource[];
+}
 
 export function createResource(props: ResourceProps): Resource {
-    lastItemId += 1;
-    resources[lastItemId] = {
-        id: lastItemId,
+    Global.lastResourceId += 1;
+    Global.resources[Global.lastResourceId] = {
+        id: Global.lastResourceId,
         name: props.name,
         category: props.category || "Resource"
     };
-    return resources[lastItemId];
+    return Global.resources[Global.lastResourceId];
 }
 
 export function getResource(id: string | number): Resource {
-    return resources[id];
+    return Global.resources[id];
 }

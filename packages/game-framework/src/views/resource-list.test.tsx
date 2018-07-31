@@ -3,7 +3,7 @@ import {findComponentWithClass, findComponentWithType, Given, obj2Arr, scryCompo
 import {Global} from "../engine/global";
 import {Europe} from "../engine/production-cluster.test";
 import {BuildingList, BuildingListItem} from "./building-list";
-import {IronMine} from "../engine/buildings.test";
+import {IronMine} from "../engine/building.test";
 import {BuildingCategories, getBuildingsByCategory} from "../engine/building";
 import {ResourceList, ResourceListItem} from "./resource-list";
 import {Iron} from "../engine/resource.test";

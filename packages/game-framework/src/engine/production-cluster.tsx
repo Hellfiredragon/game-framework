@@ -19,34 +19,36 @@ export interface ProductionCluster extends Inventory {
     resources: number[];
 }
 
-let lastProductionClusterId = -1;
-const productionClusters: ProductionCluster[] = [];
+export interface GlobalClusters {
+    lastClusterId: number;
+    clusters: ProductionCluster[];
+}
 
 export function createProductionCluster(props: ProductionClusterProps): ProductionCluster {
     const resources = obj2Arr(props.resources);
     const buildings = obj2Arr(props.buildings);
 
-    lastProductionClusterId += 1;
-    productionClusters[lastProductionClusterId] = {
-        id: lastProductionClusterId,
+    Global.lastClusterId += 1;
+    Global.clusters[Global.lastClusterId] = {
+        id: Global.lastClusterId,
         name: props.name,
         explored: props.explored || false,
         resources,
         buildings
     };
-    return productionClusters[lastProductionClusterId];
+    return Global.clusters[Global.lastClusterId];
 }
 
 export function getProductionCluster(id: string | number): ProductionCluster {
-    return productionClusters[id];
+    return Global.clusters[id];
 }
 
 export function getExploredProductionCluster(): ProductionCluster[] {
-    return productionClusters.filter(p => p.explored)
+    return Global.clusters.filter(p => p.explored)
 }
 
 export function updateAllProductionCluster() {
-    productionClusters.forEach(updateCluster);
+    Global.clusters.forEach(updateCluster);
 }
 
 export function getCost(productionCluster: ProductionCluster, building: Building, levels: number): number[] {
@@ -131,7 +133,7 @@ export function getEnergyConsumption(cluster: ProductionCluster) {
 }
 
 export function getEnergyProductionFactor(production: number, consumption: number): number {
-    if(consumption == 0) return 1;
+    if (consumption == 0) return 1;
     const percent = production / consumption;
     if (isNaN(percent)) return 0;
     if (percent >= 1) return 1;
@@ -140,22 +142,22 @@ export function getEnergyProductionFactor(production: number, consumption: numbe
     return result;
 }
 
-export function calcProduction(productionCluster: ProductionCluster): number[] {
+export function calcProduction(productionCluster: ProductionCluster, time: number = 1): number[] {
     const energyProductionFactor = getEnergyProductionFactor(getEnergyProduction(productionCluster), getEnergyConsumption(productionCluster));
     const production: number[] = [];
     productionCluster.buildings.forEach((level, buildingId) => {
         const building = getBuilding(buildingId);
         let enough = true;
         building.consumes.forEach((amount, resourceId) => {
-            const consumed = amount * level * (building.energy.consumes > 0 ? energyProductionFactor : 1);
+            const consumed = amount * level * time * (building.energy.consumes > 0 ? energyProductionFactor : 1);
             if (productionCluster.resources[resourceId] < consumed) enough = false;
         });
         if (enough) {
             building.produces.forEach((amount, resourceId) => {
-                production[resourceId] = (production[resourceId] || 0) + amount * level * (building.energy.consumes > 0 ? energyProductionFactor : 1);
+                production[resourceId] = (production[resourceId] || 0) + amount * level * time * (building.energy.consumes > 0 ? energyProductionFactor : 1);
             });
             building.consumes.forEach((amount, resourceId) => {
-                production[resourceId] = (production[resourceId] || 0) - amount * level * (building.energy.consumes > 0 ? energyProductionFactor : 1);
+                production[resourceId] = (production[resourceId] || 0) - amount * level * time * (building.energy.consumes > 0 ? energyProductionFactor : 1);
             });
         }
     });
@@ -163,8 +165,8 @@ export function calcProduction(productionCluster: ProductionCluster): number[] {
 }
 
 export function updateCluster(productionCluster: ProductionCluster) {
-    const production = calcProduction(productionCluster);
+    const production = calcProduction(productionCluster, S_PER_UPDATE);
     production.forEach((amount, resourceId) => {
-        productionCluster.resources[resourceId] = (productionCluster.resources[resourceId] || 0) + amount * S_PER_UPDATE;
+        productionCluster.resources[resourceId] = (productionCluster.resources[resourceId] || 0) + amount;
     });
 }

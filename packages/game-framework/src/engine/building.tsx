@@ -1,4 +1,5 @@
 import {obj2Arr} from "../utils";
+import {Global} from "./global";
 
 export type BuildingCategory = "Resource" | "Processing" | "Energy" | "Research"
 
@@ -40,8 +41,10 @@ export interface Building {
     }
 }
 
-let lastBuildingId = -1;
-const buildings: Building[] = [];
+export interface GlobalBuildings {
+    lastBuildingId: number;
+    buildings: Building[];
+}
 
 export function createBuilding(props: BuildingProps): Building {
     const cost = obj2Arr(props.cost);
@@ -49,9 +52,9 @@ export function createBuilding(props: BuildingProps): Building {
     const costLevel = obj2Arr(props.costLevel);
     const produces = obj2Arr(props.produces);
     const consumes = obj2Arr(props.consumes);
-    lastBuildingId += 1;
-    buildings[lastBuildingId] = {
-        id: lastBuildingId,
+    Global.lastBuildingId += 1;
+    Global.buildings[Global.lastBuildingId] = {
+        id: Global.lastBuildingId,
         name: props.name,
         category: props.category || "Resource",
         cost,
@@ -64,13 +67,13 @@ export function createBuilding(props: BuildingProps): Building {
             consumes: props.energy && props.energy.consumes ? props.energy.consumes : 0
         }
     };
-    return buildings[lastBuildingId];
+    return Global.buildings[Global.lastBuildingId];
 }
 
 export function getBuilding(id: string | number): Building {
-    return buildings[id];
+    return Global.buildings[id];
 }
 
 export function getBuildingsByCategory(category: BuildingCategory): Building[] {
-    return buildings.filter(b => b.category == category);
+    return Global.buildings.filter(b => b.category == category);
 }
