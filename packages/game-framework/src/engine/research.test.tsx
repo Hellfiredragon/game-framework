@@ -35,7 +35,7 @@ Given("the global state", () => {
 
     When("the player researches something", () => {
 
-        afterAll(() => {
+        beforeEach(() => {
             Global.researchProjects.forEach(x => x.explored = false);
         });
 
