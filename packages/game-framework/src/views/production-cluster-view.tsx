@@ -23,9 +23,14 @@ export class ResourceProductionListItem extends React.PureComponent<{
         const resource = getResource(id);
         const productionStyle = production > 0 ? "green" : production < 0 ? "red" : "grey";
 
-        return <article className="gf-resource-list-item">
-            <Text style="accent">{resource.name}:</Text> <Text>{formatNumber(amount)}</Text> <Text style={productionStyle}>({formatNumber(production)}/s)</Text>
-        </article>;
+        if(resource.category == "Resource") {
+            return <article className="gf-resource-list-item">
+                <Text style="accent">{resource.name}:</Text> <Text>{formatNumber(amount)}</Text> <Text
+                style={productionStyle}>({formatNumber(production)}/s)</Text>
+            </article>;
+        }else{
+            return null;
+        }
     }
 
 }

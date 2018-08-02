@@ -12,7 +12,7 @@ export class Text extends React.PureComponent<Props> {
 
         const cls = classNames(
             "gf-text",
-            style && "gf-" + style
+            style && "gf-style-" + style
         );
 
         return <span className={cls}>{this.props.children}</span>

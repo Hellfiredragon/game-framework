@@ -1,8 +1,9 @@
 import {Global} from "./global";
 import {obj2Arr} from "../utils";
 import {ProductionCluster} from "./production-cluster";
-import {Building} from "./building";
+import {Building, getBuilding} from "./building";
 import {removeResources} from "./inventory";
+import {getResourceProduction} from "./resource";
 
 export type ResearchCategory = "Building" | "Ship";
 export type AffectedProperty = "ProductionBase" | "ProductionMultiplier" | "CostBase" | "CostMultiplier";
@@ -98,4 +99,20 @@ export function getResearch(id: string | number): Research {
 
 export function getExploredResearch(): Research[] {
     return Global.researchProjects.filter(x => x.explored);
+}
+
+export function getResearchProduction(): number[] {
+    const result: number[] = [];
+    Global.clusters.forEach(cluster => {
+        cluster.buildings.forEach((level, buildingId) => {
+            const building = getBuilding(buildingId);
+            if (building.category == "Research") {
+                building.produces.forEach((amount, resourceId) => {
+                    const total = getResourceProduction(resourceId, amount, level);
+                    result[resourceId] = (result[resourceId] || 0) + total;
+                });
+            }
+        });
+    });
+    return result;
 }

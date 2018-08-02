@@ -4,11 +4,15 @@
     position: relative;
     display: inline-block;
     cursor: pointer;
-    height: @line-height;
-    line-height: @line-height;
+    height: @line-height * 2;
+    line-height: @line-height * 2;
     width: @button-width;
     text-align: center;
     user-select: none;
+    border: @border;
+    border-radius: @border-radius;
+    box-shadow: inset 0 0 0 0 fadeout(@active, 70%);
+    transition: 0.3s ease-in-out;
 
     &.gf-active {
         color: @active;
@@ -22,6 +26,7 @@
 
     &.gf-normal:hover {
         color: @active;
+        box-shadow: inset 0 0 20px 2px fadeout(@active, 70%);
 
         &::after {
             background: rgba(255, 255, 255, 0.1);
@@ -33,7 +38,11 @@
     }
 
     &.gf-icon {
-        width: @line-height;
+        width: @line-height * 2;
     }
 
+}
+
+.gf-style-2x {
+    width: @button-width * 2;
 }

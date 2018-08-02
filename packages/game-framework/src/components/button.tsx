@@ -9,17 +9,19 @@ export interface Props {
     text?: string;
     icon?: string;
     hint?: string;
+    style?: string;
 }
 
 export class Button extends React.PureComponent<Props> {
 
     render(): React.ReactNode {
-        const { state, action, icon, text, hint } = this.props;
+        const { state, action, icon, text, hint, style } = this.props;
         const myState: ButtonState = state || "normal";
 
         const cls = classNames(
             "gf-button",
             "gf-" + myState,
+            style && "gf-style-" + style,
             icon && "gf-" + icon,
             icon && "gf-icon"
         );

@@ -1,15 +1,15 @@
 @import "../variables";
 
 .gf-main {
-    background-image: @main-background;
-    background-size: 50px 50px;
+    .grid-background;
 
     position: relative;
-    width: @game-width - 40px;
-    height: @game-height - 40px;
+    width: @game-width - (2 * @main-margin);
+    height: @game-height - (2 * @main-margin);
     border: @border;
-    margin: 20px;
-    box-shadow: inset 0 0 800px 200px fadeout(@active, 90%), 0 0 2px 2px @active, 3px 3px 100px 20px rgba(0,0,0,1);
+    border-radius: @border-radius;
+    margin: @main-margin;
+    box-shadow: inset 0 0 800px 200px fadeout(@active, 90%), 0 0 2px 2px @active, 3px 3px 100px 20px black;
 
 }
 
@@ -22,6 +22,14 @@
     border-top: @border;
     padding: @padding;
 
+    display: grid;
+    grid-template-columns: 30% auto 30%;
+    grid-template-rows: 100%;
+
+    section:nth-child(2) {
+        text-align: center;
+    }
+
     .gf-button + .gf-button {
         margin-left: @padding;
     }
@@ -33,5 +41,5 @@
     top: 0;
     left: 0;
     right: 0;
-    bottom: @block-height + @border-size;
+    bottom: @block-height;
 }

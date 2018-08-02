@@ -31,3 +31,7 @@ export function createResource(props: ResourceProps): Resource {
 export function getResource(id: string | number): Resource {
     return Global.resourceTemplates[id];
 }
+
+export function getResourceProduction(id: string | number, base: number, level: number) {
+    return base * level;
+}

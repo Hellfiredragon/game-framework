@@ -1,5 +1,5 @@
 import {createBuilding} from "game-framework";
-import {Concrete, Copper, CopperOre, Iron, IronOre, RP, Sand, Silicon} from "./resource";
+import {Concrete, Copper, CopperOre, Iron, IronOre, ResearchPoints, Sand, Silicon, Steel, Tritium} from "./resource";
 
 export const IronMine = createBuilding({
     name: "Iron Mine",
@@ -134,10 +134,32 @@ export const SiliconBlastFurnace = createBuilding({
         [Concrete.id]: 1.1,
     },
     produces: {
-        [Copper.id]: 1,
+        [Silicon.id]: 1,
     },
     consumes: {
-        [CopperOre.id]: 1,
+        [Sand.id]: 1,
+    },
+    energy: {
+        consumes: 50
+    }
+});
+
+export const InductionFurnace = createBuilding({
+    name: "Induction Furnace",
+    category: "Processing",
+    cost: {
+        [Iron.id]: 100,
+        [Concrete.id]: 100,
+    },
+    costFactor: {
+        [Iron.id]: 1.1,
+        [Concrete.id]: 1.1,
+    },
+    produces: {
+        [Steel.id]: 1,
+    },
+    consumes: {
+        [Iron.id]: 1,
     },
     energy: {
         consumes: 50
@@ -157,7 +179,48 @@ export const PhotovoltaicPowerPlant = createBuilding({
         [Concrete.id]: 1.1,
         [Silicon.id]: 1.1,
     },
-        energy: {
+    energy: {
         produces: 100
+    }
+});
+
+export const TritiumMine = createBuilding({
+    name: "Tritium Mine",
+    category: "Resource",
+    cost: {
+        [Iron.id]: 100,
+        [Concrete.id]: 100,
+    },
+    costFactor: {
+        [Iron.id]: 1.1,
+        [Concrete.id]: 1.1,
+    },
+    produces: {
+        [Tritium.id]: 1
+    },
+    energy: {
+        consumes: 50
+    }
+});
+
+export const TritiumLab = createBuilding({
+    name: "Tritium Lab",
+    category: "Research",
+    cost: {
+        [Iron.id]: 100,
+        [Concrete.id]: 100,
+    },
+    costFactor: {
+        [Iron.id]: 1.1,
+        [Concrete.id]: 1.1,
+    },
+    produces: {
+        [ResearchPoints.id]: 10
+    },
+    consumes: {
+        [Tritium.id]: 1
+    },
+    energy: {
+        consumes: 50
     }
 });

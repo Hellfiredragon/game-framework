@@ -2,7 +2,7 @@ import * as React from "react";
 import {getBuildingsByCategory} from "../engine/building";
 import {Global} from "../engine/global";
 import {getBuilding} from "../engine/building";
-import {getResource} from "../engine/resource";
+import {getResource, getResourceProduction} from "../engine/resource";
 import {addBuilding, getCost, getProductionCluster, removeBuilding} from "../engine/production-cluster";
 import {Button} from "../components/button";
 import {enoughResources} from "../engine/inventory";
@@ -38,6 +38,53 @@ export class CostList extends React.Component<{
 
 }
 
+export class ProductionListItem extends React.PureComponent<{
+    id: number;
+    amount: number;
+    level: number;
+}> {
+
+    render() {
+        const { id, amount, level } = this.props;
+        const resource = getResource(id);
+        const total = getResourceProduction(id, amount, level);
+        const productionStyle = total > 0 ? "green" : total < 0 ? "red" : "grey";
+
+        return <article className="gf-production-list-item">
+            <Text style="accent">{resource.name}:</Text> <Text>{formatNumber(amount)}</Text> <Text style={productionStyle}>({formatNumber(total)})</Text>
+        </article>;
+    }
+
+}
+
+export class ProductionList extends React.Component<{
+    resources: number[];
+    level: number;
+}> {
+
+    render() {
+        const { resources, level } = this.props;
+        return <article className="gf-production-list">
+            {resources.map((amount, id) => <ProductionListItem key={id} id={id} amount={amount} level={level}/>)}
+        </article>
+    }
+
+}
+
+export class ConsumptionList extends React.Component<{
+    resources: number[];
+    level: number;
+}> {
+
+    render() {
+        const { resources, level } = this.props;
+        return <article className="gf-production-list">
+            {resources.map((amount, id) => <ProductionListItem key={id} id={id} amount={-amount} level={level}/>)}
+        </article>
+    }
+
+}
+
 export class BuildingListItem extends React.PureComponent<{
     clusterId: number,
     buildingId: number,
@@ -67,10 +114,19 @@ export class BuildingListItem extends React.PureComponent<{
         const cost = getCost(cluster, building, 1);
 
         return <article className="gf-building-list-item">
-            {building.name} ({currentLevel})
-            <CostList resources={cost}/>
-            <Button action={this.handleClickPlusOne} icon={"plus"} state={this.props.enoughResources ? "normal" : "disabled"}/>
-            <Button action={this.handleClickMinusOne} icon={"minus"} state={cluster.buildings[building.id] > 0 ? "normal" : "disabled"}/>
+            <section>
+                <Text style="accent">{building.name}</Text>
+                <Text> - Level {currentLevel}</Text><br/>
+                <Button action={this.handleClickPlusOne} icon={"plus"} state={this.props.enoughResources ? "normal" : "disabled"}/>
+                <Button action={this.handleClickMinusOne} icon={"minus"} state={cluster.buildings[building.id] > 0 ? "normal" : "disabled"}/>
+            </section>
+            <section>
+                <ProductionList resources={building.produces} level={currentLevel}/>
+                <ConsumptionList resources={building.consumes} level={currentLevel}/>
+            </section>
+            <section>
+                <CostList resources={cost}/>
+            </section>
         </article>;
     }
 

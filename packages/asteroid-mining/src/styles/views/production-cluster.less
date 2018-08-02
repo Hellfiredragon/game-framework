@@ -1,12 +1,7 @@
 @import "../variables";
 
 .gf-production-cluster-view, .gf-production-cluster-list {
-    position: absolute;
-    top: 0;
-    left: @block-height + @border-size;
-    right: 0;
-    bottom: 0;
-    border-left: @border;
+    .absolute(0, 0, 0, 0)
 }
 
 .gf-production-cluster-list-item {
@@ -35,43 +30,34 @@
 
     > .gf-energy-production {
         position: absolute;
-        top: @block-height + @border-size;
+        top: @block-height;
         left: 0;
         height: @block-height;
         width: @resource-list-size;
         padding: @padding;
+        border-bottom: @border;
         border-right: @border;
     }
 
     > .gf-resource-list {
-        position: absolute;
-        top: (2 * @block-height) + @border-size;
-        left: 0;
-        bottom: 0;
+        .absolute(2 * @block-height, 0, 0, 0);
         width: @resource-list-size;
-        border-top: @border;
         border-right: @border;
     }
 
+    .gf-building-menu {
+        .absolute(@block-height, 0, 0, @resource-list-size);
+        height: @block-height;
+        border-bottom: @border;
+        padding: @padding;
+
+        .gf-button + .gf-button {
+            margin-left: @padding;
+        }
+    }
+
     > .gf-building-list {
-        position: absolute;
-        top: @block-height + @border-size;
-        left: @resource-list-size;
-        bottom: 0;
-        right: 0;
+        .absolute(2 * @block-height, 0, 0, @resource-list-size);
     }
 
-}
-
-.gf-building-menu {
-    position: absolute;
-    left: -@block-height - @border-size;
-    top: 0;
-    bottom: 0;
-    width: @block-height;
-    padding: @padding;
-
-    .gf-button + .gf-button {
-        margin-top: @padding;
-    }
 }

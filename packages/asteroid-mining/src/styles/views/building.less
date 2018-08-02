@@ -2,8 +2,26 @@
 
 .gf-building-list {
     padding: @padding;
+    overflow-y: auto;
+    .scrollbar;
 
     .gf-resource-list {
         padding: 0;
     }
+}
+
+.gf-building-list-item {
+
+    display: grid;
+    grid-template-columns: auto 25% 25%;
+    grid-template-rows: 100%;
+
+    .gf-button + .gf-button {
+        margin-left: @padding;
+    }
+
+}
+
+.gf-building-list-item + .gf-building-list-item {
+    margin-top: @padding * 2;
 }
