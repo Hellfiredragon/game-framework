@@ -36,7 +36,7 @@ export class ResearchProductionList extends React.Component {
         const resources = Global.resources;
         const researchProduction = getResearchProduction();
         return <article className="gf-research-production">
-            {researchProduction.map((amount, resourceId) => <ResearchProductionListItem id={resourceId} amount={resources[resourceId]} production={amount}/>)}
+            {researchProduction.map((amount, resourceId) => <ResearchProductionListItem key={resourceId} id={resourceId} amount={resources[resourceId]} production={amount}/>)}
         </article>
     }
 

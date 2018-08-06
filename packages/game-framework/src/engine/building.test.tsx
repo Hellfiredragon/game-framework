@@ -129,7 +129,10 @@ export const Lab = createBuilding({
     cost: {},
     costFactor: {},
     produces: {
-        [ResearchPoints.id]: 100
+        [ResearchPoints.id]: 10
+    },
+    consumes: {
+        [Hydrogen.id]: 1
     },
     energy: {
         consumes: 100

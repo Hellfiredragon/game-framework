@@ -1,9 +1,11 @@
 import {createResearch, doResearch, getExploredResearch, getResearch} from "./research";
-import {ResearchPoints} from "./resource.test";
-import {buildingHint, Given, obj2Arr, researchHint, Then, When} from "../utils";
-import {addBuilding, createProductionCluster} from "./production-cluster";
+import {Coal, Hydrogen, ResearchPoints} from "./resource.test";
+import {buildingHint, Given, obj2Arr, researchHint, resourceHint, Then, When, withFrameVariation} from "../utils";
+import {addBuilding, createProductionCluster, updateCluster} from "./production-cluster";
 import {getBuilding} from "./building";
 import {Global} from "./global";
+import {Lab, PowerPlant} from "./building.test";
+import {S_PER_UPDATE} from "./constants";
 
 export const BaseSmelting = createResearch({
     name: "Base Smelting",
@@ -84,6 +86,61 @@ Given("the global state", () => {
                 expect(Global.resources).toEqual(expectedResources, "resources");
                 expect(Global.researchLevels).toEqual(expectedResearch, "research");
                 expect(getExploredResearch().map(x => x.name).sort()).toEqual(param.expectedExplored.map(x => x.name).sort());
+            });
+
+        });
+
+    });
+
+});
+
+Given("A production cluster with research buildings", () => {
+
+    When("the game updates", () => {
+
+        beforeEach(() => {
+            Global.resources = [];
+        });
+
+        withFrameVariation([
+            {
+                startResources: { [Hydrogen.id]: 1000, [Coal.id]: 1000 },
+                startBuildings: { [Lab.id]: 1, [PowerPlant.id]: 1 },
+                expectedClusterResources: { [Hydrogen.id]: 900, [Coal.id]: 900 },
+                expectedGlobalResources: { [ResearchPoints.id]: 1000 },
+            },
+            {
+                startResources: { [Hydrogen.id]: 50, [Coal.id]: 1000 },
+                startBuildings: { [Lab.id]: 1, [PowerPlant.id]: 1 },
+                expectedClusterResources: { [Hydrogen.id]: 0, [Coal.id]: 900 },
+                expectedGlobalResources: { [ResearchPoints.id]: 500 },
+            },
+            {
+                startResources: { [Hydrogen.id]: 1000, [Coal.id]: 1000 },
+                startBuildings: { [Lab.id]: 5, [PowerPlant.id]: 4 },
+                expectedClusterResources: { [Hydrogen.id]: 700, [Coal.id]: 600 },
+                expectedGlobalResources: { [ResearchPoints.id]: 3000 },
+            },
+        ]).forEach(param => {
+            const expectedClusterResources = obj2Arr(param.expectedClusterResources);
+            const expectedGlobalResources = obj2Arr(param.expectedGlobalResources);
+
+            Then(`it should produce globally \t${resourceHint(expectedGlobalResources)} in\t${param.frameCount * S_PER_UPDATE} seconds`, () => {
+                const cluster = createProductionCluster({
+                    name: "",
+                    resources: param.startResources,
+                    buildings: param.startBuildings
+                });
+
+                for (let i = 0; i < param.frameCount; i++) {
+                    updateCluster(cluster)
+                }
+
+                cluster.resources.forEach((p, i) => cluster.resources[i] = Math.round(p));
+                expect(cluster.resources).toEqual(expectedClusterResources);
+
+                Global.resources.forEach((p, i) => Global.resources[i] = Math.round(p));
+                expect(Global.resources).toEqual(expectedGlobalResources);
             });
 
         });

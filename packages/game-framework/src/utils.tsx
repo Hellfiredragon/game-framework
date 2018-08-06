@@ -94,3 +94,11 @@ export function findComponentWithClass<E extends Element>(
     const output = ReactTestUtils.renderIntoDocument(element) as React.Component;
     return ReactTestUtils.findRenderedDOMComponentWithClass(output, className);
 }
+
+export function scryComponentsWithClass<E extends Element>(
+    element: ReactElement<any>,
+    className: string
+) {
+    const output = ReactTestUtils.renderIntoDocument(element) as React.Component;
+    return ReactTestUtils.scryRenderedDOMComponentsWithClass(output, className);
+}

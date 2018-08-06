@@ -1,11 +1,12 @@
 import * as React from "react";
 import * as ReactTestUtils from 'react-dom/test-utils';
 import {Simulate} from "react-dom/test-utils";
-import {findComponentWithClass, Given, scryComponentsWithType, Then, When} from "../utils";
+import {findComponentWithClass, Given, scryComponentsWithClass, scryComponentsWithType, Then, When} from "../utils";
 import {createProductionCluster} from "..";
 import {ProductionClusterList, ProductionClusterListItem} from "./production-cluster-list";
 import {Global} from "../engine/global";
 import {Asia, Europe, Russia} from "../engine/production-cluster.test";
+import {Button} from "../components/button";
 
 Given("a production cluster list", () => {
 
@@ -29,7 +30,7 @@ Given("a production cluster list", () => {
 
 Given("a production cluster list item", () => {
 
-    When("it is rendered with cluster id", () => {
+    When("it is rendered with a cluster id", () => {
 
         Then("it should render the cluster name", () => {
             const div = findComponentWithClass<HTMLDivElement>(<ProductionClusterListItem id={Europe.id}/>, "gf-production-cluster-list-item");
@@ -38,8 +39,8 @@ Given("a production cluster list item", () => {
         });
 
         Then("it should be clickable", () => {
-            const div = findComponentWithClass<HTMLDivElement>(<ProductionClusterListItem id={Europe.id}/>, "gf-production-cluster-list-item");
-            Simulate.click(div);
+            const divs = scryComponentsWithClass(<ProductionClusterListItem id={Europe.id}/>, "gf-button");
+            Simulate.click(divs[0]);
 
             expect(Global.navigation.main).toBe("production-cluster");
             expect(Global.navigation.sub).toBe("details");

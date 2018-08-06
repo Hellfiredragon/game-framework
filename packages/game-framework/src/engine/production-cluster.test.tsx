@@ -370,7 +370,6 @@ Given("an production cluster", () => {
                 cluster.resources.forEach((p, i) => {
                     cluster.resources[i] = Math.round(p);
                 });
-                console.log(cluster.resources);
                 expect(cluster.resources).toEqual(expectedResources, "resources");
             });
 
@@ -468,16 +467,6 @@ Given("an production cluster", () => {
                 startBuildings: { [HydrogenKatalysator.id]: 10, [PowerPlant.id]: 2, [FuelCell.id]: 2 },
                 expectedResources: { [Hydrogen.id]: 0, [Coal.id]: 9800 },
             },
-            {
-                startResources: { [Coal.id]: 10000 },
-                startBuildings: { [Lab.id]: 1, [PowerPlant.id]: 1 },
-                expectedResources: { [Coal.id]: 9900, [ResearchPoints.id]: 10000 }
-            },
-            {
-                startResources: { [Coal.id]: 10000 },
-                startBuildings: { [Lab.id]: 6, [PowerPlant.id]: 4 },
-                expectedResources: { [Coal.id]: 9600, [ResearchPoints.id]: 20000 }
-            }
         ]).forEach(param => {
             const startResources = obj2Arr(param.startResources);
             const expectedResources = obj2Arr(param.expectedResources);

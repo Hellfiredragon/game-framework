@@ -1,9 +1,9 @@
 import {Global} from "./global";
 import {obj2Arr} from "../utils";
-import {ProductionCluster} from "./production-cluster";
+import {getEnergyConsumption, getEnergyProduction, getEnergyProductionFactor, ProductionCluster} from "./production-cluster";
 import {Building, getBuilding} from "./building";
 import {removeResources} from "./inventory";
-import {getResourceProduction} from "./resource";
+import {getResourceProduction, Resource} from "./resource";
 
 export type ResearchCategory = "Building" | "Ship";
 export type AffectedProperty = "ProductionBase" | "ProductionMultiplier" | "CostBase" | "CostMultiplier";
@@ -101,17 +101,15 @@ export function getExploredResearch(): Research[] {
     return Global.researchProjects.filter(x => x.explored);
 }
 
+export function getResearchResources(): Resource[] {
+    return Global.resourceTemplates.filter(x => x.category == "Research");
+}
+
 export function getResearchProduction(): number[] {
     const result: number[] = [];
-    Global.clusters.forEach(cluster => {
-        cluster.buildings.forEach((level, buildingId) => {
-            const building = getBuilding(buildingId);
-            if (building.category == "Research") {
-                building.produces.forEach((amount, resourceId) => {
-                    const total = getResourceProduction(resourceId, amount, level);
-                    result[resourceId] = (result[resourceId] || 0) + total;
-                });
-            }
+    getResearchResources().forEach((resource, resourceId) => {
+        Global.clusters.forEach(cluster => {
+            result[resourceId] = (result[resourceId] || 0) + (cluster.currentProduction[resourceId] || 0);
         });
     });
     return result;

@@ -41,10 +41,9 @@ export class ResourceProductionList extends React.Component<{
 
     render() {
         const cluster = getProductionCluster(this.props.clusterId);
-        const production = calcProduction(cluster);
 
         return <article className="gf-resource-list">
-            {cluster.resources.map((amount, id) => <ResourceProductionListItem key={id} id={id} amount={amount} production={production[id]}/>)}
+            {cluster.resources.map((amount, id) => <ResourceProductionListItem key={id} id={id} amount={amount} production={cluster.currentProduction[id]}/>)}
         </article>
     }
 

@@ -3,6 +3,7 @@ import {Building, getBuilding} from "./building";
 import {Global} from "./global";
 import {obj2Arr} from "../utils";
 import {MS_PER_UPDATE, S_PER_UPDATE} from "./constants";
+import {getResource} from "./resource";
 
 export interface ProductionClusterProps {
     name: string,
@@ -17,6 +18,7 @@ export interface ProductionCluster extends Inventory {
     explored: boolean
     buildings: number[];
     resources: number[];
+    currentProduction: number[];
 }
 
 export interface GlobalClusters {
@@ -34,7 +36,8 @@ export function createProductionCluster(props: ProductionClusterProps): Producti
         name: props.name,
         explored: props.explored || false,
         resources,
-        buildings
+        buildings,
+        currentProduction: []
     };
     return Global.clusters[Global.lastClusterId];
 }
@@ -167,6 +170,12 @@ export function calcProduction(productionCluster: ProductionCluster, time: numbe
 export function updateCluster(productionCluster: ProductionCluster) {
     const production = calcProduction(productionCluster, S_PER_UPDATE);
     production.forEach((amount, resourceId) => {
-        productionCluster.resources[resourceId] = (productionCluster.resources[resourceId] || 0) + amount;
+        const resource = getResource(resourceId);
+        if (resource.category == "Research") {
+            Global.resources[resourceId] = (Global.resources[resourceId] || 0) + amount;
+        } else {
+            productionCluster.resources[resourceId] = (productionCluster.resources[resourceId] || 0) + amount;
+        }
+        productionCluster.currentProduction[resourceId] = amount / S_PER_UPDATE;
     });
 }
