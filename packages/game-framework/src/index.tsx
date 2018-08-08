@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 
 import {createGameLoop} from "./loop";
 import {updateAllProductionCluster} from "./engine/production-cluster";
-import {Main} from "./views/main/main";
+import {Main} from "./views/main";
 
 export {createBuilding, Building} from "./engine/building";
 export {configure, GlobalState} from "./engine/global";
