@@ -77,7 +77,7 @@ export class EnergyProduction extends React.PureComponent<{
         const style = energyProductionFactor == 1 ? "green" : "red";
 
         return <article className="gf-energy-production">
-            <Text style="accent">Energy:</Text> <Text>{production}/{consumption}</Text> <Text style={style}>({formatPercent(energyProductionFactor)})</Text>
+            <Text style="accent">Energy:</Text> <Text>{consumption}/{production}</Text> <Text style={style}>({formatPercent(energyProductionFactor)})</Text>
         </article>
     }
 }
